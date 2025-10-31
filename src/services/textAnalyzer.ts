@@ -1,6 +1,6 @@
 import type { Suggestion } from '../types';
 import { checkAcademicGrammar } from './offlineAcademicChecker';
-import { checkWithLanguageTool, isLanguageToolAvailable } from './languageToolService';
+import { checkWithLanguageTool } from './languageToolService';
 
 /**
  * Analyze text and return all suggestions
