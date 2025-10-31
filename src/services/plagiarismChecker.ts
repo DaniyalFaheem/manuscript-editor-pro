@@ -1,5 +1,3 @@
-import type { Suggestion } from '../types';
-
 export interface PlagiarismResult {
   text: string;
   similarity: number;
