@@ -52,9 +52,9 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Analyze text with debouncing
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       if (content) {
-        const newSuggestions = analyzeText(content);
+        const newSuggestions = await analyzeText(content);
         setSuggestions(newSuggestions);
         
         const newMetrics = calculateReadabilityMetrics(content);
