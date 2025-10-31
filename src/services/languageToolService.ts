@@ -215,7 +215,8 @@ export async function isLanguageToolAvailable(apiUrl?: string): Promise<boolean>
     
     clearTimeout(timeoutId);
     return response.ok;
-  } catch {
+  } catch (error) {
+    console.debug('LanguageTool API availability check failed:', error instanceof Error ? error.message : 'Unknown error');
     return false;
   }
 }
