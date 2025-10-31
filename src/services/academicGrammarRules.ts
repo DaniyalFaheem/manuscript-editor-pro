@@ -39,12 +39,20 @@ const fundamentalGrammarRules: AcademicGrammarRule[] = [
     id: 'svagr-003',
     pattern: /\b(data)\s+(is|was|has)\b/gi,
     message: '"Data" is typically plural in academic writing. Use "are" instead of "is".',
-    suggestion: (match) => match[0].replace(/is|was|has/gi, m => {
-      if (m.toLowerCase() === 'is') return m.replace(/is/i, 'are');
-      if (m.toLowerCase() === 'was') return m.replace(/was/i, 'were');
-      if (m.toLowerCase() === 'has') return m.replace(/has/i, 'have');
-      return m;
-    }),
+    suggestion: (match) => {
+      const original = match[0];
+      // Preserve case of original
+      if (/\bis\b/i.test(original)) {
+        return original.replace(/is/i, match => match[0] === 'I' ? 'Are' : 'are');
+      }
+      if (/\bwas\b/i.test(original)) {
+        return original.replace(/was/i, match => match[0] === 'W' ? 'Were' : 'were');
+      }
+      if (/\bhas\b/i.test(original)) {
+        return original.replace(/has/i, match => match[0] === 'H' ? 'Have' : 'have');
+      }
+      return original;
+    },
     type: 'grammar',
     severity: 'warning',
     category: 'grammar',

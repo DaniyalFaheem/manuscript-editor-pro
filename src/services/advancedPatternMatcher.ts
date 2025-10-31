@@ -283,6 +283,7 @@ export function getMatchStatistics(matches: RuleMatch[]): {
 
 /**
  * Performance timer for benchmarking
+ * Note: Only logs in development mode
  */
 export function measurePerformance<T>(
   name: string,
@@ -292,7 +293,10 @@ export function measurePerformance<T>(
   const result = fn();
   const duration = performance.now() - start;
   
-  console.log(`[Performance] ${name}: ${duration.toFixed(2)}ms`);
+  // Only log in development mode
+  if (import.meta.env.DEV) {
+    console.log(`[Performance] ${name}: ${duration.toFixed(2)}ms`);
+  }
   
   return { result, duration };
 }

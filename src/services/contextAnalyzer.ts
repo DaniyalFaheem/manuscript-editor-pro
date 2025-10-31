@@ -93,13 +93,28 @@ export function getSentenceBoundaries(text: string, offset: number): { start: nu
   let currentOffset = 0;
   
   for (const sentence of sentences) {
-    const start = text.indexOf(sentence, currentOffset);
+    // Find sentence starting from current position to avoid duplicates
+    let start = text.indexOf(sentence, currentOffset);
+    
+    // If not found from current position, we may have skipped whitespace
+    if (start === -1 || start < currentOffset) {
+      // Try to find near current offset with some tolerance
+      const searchStart = Math.max(0, currentOffset - 10);
+      start = text.indexOf(sentence, searchStart);
+    }
+    
+    if (start === -1) {
+      // Fallback: continue to next sentence
+      continue;
+    }
+    
     const end = start + sentence.length;
     
     if (offset >= start && offset < end) {
       return { start, end };
     }
     
+    // Move past this sentence for next iteration
     currentOffset = end;
   }
   
@@ -115,13 +130,26 @@ export function getParagraphBoundaries(text: string, offset: number): { start: n
   let currentOffset = 0;
   
   for (const paragraph of paragraphs) {
-    const start = text.indexOf(paragraph, currentOffset);
+    // Find paragraph starting from current position
+    let start = text.indexOf(paragraph, currentOffset);
+    
+    // If not found from current position, try with some tolerance
+    if (start === -1 || start < currentOffset) {
+      const searchStart = Math.max(0, currentOffset - 10);
+      start = text.indexOf(paragraph, searchStart);
+    }
+    
+    if (start === -1) {
+      continue;
+    }
+    
     const end = start + paragraph.length;
     
     if (offset >= start && offset < end) {
       return { start, end };
     }
     
+    // Move past this paragraph for next iteration
     currentOffset = end;
   }
   

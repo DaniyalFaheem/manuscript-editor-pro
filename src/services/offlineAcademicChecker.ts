@@ -268,12 +268,12 @@ export function getCheckerInfo(): {
     totalRules: TOTAL_RULES,
     version: '1.0.0',
     capabilities: [
-      'Fundamental Grammar (400+ rules)',
-      'Academic Tone & Formality (350+ rules)',
-      'Citation & Methodology (250+ rules)',
-      'Advanced Punctuation (400+ rules)',
-      'Wordiness & Redundancy (300+ rules)',
-      'Academic Spelling (300+ rules)'
+      'Fundamental Grammar (15+ core rules, expandable to 400+)',
+      'Academic Tone & Formality (15+ core rules, expandable to 350+)',
+      'Citation & Methodology (15+ core rules, expandable to 250+)',
+      'Advanced Punctuation (15+ core rules, expandable to 400+)',
+      'Wordiness & Redundancy (15+ core rules, expandable to 300+)',
+      'Academic Spelling (15+ core rules, expandable to 300+)'
     ],
     categories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
     offline: true
