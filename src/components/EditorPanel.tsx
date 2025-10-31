@@ -1,92 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { Paper, Box, TextField } from '@mui/material';
-import Editor from '@monaco-editor/react';
-import { useDocument } from '../context/DocumentContext';
+import React, { useRef, useEffect } from 'react';
+import { MonacoEditor } from 'monaco-editor'; // Importing the editor type from monaco-editor
 
-const EditorPanel: React.FC = () => {
-  const { content, setContent, isDarkMode } = useDocument();
-  const [isMonacoReady, setIsMonacoReady] = useState(false);
-  const [monacoError, setMonacoError] = useState(false);
+const EditorPanel = () => {
+    const editorRef = useRef(null);
+    const decorationsRef = useRef([]);
 
-  const handleEditorChange = (value: string | undefined) => {
-    setContent(value || '');
-  };
+    const handleEditorMount = (editor) => {
+        editorRef.current = editor;
 
-  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(event.target.value);
-  };
+        // Add click handler for suggestions
+        editor.onMouseDown((event) => {
+            if (event.target.type === 'suggestion') {
+                // Handle suggestion click
+                acceptSuggestion(event.target);
+            }
+        });
+    };
 
-  const handleEditorMount = () => {
-    setIsMonacoReady(true);
-  };
+    useEffect(() => {
+        // Create decorations for each suggestion
+        const decorations = suggestions.map((suggestion) => {
+            return {
+                range: suggestion.range,
+                options: {
+                    inlineClassName: getErrorClass(suggestion.type),
+                    hoverMessage: { value: suggestion.message }
+                }
+            };
+        });
+        decorationsRef.current = editorRef.current.deltaDecorations(decorationsRef.current, decorations);
+    }, [suggestions]);
 
-  useEffect(() => {
-    // Set a timeout to show fallback if Monaco doesn't load
-    const timeout = setTimeout(() => {
-      if (!isMonacoReady) {
-        setMonacoError(true);
-      }
-    }, 5000);
-
-    return () => clearTimeout(timeout);
-  }, [isMonacoReady]);
-
-  return (
-    <Paper
-      elevation={2}
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}
-    >
-      <Box sx={{ flex: 1, minHeight: 0 }}>
-        {monacoError ? (
-          <TextField
-            multiline
-            fullWidth
-            value={content}
-            onChange={handleTextAreaChange}
-            placeholder="Start typing your manuscript here..."
-            sx={{
-              height: '100%',
-              '& .MuiInputBase-root': {
-                height: '100%',
-                alignItems: 'flex-start',
-                fontFamily: 'monospace',
-                fontSize: 14,
-                lineHeight: 1.6,
-              },
-              '& .MuiInputBase-input': {
-                height: '100% !important',
-                overflow: 'auto !important',
-              },
-            }}
-          />
-        ) : (
-          <Editor
-            height="100%"
-            defaultLanguage="markdown"
-            value={content}
-            onChange={handleEditorChange}
-            onMount={handleEditorMount}
-            theme={isDarkMode ? 'vs-dark' : 'light'}
+    return (
+        <MonacoEditor
             options={{
-              fontSize: 14,
-              lineNumbers: 'on',
-              wordWrap: 'on',
-              minimap: { enabled: false },
-              scrollBeyondLastLine: false,
-              automaticLayout: true,
-              padding: { top: 16, bottom: 16 },
+                minimap: { enabled: true },
+                glyphMargin: true
             }}
-            loading="Loading editor..."
-          />
-        )}
-      </Box>
-    </Paper>
-  );
+            onMount={handleEditorMount}
+        />
+    );
 };
+
+const getErrorClass = (type) => {
+    switch (type) {
+        case 'grammar': return 'error-grammar'; // Red
+        case 'punctuation': return 'error-punctuation'; // Orange
+        case 'style': return 'error-style'; // Yellow
+        case 'spelling': return 'error-spelling'; // Blue
+        default: return '';
+    }
+};
+
+// Inject custom CSS styles for wavy underlines and glyph margins
+const styles = `
+.error-grammar { text-decoration: underline wavy red; }
+.error-punctuation { text-decoration: underline wavy orange; }
+.error-style { text-decoration: underline wavy yellow; }
+.error-spelling { text-decoration: underline wavy blue; }
+`;
+
+const styleSheet = document.createElement('style');
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
 
 export default EditorPanel;
