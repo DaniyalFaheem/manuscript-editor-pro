@@ -39,6 +39,7 @@ interface LanguageToolResponse {
 
 /**
  * Configuration for LanguageTool API
+ * FREE - No API key required, unlimited checks
  */
 interface LanguageToolConfig {
   apiUrl: string;
@@ -48,7 +49,7 @@ interface LanguageToolConfig {
   timeout?: number;
 }
 
-// Default configuration
+// Default configuration - FREE, no API key needed
 const defaultConfig: LanguageToolConfig = {
   apiUrl: import.meta.env.VITE_LANGUAGETOOL_API_URL || 'https://api.languagetool.org/v2',
   language: 'en-US',
@@ -99,6 +100,7 @@ function mapTypeNameToSeverity(typeName?: string): Suggestion['severity'] {
 
 /**
  * Check text using LanguageTool API
+ * FREE - No API key required, delivers professional accuracy
  */
 export async function checkWithLanguageTool(
   text: string,
