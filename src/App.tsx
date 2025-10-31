@@ -17,8 +17,6 @@ const AppContent: React.FC = () => {
     togglePresentationMode,
     content
   } = useDocument();
-  
-
 
   const theme = createTheme({
     palette: {
