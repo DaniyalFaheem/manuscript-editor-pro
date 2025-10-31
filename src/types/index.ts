@@ -34,6 +34,14 @@ export interface DocumentState {
   fileName: string;
 }
 
-export type ExportFormat = 'txt' | 'md' | 'html' | 'docx' | 'pdf';
+export type ExportFormat = 'txt' | 'md' | 'html' | 'docx' | 'pdf' | 'latex';
 
 export type FileFormat = 'docx' | 'pdf' | 'txt' | 'md' | 'tex';
+
+// Re-export types from services
+export type { StructureAnalysis, Section, SectionType } from '../services/documentStructureAnalyzer';
+export type { SearchMatch, SearchOptions, SearchResult } from '../services/searchReplace';
+export type { ShortcutAction } from '../services/keyboardShortcuts';
+export type { NotationError, NotationErrorType } from '../services/scientificNotationValidator';
+export type { LanguageVariant, LanguageIssue, LanguageAnalysis } from '../services/languageStyleSwitcher';
+export type { ExportOptions } from '../services/exportManager';

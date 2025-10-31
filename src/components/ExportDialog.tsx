@@ -15,7 +15,7 @@ import {
   Box,
 } from '@mui/material';
 import { useDocument } from '../context/DocumentContext';
-import { exportFile } from '../services/exportService';
+import { exportDocument } from '../services/exportManager';
 import type { ExportFormat } from '../types';
 
 interface ExportDialogProps {
@@ -39,7 +39,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose }) => {
     setError(null);
 
     try {
-      await exportFile(content, fileName, format);
+      await exportDocument(content, fileName, { format });
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to export file');
@@ -80,7 +80,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose }) => {
               <FormControlLabel
                 value="html"
                 control={<Radio />}
-                label="HTML (.html)"
+                label="HTML (.html) with styling"
               />
               <FormControlLabel
                 value="docx"
@@ -90,7 +90,12 @@ const ExportDialog: React.FC<ExportDialogProps> = ({ open, onClose }) => {
               <FormControlLabel
                 value="pdf"
                 control={<Radio />}
-                label="PDF (.pdf) - Opens print dialog"
+                label="PDF (.pdf) - Professional format"
+              />
+              <FormControlLabel
+                value="latex"
+                control={<Radio />}
+                label="LaTeX (.tex) - Academic format"
               />
             </Box>
           </RadioGroup>

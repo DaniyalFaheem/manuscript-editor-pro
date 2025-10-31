@@ -1,67 +1,29 @@
-import React, { useRef, useEffect } from 'react';
-import { MonacoEditor } from 'monaco-editor'; // Importing the editor type from monaco-editor
+import React from 'react';
+import Editor from '@monaco-editor/react';
+import { useDocument } from '../context/DocumentContext';
+import { Paper } from '@mui/material';
 
-const EditorPanel = () => {
-    const editorRef = useRef(null);
-    const decorationsRef = useRef([]);
-
-    const handleEditorMount = (editor) => {
-        editorRef.current = editor;
-
-        // Add click handler for suggestions
-        editor.onMouseDown((event) => {
-            if (event.target.type === 'suggestion') {
-                // Handle suggestion click
-                acceptSuggestion(event.target);
-            }
-        });
-    };
-
-    useEffect(() => {
-        // Create decorations for each suggestion
-        const decorations = suggestions.map((suggestion) => {
-            return {
-                range: suggestion.range,
-                options: {
-                    inlineClassName: getErrorClass(suggestion.type),
-                    hoverMessage: { value: suggestion.message }
-                }
-            };
-        });
-        decorationsRef.current = editorRef.current.deltaDecorations(decorationsRef.current, decorations);
-    }, [suggestions]);
+const EditorPanel: React.FC = () => {
+    const { content, setContent, isDarkMode } = useDocument();
 
     return (
-        <MonacoEditor
-            options={{
-                minimap: { enabled: true },
-                glyphMargin: true
-            }}
-            onMount={handleEditorMount}
-        />
+        <Paper sx={{ height: '100%', overflow: 'hidden' }}>
+            <Editor
+                height="100%"
+                defaultLanguage="markdown"
+                value={content}
+                onChange={(value) => setContent(value || '')}
+                theme={isDarkMode ? 'vs-dark' : 'vs-light'}
+                options={{
+                    minimap: { enabled: true },
+                    wordWrap: 'on',
+                    lineNumbers: 'on',
+                    fontSize: 14,
+                    padding: { top: 10 }
+                }}
+            />
+        </Paper>
     );
 };
-
-const getErrorClass = (type) => {
-    switch (type) {
-        case 'grammar': return 'error-grammar'; // Red
-        case 'punctuation': return 'error-punctuation'; // Orange
-        case 'style': return 'error-style'; // Yellow
-        case 'spelling': return 'error-spelling'; // Blue
-        default: return '';
-    }
-};
-
-// Inject custom CSS styles for wavy underlines and glyph margins
-const styles = `
-.error-grammar { text-decoration: underline wavy red; }
-.error-punctuation { text-decoration: underline wavy orange; }
-.error-style { text-decoration: underline wavy yellow; }
-.error-spelling { text-decoration: underline wavy blue; }
-`;
-
-const styleSheet = document.createElement('style');
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
 
 export default EditorPanel;
