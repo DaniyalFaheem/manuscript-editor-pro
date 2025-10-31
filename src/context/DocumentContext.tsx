@@ -13,6 +13,8 @@ import { calculateReadabilityMetrics } from '../services/readabilityCalculator';
 import { analyzeDocumentStructure } from '../services/documentStructureAnalyzer';
 import { validateScientificNotation } from '../services/scientificNotationValidator';
 import { analyzeLanguageStyle, convertToVariant } from '../services/languageStyleSwitcher';
+import { PlagiarismChecker, type PlagiarismResult } from '../services/plagiarismChecker';
+import { StatisticsCalculator, type DocumentStatistics } from '../services/statisticsCalculator';
 
 interface DocumentContextType {
   content: string;
@@ -25,6 +27,8 @@ interface DocumentContextType {
   languageAnalysis: LanguageAnalysis | null;
   languageVariant: LanguageVariant;
   presentationMode: boolean;
+  plagiarismResults: PlagiarismResult[];
+  statistics: DocumentStatistics | null;
   setContent: (content: string) => void;
   toggleDarkMode: () => void;
   setFileName: (name: string) => void;
@@ -70,6 +74,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return (saved as LanguageVariant) || 'US';
   });
   const [presentationMode, setPresentationMode] = useState(false);
+  const [plagiarismResults, setPlagiarismResults] = useState<PlagiarismResult[]>([]);
+  const [statistics, setStatistics] = useState<DocumentStatistics | null>(null);
 
   // Load content from localStorage on mount
   useEffect(() => {
@@ -83,23 +89,37 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     const timer = setTimeout(async () => {
       if (content) {
+        // Initialize services
+        const plagiarismChecker = new PlagiarismChecker();
+        const statisticsCalculator = new StatisticsCalculator();
+
+        // Grammar check - runs automatically
         const newSuggestions = await analyzeText(content);
         setSuggestions(newSuggestions);
         
+        // Readability analysis - runs automatically
         const newMetrics = calculateReadabilityMetrics(content);
         setMetrics(newMetrics);
 
-        // Analyze document structure
+        // Analyze document structure - runs automatically
         const structure = analyzeDocumentStructure(content);
         setStructureAnalysis(structure);
 
-        // Validate scientific notation
+        // Validate scientific notation - runs automatically
         const notation = validateScientificNotation(content);
         setNotationErrors(notation);
 
-        // Analyze language style
+        // Analyze language style - runs automatically
         const language = analyzeLanguageStyle(content);
         setLanguageAnalysis(language);
+
+        // Plagiarism check - runs automatically
+        const plagiarism = await plagiarismChecker.checkPlagiarism(content);
+        setPlagiarismResults(plagiarism);
+
+        // Statistics panel - runs automatically
+        const stats = statisticsCalculator.calculate(content);
+        setStatistics(stats);
       } else {
         setSuggestions([]);
         setMetrics({
@@ -117,6 +137,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setStructureAnalysis(null);
         setNotationErrors([]);
         setLanguageAnalysis(null);
+        setPlagiarismResults([]);
+        setStatistics(null);
       }
     }, 1000);
 
@@ -194,6 +216,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     languageAnalysis,
     languageVariant,
     presentationMode,
+    plagiarismResults,
+    statistics,
     setContent,
     toggleDarkMode,
     setFileName,
