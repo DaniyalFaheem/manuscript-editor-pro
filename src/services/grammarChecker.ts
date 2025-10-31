@@ -1,3 +1,10 @@
+/**
+ * @deprecated This file contains basic grammar checking rules.
+ * The application now uses LanguageTool API for professional-grade grammar checking.
+ * These functions are kept for reference but are not actively used.
+ * See languageToolService.ts for the current grammar checking implementation.
+ */
+
 import type { Suggestion } from '../types';
 import { generateId, getPositionFromOffset } from '../utils/textUtils';
 
