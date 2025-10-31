@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { ThemeProvider, createTheme, CssBaseline, Box, Typography, Tabs, Tab } from '@mui/material';
+import React, { useEffect } from 'react';
+import { ThemeProvider, createTheme, CssBaseline, Box, Typography } from '@mui/material';
 import { DocumentProvider, useDocument } from './context/DocumentContext';
 import Header from './components/Header';
 import EditorPanel from './components/EditorPanel';
 import SuggestionPanel from './components/SuggestionPanel';
 import MetricsPanel from './components/MetricsPanel';
 import PresentationMode from './components/PresentationMode';
-import DocumentStructurePanel from './components/DocumentStructurePanel';
-import ScientificNotationPanel from './components/ScientificNotationPanel';
-import LanguageStyleSelector from './components/LanguageStyleSelector';
+
 import { setupKeyboardShortcuts } from './services/keyboardShortcuts';
 import type { ShortcutAction } from './types';
 
@@ -17,17 +15,10 @@ const AppContent: React.FC = () => {
     isDarkMode, 
     presentationMode, 
     togglePresentationMode,
-    content,
-    structureAnalysis,
-    notationErrors,
-    languageAnalysis,
-    languageVariant,
-    setLanguageVariant,
-    convertLanguageVariant,
-    setContent
+    content
   } = useDocument();
   
-  const [rightPanelTab, setRightPanelTab] = useState(0);
+
 
   const theme = createTheme({
     palette: {
@@ -88,42 +79,8 @@ const AppContent: React.FC = () => {
           <Box sx={{ flex: '1 1 50%', minWidth: 0, height: '100%' }}>
             <EditorPanel />
           </Box>
-          <Box sx={{ flex: '0 0 25%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Tabs
-              value={rightPanelTab}
-              onChange={(_, newValue) => setRightPanelTab(newValue)}
-              variant="fullWidth"
-              sx={{ borderBottom: 1, borderColor: 'divider', mb: 1 }}
-            >
-              <Tab label="Metrics" />
-              <Tab label="Structure" />
-              <Tab label="Notation" />
-              <Tab label="Language" />
-            </Tabs>
-            <Box sx={{ flex: 1, overflow: 'auto' }}>
-              {rightPanelTab === 0 && <MetricsPanel />}
-              {rightPanelTab === 1 && <DocumentStructurePanel analysis={structureAnalysis} />}
-              {rightPanelTab === 2 && (
-                <ScientificNotationPanel
-                  errors={notationErrors}
-                  onFixError={(error) => {
-                    const newContent = 
-                      content.substring(0, error.startOffset) +
-                      error.suggestion +
-                      content.substring(error.endOffset);
-                    setContent(newContent);
-                  }}
-                />
-              )}
-              {rightPanelTab === 3 && (
-                <LanguageStyleSelector
-                  analysis={languageAnalysis}
-                  currentVariant={languageVariant}
-                  onVariantChange={setLanguageVariant}
-                  onConvert={convertLanguageVariant}
-                />
-              )}
-            </Box>
+          <Box sx={{ flex: '0 0 25%', minWidth: 0, height: '100%' }}>
+            <MetricsPanel />
           </Box>
         </Box>
         <Box
