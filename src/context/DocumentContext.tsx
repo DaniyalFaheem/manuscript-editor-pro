@@ -1,7 +1,18 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { Suggestion, TextMetrics } from '../types';
+import type { 
+  Suggestion, 
+  TextMetrics, 
+  StructureAnalysis, 
+  NotationError,
+  LanguageVariant,
+  LanguageAnalysis,
+  ShortcutAction
+} from '../types';
 import { analyzeText } from '../services/textAnalyzer';
 import { calculateReadabilityMetrics } from '../services/readabilityCalculator';
+import { analyzeDocumentStructure } from '../services/documentStructureAnalyzer';
+import { validateScientificNotation } from '../services/scientificNotationValidator';
+import { analyzeLanguageStyle, convertToVariant } from '../services/languageStyleSwitcher';
 
 interface DocumentContextType {
   content: string;
@@ -9,17 +20,27 @@ interface DocumentContextType {
   metrics: TextMetrics;
   isDarkMode: boolean;
   fileName: string;
+  structureAnalysis: StructureAnalysis | null;
+  notationErrors: NotationError[];
+  languageAnalysis: LanguageAnalysis | null;
+  languageVariant: LanguageVariant;
+  presentationMode: boolean;
   setContent: (content: string) => void;
   toggleDarkMode: () => void;
   setFileName: (name: string) => void;
   acceptSuggestion: (id: string) => void;
   dismissSuggestion: (id: string) => void;
+  setLanguageVariant: (variant: LanguageVariant) => void;
+  convertLanguageVariant: (targetVariant: LanguageVariant) => void;
+  togglePresentationMode: () => void;
+  handleShortcutAction: (action: ShortcutAction) => void;
 }
 
 const DocumentContext = createContext<DocumentContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'manuscript-editor-content';
 const DARK_MODE_KEY = 'manuscript-editor-dark-mode';
+const LANGUAGE_VARIANT_KEY = 'manuscript-editor-language-variant';
 
 export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [content, setContentState] = useState<string>('');
@@ -41,6 +62,14 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return saved ? JSON.parse(saved) : false;
   });
   const [fileName, setFileName] = useState<string>('untitled.txt');
+  const [structureAnalysis, setStructureAnalysis] = useState<StructureAnalysis | null>(null);
+  const [notationErrors, setNotationErrors] = useState<NotationError[]>([]);
+  const [languageAnalysis, setLanguageAnalysis] = useState<LanguageAnalysis | null>(null);
+  const [languageVariant, setLanguageVariantState] = useState<LanguageVariant>(() => {
+    const saved = localStorage.getItem(LANGUAGE_VARIANT_KEY);
+    return (saved as LanguageVariant) || 'US';
+  });
+  const [presentationMode, setPresentationMode] = useState(false);
 
   // Load content from localStorage on mount
   useEffect(() => {
@@ -59,6 +88,18 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         
         const newMetrics = calculateReadabilityMetrics(content);
         setMetrics(newMetrics);
+
+        // Analyze document structure
+        const structure = analyzeDocumentStructure(content);
+        setStructureAnalysis(structure);
+
+        // Validate scientific notation
+        const notation = validateScientificNotation(content);
+        setNotationErrors(notation);
+
+        // Analyze language style
+        const language = analyzeLanguageStyle(content);
+        setLanguageAnalysis(language);
       } else {
         setSuggestions([]);
         setMetrics({
@@ -73,6 +114,9 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           gunningFog: 0,
           passiveVoicePercentage: 0,
         });
+        setStructureAnalysis(null);
+        setNotationErrors([]);
+        setLanguageAnalysis(null);
       }
     }, 1000);
 
@@ -89,12 +133,37 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem(DARK_MODE_KEY, JSON.stringify(isDarkMode));
   }, [isDarkMode]);
 
+  // Save language variant preference
+  useEffect(() => {
+    localStorage.setItem(LANGUAGE_VARIANT_KEY, languageVariant);
+  }, [languageVariant]);
+
   const setContent = useCallback((newContent: string) => {
     setContentState(newContent);
   }, []);
 
   const toggleDarkMode = useCallback(() => {
     setIsDarkMode(prev => !prev);
+  }, []);
+
+  const setLanguageVariant = useCallback((variant: LanguageVariant) => {
+    setLanguageVariantState(variant);
+  }, []);
+
+  const convertLanguageVariant = useCallback((targetVariant: LanguageVariant) => {
+    const converted = convertToVariant(content, targetVariant);
+    setContentState(converted);
+    setLanguageVariantState(targetVariant);
+  }, [content]);
+
+  const togglePresentationMode = useCallback(() => {
+    setPresentationMode(prev => !prev);
+  }, []);
+
+  const handleShortcutAction = useCallback((action: ShortcutAction) => {
+    // This will be implemented by the consuming components
+    // Just a placeholder for the context
+    console.log('Shortcut action:', action);
   }, []);
 
   const acceptSuggestion = useCallback((id: string) => {
@@ -120,11 +189,20 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     metrics,
     isDarkMode,
     fileName,
+    structureAnalysis,
+    notationErrors,
+    languageAnalysis,
+    languageVariant,
+    presentationMode,
     setContent,
     toggleDarkMode,
     setFileName,
     acceptSuggestion,
     dismissSuggestion,
+    setLanguageVariant,
+    convertLanguageVariant,
+    togglePresentationMode,
+    handleShortcutAction,
   };
 
   return (
