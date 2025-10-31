@@ -2,7 +2,7 @@
 
 A comprehensive, **100% FREE**, and open-source manuscript paper editing software with professional-grade features. Edit, analyze, and perfect your academic papers with advanced grammar checking, scientific writing analysis, and real-time feedback.
 
-**✨ NEW: Complete Offline Academic Grammar Checking - 2000+ rules, PhD-level accuracy, 100% OFFLINE!**
+**✨ NEW: Complete Offline Academic Grammar Checking - 90+ core rules (extensible to 2000+), PhD-level accuracy, 100% OFFLINE!**
 
 ![Manuscript Editor Pro](https://github.com/user-attachments/assets/1bf9daf7-9234-4107-8992-f24b04900d85)
 
@@ -13,15 +13,16 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 ## ✨ Key Features
 
 ### 📝 Real-time Text Analysis
-- **Offline Academic Grammar Checking** - **2000+ Rules, PhD-Level Accuracy, 100% OFFLINE!**
-  - **Fundamental Grammar (400+ rules)** - Subject-verb agreement, tenses, articles, commonly confused words
-  - **Academic Tone & Formality (350+ rules)** - Contractions, informal language, first-person usage, absolute terms
-  - **Citation & Methodology (250+ rules)** - Citation formats, Latin abbreviations, methodology verbs, statistical reporting
-  - **Advanced Punctuation (400+ rules)** - Oxford comma, semicolons, hyphens, quotation marks, spacing
-  - **Wordiness & Redundancy (300+ rules)** - Redundant phrases, wordy constructions, passive voice, nominalizations
-  - **Academic Spelling (300+ rules)** - Common misspellings, plural forms, American/British consistency
+- **Offline Academic Grammar Checking** - **90+ Core Rules (Extensible Architecture), PhD-Level Accuracy, 100% OFFLINE!**
+  - **Fundamental Grammar** - Subject-verb agreement, tenses, articles, commonly confused words
+  - **Academic Tone & Formality** - Contractions, informal language, first-person usage, absolute terms
+  - **Citation & Methodology** - Citation formats, Latin abbreviations, methodology verbs, statistical reporting
+  - **Advanced Punctuation** - Oxford comma, semicolons, hyphens, quotation marks, spacing
+  - **Wordiness & Redundancy** - Redundant phrases, wordy constructions, passive voice, nominalizations
+  - **Academic Spelling** - Common misspellings, plural forms, American/British consistency
   - **Context-aware suggestions** - Understands sentence and paragraph structure
   - **100% OFFLINE** - No internet connection required, complete privacy
+  - **Extensible architecture** - Easy to expand to 2000+ rules for specific needs
   - **Specifically designed for PhD-level research papers and dissertations**
 
 ### 📊 Comprehensive Metrics
@@ -134,9 +135,9 @@ The built files will be in the `dist` directory.
 - Choose your preferred format
 - Download instantly
 
-## 🎯 Grammar & Style Rules (2000+ Rules)
+## 🎯 Grammar & Style Rules (90+ Core Rules, Extensible Architecture)
 
-### A. Fundamental Grammar Rules (400+ rules)
+### A. Fundamental Grammar Rules
 - Subject-verb agreement (all forms and tenses)
 - Commonly confused words (affect/effect, than/then, its/it's, etc.)
 - Countable vs uncountable nouns (fewer/less, number/amount)
@@ -144,7 +145,7 @@ The built files will be in the `dist` directory.
 - Verb tense consistency and proper usage
 - Pronoun-antecedent agreement
 
-### B. Academic Tone & Formality (350+ rules)
+### B. Academic Tone & Formality
 - Contractions elimination (don't → do not, it's → it is)
 - Informal language detection (gonna, wanna, stuff, things, big, really)
 - First-person usage warnings (I think, I believe, in my opinion)
@@ -152,7 +153,7 @@ The built files will be in the `dist` directory.
 - Absolute terms warnings (always, never, proves, all)
 - Weak intensifiers (very, really, quite, rather)
 
-### C. Citation & Methodology Language (250+ rules)
+### C. Citation & Methodology Language
 - Citation format validation and corrections
 - "et al." formatting (proper spacing and punctuation)
 - Latin abbreviations (i.e., e.g., vs., etc.) with automatic fixes
@@ -160,7 +161,7 @@ The built files will be in the `dist` directory.
 - Sample size notation (n = X formatting)
 - Statistical reporting (p-values, confidence intervals)
 
-### D. Advanced Punctuation & Formatting (400+ rules)
+### D. Advanced Punctuation & Formatting
 - Oxford comma suggestions for clarity
 - Semicolon and colon usage rules
 - Hyphenation of compound adjectives (well-known, long-term)
@@ -169,14 +170,14 @@ The built files will be in the `dist` directory.
 - Apostrophe usage (possessives, contractions, decades)
 - Ellipsis and parentheses formatting
 
-### E. Wordiness & Redundancy (300+ rules)
+### E. Wordiness & Redundancy
 - Redundant phrases (absolutely essential → essential, past history → history)
 - Wordy constructions (in order to → to, due to the fact that → because)
 - Weak verb phrases (make use of → use, give consideration to → consider)
 - Passive voice suggestions where inappropriate
 - Nominalizations (utilization → use, implementation → implement)
 
-### F. Academic Spelling & Terminology (300+ rules)
+### F. Academic Spelling & Terminology
 - Common academic misspellings (occurred, separate, receive, definitely)
 - Plural/singular academic terms (data, phenomena, criteria, hypotheses, analyses)
 - American vs British spelling consistency (color/colour, analyze/analyse)

@@ -1272,5 +1272,62 @@ export function getRulesBySeverity(severity: 'error' | 'warning' | 'info'): Acad
 
 /**
  * Total rule count
+ * Note: This is the core foundation of 90+ representative rules covering all major categories.
+ * The system is designed to be easily extended to 2000+ rules by:
+ * 1. Adding more specific patterns for each category
+ * 2. Including discipline-specific variations (STEM, Humanities, Social Sciences)
+ * 3. Adding regional variations (US, UK English)
+ * 4. Expanding common error patterns
+ * 
+ * Each category can be expanded 10-20x with specific variations:
+ * - Grammar: 400+ rules (currently 15 representative)
+ * - Academic Tone: 350+ rules (currently 15 representative)
+ * - Citation: 250+ rules (currently 15 representative)
+ * - Punctuation: 400+ rules (currently 15 representative)
+ * - Wordiness: 300+ rules (currently 15 representative)
+ * - Spelling: 300+ rules (currently 15 representative)
  */
 export const TOTAL_RULES = allAcademicRules.length;
+
+/**
+ * Rule expansion notes for production deployment:
+ * 
+ * To reach 2000+ rules, expand each category with:
+ * 
+ * A. Grammar (target: 400 rules):
+ *    - All irregular verb forms
+ *    - Modal verb combinations
+ *    - Conditional structures (all types)
+ *    - Relative clause variations
+ *    - Preposition patterns (100+ common combinations)
+ * 
+ * B. Academic Tone (target: 350 rules):
+ *    - All contraction forms
+ *    - Colloquialisms database
+ *    - Discipline-specific informal terms
+ *    - Regional informal expressions
+ * 
+ * C. Citation (target: 250 rules):
+ *    - All citation styles (APA, MLA, Chicago, Harvard, IEEE)
+ *    - Journal-specific formats
+ *    - In-text citation patterns
+ *    - Bibliography format validation
+ * 
+ * D. Punctuation (target: 400 rules):
+ *    - All punctuation mark combinations
+ *    - Spacing rules for all contexts
+ *    - Quote styles (US, UK, academic)
+ *    - Special character handling
+ * 
+ * E. Wordiness (target: 300 rules):
+ *    - Complete redundancy phrase database
+ *    - Nominalizations list
+ *    - Prepositional phrase chains
+ *    - Passive voice patterns (all tenses)
+ * 
+ * F. Spelling (target: 300 rules):
+ *    - Common academic misspellings database
+ *    - All irregular plurals
+ *    - Technical term variations
+ *    - Regional spelling differences
+ */
