@@ -1,37 +1,53 @@
 # 📝 Manuscript Editor Pro
 
-A comprehensive, free, and open-source manuscript paper editing software with professional-grade features. Edit, analyze, and perfect your academic papers with advanced grammar checking, scientific writing analysis, citation management, and more.
+A comprehensive, free, and open-source manuscript paper editing software with professional-grade features. Edit, analyze, and perfect your academic papers with advanced grammar checking, scientific writing analysis, and real-time feedback.
 
-## 🌟 Features
-
-### Core Editing Features
-- ✅ **Advanced Grammar & Punctuation Checking** - AI-powered grammar analysis
-- ✅ **Scientific Writing Analysis** - Passive voice, wordiness, and clarity checks
-- ✅ **Real-time Suggestions** - Instant feedback as you type
-- ✅ **Track Changes** - Microsoft Word-style revision tracking
-- ✅ **Multi-format Support** - DOCX, PDF, TXT, LaTeX, Markdown
-
-### Professional Analysis Tools
-- 📊 **Readability Metrics** - Flesch, Gunning Fog, SMOG, and more
-- 🎯 **Style Consistency** - Spelling, capitalization, terminology
-- 📚 **Citation Management** - APA, MLA, Chicago, Harvard, IEEE
-- 🔍 **Plagiarism Detection** - Text similarity checking
-- 📈 **Word Count & Statistics** - Detailed document analytics
-
-### Export & Sharing
-- 💾 **Multiple Export Formats** - DOCX, PDF, LaTeX, HTML, Markdown
-- 🌐 **Cloud Integration** - Save and load from cloud storage
-- 👥 **Collaborative Features** - Share and comment
-- 🎨 **Professional Templates** - Journal-specific formatting
+![Manuscript Editor Pro](https://github.com/user-attachments/assets/1bf9daf7-9234-4107-8992-f24b04900d85)
 
 ## 🚀 Live Demo
 
-**Access the app**: [https://DaniyalFaheem.github.io/manuscript-editor-pro](https://DaniyalFaheem.github.io/manuscript-editor-pro)
+**Access the app now**: [https://DaniyalFaheem.github.io/manuscript-editor-pro](https://DaniyalFaheem.github.io/manuscript-editor-pro)
+
+## ✨ Key Features
+
+### 📝 Real-time Text Analysis
+- **Grammar & Punctuation Checking** - Detect common errors like their/there/they're, could of/could have, subject-verb agreement
+- **Style Suggestions** - Identify passive voice, wordy phrases, hedge words, and weak verbs
+- **Repeated Words Detection** - Automatically find and fix duplicate words
+- **Sentence Length Analysis** - Flag overly long sentences (>40 words)
+
+### 📊 Comprehensive Metrics
+- **Flesch Reading Ease Score** - 0-100 scale readability measurement
+- **Flesch-Kincaid Grade Level** - US grade level equivalent
+- **Gunning Fog Index** - Years of education needed to understand
+- **Passive Voice Detection** - Percentage calculation with recommendations
+- **Word Count Statistics** - Words, characters, sentences, paragraphs
+
+### 🔄 Multi-format Support
+- **Import**: DOCX, PDF, TXT, Markdown, LaTeX
+- **Export**: TXT, Markdown, HTML, DOCX, PDF (via print)
+- Drag-and-drop file upload
+- Up to 50MB file size support
+
+### 🎨 User Experience
+- **Dark Mode** - Easy on the eyes for extended writing sessions
+- **Auto-save** - Automatically saves to browser localStorage
+- **Accept/Dismiss Suggestions** - One-click to apply or ignore recommendations
+- **Categorized Suggestions** - Filter by Grammar, Style, or Punctuation
+- **Responsive Design** - Works on desktop, tablet, and mobile
+
+## 🖼️ Screenshots
+
+### Light Mode
+![Light Mode](https://github.com/user-attachments/assets/1bf9daf7-9234-4107-8992-f24b04900d85)
+
+### Dark Mode
+![Dark Mode](https://github.com/user-attachments/assets/9c94b715-b936-405a-8e87-dbcc3065402d)
 
 ## 💻 Local Development
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18 or higher
 - npm or yarn
 
 ### Installation
@@ -47,87 +63,104 @@ cd manuscript-editor-pro
 npm install
 
 # Start development server
-npm start
+npm run dev
 ```
 
-Visit `http://localhost:3000` in your browser.
+Visit `http://localhost:5173/manuscript-editor-pro/` in your browser.
 
-## 📦 Build for Production
+### Build for Production
 
 ```bash
 npm run build
 ```
 
+The built files will be in the `dist` directory.
+
 ## 🛠️ Technology Stack
 
-- **Frontend**: React 18 with TypeScript
-- **Editor**: Monaco Editor (VS Code's editor)
-- **UI Framework**: Material-UI v5
-- **Text Analysis**: Natural, Compromise.js, LanguageTool
-- **File Processing**: Mammoth.js, PDF.js
-- **State Management**: React Context + Hooks
+- **Frontend Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
-- **Deployment**: GitHub Pages
+- **UI Library**: Material-UI (MUI) v5
+- **Text Editor**: Monaco Editor (with textarea fallback)
+- **NLP Libraries**: Compromise.js, Natural
+- **File Processing**: 
+  - Mammoth.js (DOCX parsing)
+  - PDF.js (PDF text extraction)
+  - docx (DOCX generation)
+  - file-saver (File downloads)
+- **State Management**: React Context + Hooks
+- **Deployment**: GitHub Pages via GitHub Actions
 
 ## 📖 Usage Guide
 
-### 1. Upload Document
-- Click "Upload Document" or drag-and-drop your file
-- Supported formats: DOCX, PDF, TXT, MD, TEX
+### 1. Writing Your Manuscript
+- Start typing directly in the editor
+- Your work is auto-saved to browser storage
+- Dark mode available via the moon/sun icon
 
-### 2. Review Suggestions
-- Grammar errors highlighted in red
-- Style suggestions in yellow
-- Click any suggestion to see details
-- Accept/reject individual suggestions
+### 2. Reviewing Suggestions
+- Suggestions appear in the left panel as you type
+- Filter by type: All, Grammar, Style, or Punctuation
+- Click the green checkmark to accept a suggestion
+- Click the red X to dismiss a suggestion
 
-### 3. Analyze Metrics
-- View readability scores in right panel
-- Check word count and statistics
-- Review citation format compliance
+### 3. Checking Metrics
+- View real-time statistics in the right panel
+- Monitor readability scores
+- Track passive voice percentage
+- See word and sentence counts
 
-### 4. Export Your Work
-- Click "Export" button
+### 4. Uploading Documents
+- Click "Upload" button in the header
+- Drag-and-drop or browse for files
+- Supported: DOCX, PDF, TXT, MD, LaTeX
+
+### 5. Exporting Your Work
+- Click "Export" button in the header
 - Choose your preferred format
-- Download with or without tracked changes
+- Download instantly
 
-## 🎨 Features in Detail
+## 🎯 Grammar & Style Rules
 
-### Grammar & Punctuation
+### Grammar Checks
+- their/there/they're usage
+- its/it's confusion
+- could of/would of/should of → could have/would have/should have
 - Subject-verb agreement
-- Tense consistency
-- Comma splices
-- Run-on sentences
-- Missing punctuation
-- Incorrect article usage
+- Repeated words
+- Punctuation spacing
 
-### Scientific Writing Analysis
-- Passive voice detection (with percentage)
-- Wordiness and redundancy
-- Weak verb identification
-- Hedge words and uncertainty markers
-- Proper noun capitalization
-- Technical term consistency
+### Style Suggestions
+- Passive voice detection
+- Wordy phrases (e.g., "in order to" → "to")
+- Hedge words (maybe, possibly, perhaps)
+- Informal language (gonna, wanna, kinda)
+- Weak intensifiers (very, really, quite)
+- Sentence length (>40 words flagged)
 
-### Citation Formats Supported
-- APA 7th Edition
-- MLA 9th Edition
-- Chicago 17th Edition
-- Harvard Style
-- IEEE Style
-- Nature/Science Journal Styles
+## 📊 Readability Metrics Explained
 
-### Readability Metrics
-- **Flesch Reading Ease**: 0-100 scale
-- **Flesch-Kincaid Grade**: US grade level
-- **Gunning Fog**: Years of education needed
-- **SMOG Index**: Readability age
-- **Coleman-Liau**: Grade level
-- **Automated Readability Index (ARI)**
+- **Flesch Reading Ease (0-100)**: Higher scores indicate easier readability
+  - 90-100: Very Easy (5th grade)
+  - 60-70: Standard (8th-9th grade)
+  - 0-30: Very Difficult (College graduate)
+
+- **Flesch-Kincaid Grade Level**: US school grade level required to understand the text
+
+- **Gunning Fog Index**: Years of formal education needed to understand the text on first reading
+
+- **Passive Voice %**: Percentage of sentences using passive voice. Aim for <10% for clear, direct writing.
+
+## 🔒 Privacy & Security
+
+- **100% Client-Side Processing**: All text analysis happens in your browser
+- **No Data Sent to Servers**: Your documents never leave your device
+- **Local Storage Only**: Auto-save uses browser localStorage
+- **Open Source**: Full transparency - inspect the code yourself
 
 ## 🤝 Contributing
 
-We welcome contributions! Please follow these steps:
+Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -137,37 +170,40 @@ We welcome contributions! Please follow these steps:
 
 ### Development Guidelines
 - Follow TypeScript best practices
-- Write unit tests for new features
-- Update documentation
-- Follow existing code style
+- Write clean, readable code
+- Update documentation for new features
+- Test thoroughly before submitting PR
 
 ## 📄 License
 
-MIT License - feel free to use this project for any purpose!
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- LanguageTool for grammar checking API
-- Natural Language Processing libraries
-- Open-source community
+- Natural Language Processing libraries: Compromise.js, Natural
+- File processing libraries: Mammoth.js, PDF.js, docx
+- UI components: Material-UI
+- Editor: Monaco Editor (VS Code's editor)
 
-## 📞 Support
+## 📞 Support & Contact
 
 - 🐛 [Report Bugs](https://github.com/DaniyalFaheem/manuscript-editor-pro/issues)
 - 💡 [Request Features](https://github.com/DaniyalFaheem/manuscript-editor-pro/issues)
-- 📧 Contact: [Your Email]
+- 📧 Contact: Open an issue for questions
 
 ## 🗺️ Roadmap
 
-- [ ] AI-powered paraphrasing
+- [ ] Advanced AI-powered grammar checking
 - [ ] Multi-language support
-- [ ] Real-time collaboration
-- [ ] Mobile app version
+- [ ] Real-time collaboration features
 - [ ] Browser extension
-- [ ] Integration with Zotero/Mendeley
-- [ ] Voice dictation
-- [ ] Advanced plagiarism detection
+- [ ] Mobile app version
+- [ ] Integration with reference managers (Zotero, Mendeley)
+- [ ] Custom dictionary and style rules
+- [ ] Export to LaTeX with formatting
 
 ---
 
-⭐ Star this repository if you find it helpful!
+⭐ **Star this repository if you find it helpful!**
+
+Made with ❤️ for students, researchers, and writers worldwide.
