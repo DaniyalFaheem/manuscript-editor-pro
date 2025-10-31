@@ -4,7 +4,7 @@
  */
 
 import { saveAs } from 'file-saver';
-import { Document, Paragraph, TextRun, Packer, AlignmentType } from 'docx';
+import { Document, Paragraph, TextRun, Packer } from 'docx';
 import { jsPDF } from 'jspdf';
 
 export interface ExportOptions {
@@ -227,7 +227,6 @@ async function exportAsPdf(
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const maxWidth = pageWidth - margins.left - margins.right;
-  const maxHeight = pageHeight - margins.top - margins.bottom;
 
   let y = margins.top;
   const lineHeight = fontSize * 0.3527 * lineSpacing; // Convert pt to mm

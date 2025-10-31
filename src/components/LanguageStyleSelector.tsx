@@ -9,10 +9,9 @@ import {
   InputLabel,
   Button,
   Alert,
-  Chip,
-  LinearProgress,
-  SelectChangeEvent
+  Chip
 } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material';
 import {
   Language as LanguageIcon,
   CheckCircle as CheckCircleIcon,
