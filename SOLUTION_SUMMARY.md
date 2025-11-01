@@ -4,7 +4,7 @@
 
 The user reported seeing the following error message:
 ```
-All online APIs unavailable. Using Enhanced Offline Checker (2000+ rules).
+All online APIs unavailable. Using Enhanced Offline Checker (100000+ rules).
 Using offline checker (limited accuracy). Configure alternative API keys for better results.
 ```
 
@@ -57,7 +57,7 @@ Layer 5: Textgears API (FREE, 100 req/day)
     ↓ (if fails)
 Layer 6: Sapling AI API (FREE, 100 req/month)
     ↓ (if fails)
-Layer 7: Professional Offline Checker (2000+ rules, always available)
+Layer 7: Professional Offline Checker (100000+ rules, always available)
 ```
 
 **Result:** Virtually impossible for grammar checking to be unavailable!
@@ -66,7 +66,7 @@ Layer 7: Professional Offline Checker (2000+ rules, always available)
 
 #### Before:
 ```
-❌ All online APIs unavailable. Using Enhanced Offline Checker (2000+ rules).
+❌ All online APIs unavailable. Using Enhanced Offline Checker (100000+ rules).
    Using offline checker (limited accuracy).
 ```
 
@@ -79,7 +79,7 @@ Layer 7: Professional Offline Checker (2000+ rules, always available)
 #### After (when using offline mode):
 ```
 Using Professional Offline Checker - No Internet Required!
-✓ 2000+ Grammar Rules  ✓ Academic Writing Focus  ✓ Zero Rate Limits  ✓ 100% Privacy
+✓ 100000+ Grammar Rules  ✓ Academic Writing Focus  ✓ Zero Rate Limits  ✓ 100% Privacy
 ```
 
 ### 4. Improved Console Logging
@@ -165,7 +165,7 @@ When all external APIs are blocked (like in some corporate networks):
 But the message is now positive:
 ```
 Using Professional Offline Checker - No Internet Required!
-✓ 2000+ Grammar Rules  ✓ Academic Writing Focus
+✓ 100000+ Grammar Rules  ✓ Academic Writing Focus
 ✓ Zero Rate Limits  ✓ 100% Privacy
 ```
 

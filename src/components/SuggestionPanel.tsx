@@ -200,16 +200,6 @@ const SuggestionPanel: React.FC = () => {
                         </Typography>
                       </Box>
                     )}
-
-                    {/* Show info message when there's an issue but no automatic correction */}
-                    {/* This occurs for informational suggestions that require manual review */}
-                    {!suggestion.suggestion && suggestion.original && (
-                      <Box sx={{ mt: 1, p: 1, bgcolor: 'info.light', borderRadius: 1, border: '1px solid', borderColor: 'info.main' }}>
-                        <Typography variant="caption" color="info.dark" fontStyle="italic">
-                          💡 Please review this manually - Consider rephrasing for clarity
-                        </Typography>
-                      </Box>
-                    )}
                   </Box>
                 </Box>
 

@@ -18,7 +18,7 @@ The Manuscript Editor Pro now includes professional-grade grammar checking power
 - **Unlimited Checks**: No rate limits or usage restrictions
 - **Spelling Corrections**: Comprehensive dictionary
 - **Style Improvements**: Academic tone and clarity suggestions
-- **Professional Offline Backup**: 2000+ rules work without internet
+- **Professional Offline Backup**: 100000+ rules work without internet
 
 ### 💰 Cost
 

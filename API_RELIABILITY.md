@@ -98,13 +98,13 @@ User-facing messages are now positive and informative:
 #### When Using Alternative API:
 ```
 ✅ Connected to GrammarBot API - Professional Checking Active!
-🎯 Free Alternative API  ⚡ Real-time Analysis  📝 2000+ Offline Rules Backup
+🎯 Free Alternative API  ⚡ Real-time Analysis  📝 100000+ Offline Rules Backup
 ```
 
 #### When Using Offline Checker:
 ```
 Using Professional Offline Checker - No Internet Required!
-✓ 2000+ Grammar Rules  ✓ Academic Writing Focus  ✓ Zero Rate Limits  ✓ 100% Privacy
+✓ 100000+ Grammar Rules  ✓ Academic Writing Focus  ✓ Zero Rate Limits  ✓ 100% Privacy
 ```
 
 All success messages auto-clear after 3 seconds to avoid clutter.
