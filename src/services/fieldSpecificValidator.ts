@@ -351,32 +351,68 @@ export function validateUnitsAndMeasurements(text: string): Suggestion[] {
     }
   }
   
-  // Check for missing units
-  const numberPattern = /\b\d+\.?\d*\s*(?![a-zA-Z%°])/g;
+  // Check for missing units - with improved context detection
+  // Only match numbers that are likely measurements (isolated numbers with spaces around them)
+  const numberPattern = /(?:^|\s)(\d+\.?\d*)(?:\s|$)/g;
   let match;
   
   while ((match = numberPattern.exec(text)) !== null) {
-    // Check context - skip if it's clearly not a measurement
-    const context = text.substring(Math.max(0, match.index - 20), match.index + match[0].length + 20).toLowerCase();
-    const skipPatterns = ['page', 'table', 'figure', 'section', 'chapter', 'year', 'participants', 'n =', 'p =', 'r ='];
+    const numberIndex = match.index + match[0].indexOf(match[1]);
+    const number = match[1];
     
-    if (!skipPatterns.some(pattern => context.includes(pattern))) {
-      const pos = getPositionFromOffset(text, match.index);
-      suggestions.push({
-        id: `units-missing-${match.index}`,
-        type: 'style',
-        severity: 'info',
-        message: 'Number without units - ensure measurement units are specified',
-        original: match[0],
-        suggestion: 'Add appropriate units if this is a measurement',
-        startLine: pos.line,
-        endLine: pos.line,
-        startColumn: pos.column,
-        endColumn: pos.column + match[0].length,
-        startOffset: match.index,
-        endOffset: match.index + match[0].length,
-      });
+    // Check context - skip if it's clearly not a measurement
+    const contextBefore = text.substring(Math.max(0, numberIndex - 30), numberIndex).toLowerCase();
+    const contextAfter = text.substring(numberIndex + number.length, Math.min(text.length, numberIndex + number.length + 30)).toLowerCase();
+    const fullContext = contextBefore + contextAfter;
+    
+    // Enhanced skip patterns for academic writing
+    const skipPatterns = [
+      'page', 'table', 'figure', 'fig', 'section', 'chapter', 'appendix',
+      'year', 'participants', 'n =', 'p =', 'r =', 't =', 'f =', 'χ²', 'chi-square',
+      'reference', 'ref', 'citation', 'cite', '[', ']', '(', ')',
+      'sample', 'group', 'study', 'trial', 'experiment',
+      'version', 'step', 'phase', 'stage', 'week', 'day', 'month',
+      'equation', 'formula', 'model', 'id', 'number', 'no.',
+      'df =', 'α =', 'β =', 'r² =', 'sd =', 'm =', 'age'
+    ];
+    
+    // Check if this is a heading number (e.g., "2.6", "3.1.2")
+    const isHeadingNumber = /^\d+(\.\d+)+/.test(number) || 
+                           (contextBefore.match(/\n\s*$/) && contextAfter.match(/^\s+[A-Z]/));
+    
+    // Check if this is a reference citation (e.g., "[35]", "(35)")
+    const isReferenceCitation = /[[(]\s*$/.test(contextBefore) && /^\s*[\])]/.test(contextAfter);
+    
+    // Check if this is a year (1900-2099)
+    const isYear = /^(19|20)\d{2}$/.test(number);
+    
+    // Check if number is followed by units or measurement indicators
+    const hasUnitsAfter = /^\s*[a-zA-Z%°]/.test(contextAfter);
+    
+    // Skip if any skip pattern is found, or if it's a special case
+    if (skipPatterns.some(pattern => fullContext.includes(pattern)) || 
+        isHeadingNumber || 
+        isReferenceCitation || 
+        isYear ||
+        hasUnitsAfter) {
+      continue;
     }
+    
+    const pos = getPositionFromOffset(text, numberIndex);
+    suggestions.push({
+      id: `units-missing-${numberIndex}`,
+      type: 'style',
+      severity: 'info',
+      message: 'Number without units - ensure measurement units are specified',
+      original: number,
+      suggestion: 'Add appropriate units if this is a measurement',
+      startLine: pos.line,
+      endLine: pos.line,
+      startColumn: pos.column,
+      endColumn: pos.column + number.length,
+      startOffset: numberIndex,
+      endOffset: numberIndex + number.length,
+    });
   }
   
   return suggestions;
