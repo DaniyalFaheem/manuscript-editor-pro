@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Paper,
   Typography,
@@ -22,10 +22,13 @@ const SuggestionPanel: React.FC = () => {
   const [filter, setFilter] = useState<string>('all');
   const [showLegend, setShowLegend] = useState<boolean>(false);
 
-  const filteredSuggestions = suggestions.filter(s => {
-    if (filter === 'all') return true;
-    return s.type === filter;
-  });
+  // Memoize filtered suggestions to avoid re-filtering on every render
+  const filteredSuggestions = useMemo(() => {
+    return suggestions.filter(s => {
+      if (filter === 'all') return true;
+      return s.type === filter;
+    });
+  }, [suggestions, filter]);
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {

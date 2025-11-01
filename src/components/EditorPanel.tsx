@@ -146,11 +146,22 @@ const EditorPanel: React.FC = () => {
                 onMount={handleEditorDidMount}
                 theme={isDarkMode ? 'vs-dark' : 'vs-light'}
                 options={{
-                    minimap: { enabled: true },
+                    minimap: { enabled: true, maxColumn: 80 }, // Limit minimap width for performance
                     wordWrap: 'on',
                     lineNumbers: 'on',
                     fontSize: 14,
-                    padding: { top: 10 }
+                    padding: { top: 10 },
+                    // Performance optimizations
+                    scrollBeyondLastLine: false,
+                    renderLineHighlight: 'line',
+                    smoothScrolling: true,
+                    cursorSmoothCaretAnimation: 'on',
+                    // Reduce rendering overhead
+                    renderValidationDecorations: 'on',
+                    quickSuggestions: false, // Disable quick suggestions for better performance
+                    parameterHints: { enabled: false },
+                    // Memory optimization
+                    maxTokenizationLineLength: 1000,
                 }}
             />
         </Paper>

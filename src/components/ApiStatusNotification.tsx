@@ -18,19 +18,19 @@ const ApiStatusNotification: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    // Check for API errors every 2 seconds
+    // Check for API errors every 5 seconds (reduced frequency for better performance)
     const interval = setInterval(() => {
       if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError) {
         const error = (window as any).__lastLanguageToolError;
-        // Only show if error is recent (within last 10 seconds) and different from current
-        if (Date.now() - error.timestamp < 10000) {
+        // Only show if error is recent (within last 15 seconds) and different from current
+        if (Date.now() - error.timestamp < 15000) {
           if (!errorInfo || error.timestamp !== errorInfo.timestamp) {
             setErrorInfo(error);
             setOpen(true);
           }
         }
       }
-    }, 2000);
+    }, 5000); // Reduced from 2000ms to 5000ms
 
     return () => clearInterval(interval);
   }, [errorInfo]);
