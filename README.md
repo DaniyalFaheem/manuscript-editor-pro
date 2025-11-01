@@ -3,12 +3,12 @@
 A comprehensive, **100% FREE**, and open-source manuscript paper editing software with professional-grade features. Specifically designed for PhD dissertations, M.Phil theses, and international research papers. Edit, analyze, and perfect your academic papers with advanced grammar checking, citation validation, statistical notation verification, and real-time feedback.
 
 **✨ NEW: PhD-Level Enhancements for Research Papers!**
+- **Online Grammar Checking** - LanguageTool API integration for maximum accuracy (requires internet)
 - **Citation Validation** - APA 7, MLA 9, Chicago 17, IEEE, Harvard with auto-detection
 - **Statistical Notation Checking** - p-values, confidence intervals, effect sizes, sample sizes
 - **Academic Structure Validation** - Ensures all required sections for dissertations/theses
 - **Field-Specific Terminology** - Validates discipline-specific language (STEM, Medicine, Social Sciences, etc.)
 - **Enhanced Plagiarism Detection** - Self-plagiarism, excessive quotations, missing attributions
-- **100% OFFLINE** - Complete privacy, no data leaves your device
 
 ![Manuscript Editor Pro](https://github.com/user-attachments/assets/1bf9daf7-9234-4107-8992-f24b04900d85)
 
@@ -19,7 +19,7 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 ## ✨ Key Features
 
 ### 📝 Real-time Text Analysis
-- **Offline Academic Grammar Checking** - **90+ Core Rules (Extensible Architecture), PhD-Level Accuracy, 100% OFFLINE!**
+- **Online Grammar Checking via LanguageTool API** - **Professional-grade accuracy, PhD-Level quality!**
   - **Fundamental Grammar** - Subject-verb agreement, tenses, articles, commonly confused words
   - **Academic Tone & Formality** - Contractions, informal language, first-person usage, absolute terms
   - **Citation & Methodology** - Citation formats, Latin abbreviations, methodology verbs, statistical reporting
@@ -27,8 +27,8 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
   - **Wordiness & Redundancy** - Redundant phrases, wordy constructions, passive voice, nominalizations
   - **Academic Spelling** - Common misspellings, plural forms, American/British consistency
   - **Context-aware suggestions** - Understands sentence and paragraph structure
-  - **100% OFFLINE** - No internet connection required, complete privacy
-  - **Extensible architecture** - Easy to expand to 2000+ rules for specific needs
+  - **Maximum Accuracy** - Online API provides superior results compared to offline rule-based checking
+  - **Free to Use** - No API key required, unlimited usage
   - **Specifically designed for PhD-level research papers and dissertations**
 
 ### 📚 Citation Management & Validation (NEW!)
@@ -126,7 +126,7 @@ npm install
 npm run dev
 ```
 
-That's it! Complete validation system (grammar, citations, statistics, structure, field-specific) works instantly with no configuration or internet required.
+That's it! Complete validation system works instantly with no configuration. Grammar checking requires internet for maximum accuracy via LanguageTool API. Specialized validators (citations, statistics, structure, field-specific) work independently.
 
 Visit `http://localhost:5173/manuscript-editor-pro/` in your browser.
 
@@ -145,14 +145,14 @@ The built files will be in the `dist` directory.
 - **UI Library**: Material-UI (MUI) v5
 - **Text Editor**: Monaco Editor (with textarea fallback)
 - **Validation System**: 
-  - **Grammar Checker** - 90+ core rules (extensible to 2000+), **100% OFFLINE, PhD-level accuracy**
+  - **Grammar Checker** - LanguageTool API integration for maximum accuracy (requires internet)
   - **Citation Validator** - APA, MLA, Chicago, IEEE, Harvard with auto-detection
   - **Statistics Checker** - APA 7th edition compliance for all statistical notation
   - **Structure Analyzer** - Document type-specific validation
   - **Field Validator** - Discipline-specific terminology and methodology
   - **Plagiarism Detector** - Multi-strategy originality checking
   - Specifically designed for PhD dissertations, theses, and research papers
-  - No internet connection required, complete privacy
+  - Professional-grade accuracy with online grammar checking
 - **NLP Libraries**: Compromise.js, Natural (for supplementary analysis)
 - **File Processing**: 
   - Mammoth.js (DOCX parsing)
@@ -254,20 +254,19 @@ The built files will be in the `dist` directory.
 
 ## ⚙️ Advanced Validation System
 
-The editor uses a **comprehensive offline validation system** designed specifically for PhD-level research papers and international journal submissions.
+The editor uses a **comprehensive online and specialized validation system** designed specifically for PhD-level research papers and international journal submissions.
 
 ### Key Advantages
-- **100% OFFLINE** - No internet connection required for any validation
-- **Complete Privacy** - Your text never leaves your device
+- **Maximum Accuracy** - Online grammar checking via LanguageTool API for superior results
 - **No Configuration** - Works instantly out of the box
 - **PhD-Level Accuracy** - Designed for dissertations, theses, and journal articles
 - **Multi-Domain Support** - Validates grammar, citations, statistics, structure, and field-specific terminology
 - **Context-Aware** - Understands document structure and academic conventions
 - **Performance** - Can check 50,000+ words efficiently
-- **100% FREE** - No API keys, no limits, no restrictions
+- **100% FREE** - No API keys required, unlimited usage
 
 ### Validation Modules
-1. **Grammar Checker** - 90+ core rules (extensible to 2000+)
+1. **Grammar Checker** - LanguageTool API integration for professional-grade accuracy
 2. **Citation Validator** - 5 major citation styles with cross-referencing
 3. **Statistics Validator** - APA 7th edition compliance for all statistical notation
 4. **Structure Analyzer** - Document type-specific structure validation
@@ -276,14 +275,13 @@ The editor uses a **comprehensive offline validation system** designed specifica
 
 ## 🔒 Privacy & Security
 
-- **100% Offline Processing**: All grammar checking happens in your browser - text never sent to any server
-- **Complete Privacy**: Your documents never leave your device
-- **No API Calls**: Zero external dependencies for grammar checking
+- **Online Grammar Checking**: Uses LanguageTool API for maximum accuracy (requires internet connection)
+- **Specialized Validators**: Citation, statistics, structure, and field-specific checks process locally
 - **No Data Storage**: Your documents are never stored on external servers
 - **Local Storage Only**: Auto-save uses browser localStorage
 - **Open Source**: Full transparency - inspect the code yourself
-- **100% FREE**: No hidden costs, no premium features, no paywalls
-- **Academic Data Protection**: Perfect for sensitive research, proprietary data, and confidential manuscripts
+- **100% FREE**: No hidden costs, no premium features, no paywalls, no API keys needed
+- **Flexible**: Grammar checking requires internet, but specialized validators work independently
 
 ## 🤝 Contributing
 
@@ -321,10 +319,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🗺️ Roadmap
 
 ### ✅ Completed Features
-- [x] **Offline grammar checking** - 90+ core rules, extensible to 2000+, PhD-level accuracy
+- [x] **Online grammar checking** - LanguageTool API integration for maximum accuracy
 - [x] **Academic writing focus** - Specialized rules for research papers
 - [x] **Context-aware analysis** - Sentence and paragraph structure understanding
-- [x] **Complete privacy** - No data leaves your device, 100% offline
 - [x] **Citation validation** - APA, MLA, Chicago, IEEE, Harvard with auto-detection
 - [x] **Statistical notation checking** - p-values, CI, effect sizes, sample sizes
 - [x] **Academic structure validation** - Document type-specific requirements

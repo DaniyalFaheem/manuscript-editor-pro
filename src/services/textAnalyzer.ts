@@ -1,5 +1,4 @@
 import type { Suggestion } from '../types';
-import { checkAcademicGrammar } from './offlineAcademicChecker';
 import { checkWithLanguageTool } from './languageToolService';
 import { validateAllCitations, detectCitationStyle } from './citationValidator';
 import { validateAllStatistics } from './enhancedStatisticsValidator';
@@ -16,11 +15,13 @@ const log = (...args: unknown[]) => {
 /**
  * Analyze text and return all suggestions
  * ENHANCED: Comprehensive validation for PhD-level research papers
+ * - Grammar checking via LanguageTool API (requires internet for maximum accuracy)
  * - Citation validation (APA, MLA, Chicago, IEEE, Harvard)
  * - Statistical notation (p-values, confidence intervals, effect sizes)
  * - Academic structure (sections, headings, methodology)
  * - Field-specific terminology (STEM, Humanities, Social Sciences, etc.)
- * Uses LanguageTool API for professional accuracy and falls back to offline rules if unavailable
+ * 
+ * Note: Grammar checking requires internet connection. Specialized validators work independently.
  */
 export async function analyzeText(text: string): Promise<Suggestion[]> {
   if (!text || text.trim().length === 0) {
@@ -29,8 +30,8 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
 
   const allSuggestions: Suggestion[] = [];
 
+  // PRIMARY: Use LanguageTool API for grammar checking (requires internet for maximum accuracy)
   try {
-    // PRIMARY: Try LanguageTool API first (95%+ accuracy)
     log('Checking with LanguageTool API...');
     const apiSuggestions = await checkWithLanguageTool(text);
     
@@ -41,32 +42,9 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       log('LanguageTool returned no suggestions');
     }
   } catch (error) {
-    if (DEBUG) if (DEBUG) console.error('LanguageTool API failed:', error);
-  }
-
-  // BACKUP: Add offline academic grammar checker
-  try {
-    log('Adding offline grammar checks...');
-    const offlineSuggestions = checkAcademicGrammar(text);
-    
-    if (offlineSuggestions && offlineSuggestions.length > 0) {
-      log(`Offline checker found ${offlineSuggestions.length} issues`);
-      
-      // Merge with API suggestions, avoiding duplicates
-      for (const suggestion of offlineSuggestions) {
-        // Check if not already found by LanguageTool
-        const isDuplicate = allSuggestions.some(
-          s => s.startOffset === suggestion.startOffset && 
-               s.endOffset === suggestion.endOffset
-        );
-        
-        if (!isDuplicate) {
-          allSuggestions.push(suggestion);
-        }
-      }
-    }
-  } catch (error) {
-    if (DEBUG) console.error('Offline checker failed:', error);
+    if (DEBUG) console.error('LanguageTool API failed:', error);
+    // Note: Grammar checking requires internet connection for maximum accuracy
+    // If API fails, only specialized validators (citations, statistics, structure) will run
   }
 
   // ENHANCED: Citation validation for research papers

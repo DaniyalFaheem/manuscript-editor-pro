@@ -294,7 +294,12 @@ While the current implementation is comprehensive, potential future additions in
 
 These enhancements transform Manuscript Editor Pro from a good grammar checker into a comprehensive, PhD-level academic writing platform. The tool now provides professional-grade validation across all aspects of academic writing, from grammar and citations to statistical notation and field-specific terminology.
 
-Most importantly, all features remain **100% offline**, ensuring complete privacy for sensitive research and proprietary data. This makes it ideal for:
+The tool uses **online grammar checking via LanguageTool API** for maximum accuracy, while specialized validators (citations, statistics, structure, field-specific) can process independently. This hybrid approach provides:
+- **Maximum Accuracy**: Professional-grade grammar checking via API
+- **No API Keys**: Free LanguageTool API access without registration
+- **Specialized Validation**: Citations, statistics, and structure checks process locally
+
+This makes it ideal for:
 - PhD dissertations
 - M.Phil theses
 - Journal article submissions
