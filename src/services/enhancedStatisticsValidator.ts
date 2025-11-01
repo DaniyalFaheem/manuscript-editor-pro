@@ -126,7 +126,7 @@ export function validateConfidenceIntervals(text: string): Suggestion[] {
   const suggestions: Suggestion[] = [];
   
   // Pattern: 95% CI [lower, upper]
-  const ciPattern = /(\d+)%\s*CI\s*[\[(](-?[\d.]+)\s*,\s*(-?[\d.]+)[\])]/gi;
+  const ciPattern = /(\d+)%\s*CI\s*[[(](-?[\d.]+)\s*,\s*(-?[\d.]+)[\])]/gi;
   
   let match;
   while ((match = ciPattern.exec(text)) !== null) {

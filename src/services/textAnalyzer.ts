@@ -4,10 +4,15 @@ import { checkWithLanguageTool } from './languageToolService';
 import { validateAllCitations, detectCitationStyle } from './citationValidator';
 import { validateAllStatistics } from './enhancedStatisticsValidator';
 import { validateStructure, validateHeadingHierarchy, validateNumberedElements, validateMethodologySection } from './academicStructureValidator';
+import { validateAllFieldSpecific, detectAcademicField } from './fieldSpecificValidator';
 
 /**
  * Analyze text and return all suggestions
- * ENHANCED: Now includes citation validation, statistical notation, and academic structure checks
+ * ENHANCED: Comprehensive validation for PhD-level research papers
+ * - Citation validation (APA, MLA, Chicago, IEEE, Harvard)
+ * - Statistical notation (p-values, confidence intervals, effect sizes)
+ * - Academic structure (sections, headings, methodology)
+ * - Field-specific terminology (STEM, Humanities, Social Sciences, etc.)
  * Uses LanguageTool API for professional accuracy and falls back to offline rules if unavailable
  */
 export async function analyzeText(text: string): Promise<Suggestion[]> {
@@ -118,6 +123,24 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     }
   } catch (error) {
     console.error('Structure validation failed:', error);
+  }
+
+  // ENHANCED: Field-specific terminology and methodology validation
+  try {
+    const wordCount = text.split(/\s+/).length;
+    if (wordCount > 200) { // Only for substantial documents
+      console.log('Validating field-specific terminology...');
+      const academicField = detectAcademicField(text);
+      console.log(`Detected academic field: ${academicField}`);
+      
+      const fieldSuggestions = validateAllFieldSpecific(text, academicField);
+      if (fieldSuggestions.length > 0) {
+        console.log(`Found ${fieldSuggestions.length} field-specific issues`);
+        allSuggestions.push(...fieldSuggestions);
+      }
+    }
+  } catch (error) {
+    console.error('Field-specific validation failed:', error);
   }
 
   // Sort by position

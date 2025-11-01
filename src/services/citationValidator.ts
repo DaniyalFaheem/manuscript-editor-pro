@@ -156,7 +156,7 @@ export function validateIEEECitations(text: string): CitationMatch[] {
     
     // Parse numbers
     const nums: number[] = [];
-    const parts = numbers.split(/[,\-]/);
+    const parts = numbers.split(/[,-]/);
     for (const part of parts) {
       const num = parseInt(part.trim());
       if (num > 0 && num < 10000) {
@@ -463,7 +463,7 @@ export function validateAllCitations(text: string, preferredStyle?: CitationStyl
  */
 export function validateDOI(doi: string): boolean {
   // DOI format: 10.xxxx/xxxxx
-  const doiPattern = /^10\.\d{4,}\/[-._;()\/:A-Za-z0-9]+$/;
+  const doiPattern = /^10\.\d{4,}\/[-._;()/:A-Za-z0-9]+$/;
   return doiPattern.test(doi);
 }
 

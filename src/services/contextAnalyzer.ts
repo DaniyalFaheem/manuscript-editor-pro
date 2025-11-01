@@ -14,7 +14,7 @@ export function splitIntoSentences(text: string): string[] {
   }
 
   // Replace common abbreviations to avoid false sentence breaks
-  let processed = text
+  const processed = text
     .replace(/\be\.g\./gi, 'e_g_')
     .replace(/\bi\.e\./gi, 'i_e_')
     .replace(/\bet\s+al\./gi, 'et_al_')

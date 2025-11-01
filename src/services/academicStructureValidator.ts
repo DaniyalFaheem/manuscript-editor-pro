@@ -454,7 +454,7 @@ export function validateNumberedElements(text: string): Suggestion[] {
   const suggestions: Suggestion[] = [];
   
   // Extract table numbers
-  const tablePattern = /Table\s+(\d+)[:\.]?/gi;
+  const tablePattern = /Table\s+(\d+)[:.]?/gi;
   const tableNumbers: number[] = [];
   let match;
   
@@ -483,7 +483,7 @@ export function validateNumberedElements(text: string): Suggestion[] {
   }
   
   // Extract figure numbers
-  const figurePattern = /Figure\s+(\d+)[:\.]?/gi;
+  const figurePattern = /Figure\s+(\d+)[:.]?/gi;
   const figureNumbers: number[] = [];
   
   while ((match = figurePattern.exec(text)) !== null) {
