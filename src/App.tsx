@@ -6,6 +6,7 @@ import EditorPanel from './components/EditorPanel';
 import SuggestionPanel from './components/SuggestionPanel';
 import MetricsPanel from './components/MetricsPanel';
 import PresentationMode from './components/PresentationMode';
+import ApiStatusNotification from './components/ApiStatusNotification';
 
 import { setupKeyboardShortcuts } from './services/keyboardShortcuts';
 import type { ShortcutAction } from './types';
@@ -70,6 +71,7 @@ const AppContent: React.FC = () => {
       <CssBaseline />
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Header />
+        <ApiStatusNotification />
         <Box sx={{ flex: 1, overflow: 'hidden', p: 2, display: 'flex', gap: 2 }}>
           <Box sx={{ flex: '0 0 25%', minWidth: 0, height: '100%' }}>
             <SuggestionPanel />

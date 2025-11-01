@@ -33,27 +33,47 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
 
   // PRIMARY: Use LanguageTool API for grammar checking (requires internet for maximum accuracy)
   let languageToolSuccess = false;
+  let apiErrorMessage = '';
+  
   try {
     log('Checking with LanguageTool API...');
     const apiSuggestions = await checkWithLanguageTool(text);
     
-    if (apiSuggestions && apiSuggestions.length > 0) {
+    if (apiSuggestions && apiSuggestions.length >= 0) {
       log(`LanguageTool found ${apiSuggestions.length} issues`);
       allSuggestions.push(...apiSuggestions);
       languageToolSuccess = true;
-    } else {
-      log('LanguageTool returned no suggestions');
-      // Even with no suggestions, if API call succeeded, don't fallback
-      languageToolSuccess = true;
+      
+      // Clear any previous error notifications
+      if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError) {
+        delete (window as any).__lastLanguageToolError;
+      }
     }
   } catch (error) {
-    // Always log API failures so users know grammar checking isn't working
-    console.warn('LanguageTool API failed. Falling back to offline grammar checking.', error);
+    // Capture error details for user notification
+    if (error instanceof Error) {
+      apiErrorMessage = error.message;
+      
+      // Store error in window for UI to display
+      if (typeof window !== 'undefined') {
+        (window as any).__lastLanguageToolError = {
+          message: 'LanguageTool API is currently unavailable. Using offline grammar checking.',
+          details: apiErrorMessage,
+          timestamp: Date.now()
+        };
+      }
+      
+      console.error('LanguageTool API failed after retries:', apiErrorMessage);
+    }
     languageToolSuccess = false;
   }
 
   // FALLBACK: Use offline academic grammar checker when LanguageTool API fails
+  // Note: Offline checker has limited accuracy compared to LanguageTool API
   if (!languageToolSuccess) {
+    console.warn('⚠️ Using offline grammar checker - accuracy may be reduced');
+    console.warn('💡 Tip: Check your internet connection for better grammar checking');
+    
     try {
       log('Using offline academic grammar checker...');
       const offlineSuggestions = checkAcademicGrammar(text);
