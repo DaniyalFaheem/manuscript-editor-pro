@@ -19,6 +19,15 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 ## ✨ Key Features
 
 ### 📝 Real-time Text Analysis
+- **🎨 Color-Coded Inline Highlighting** - **NEW! Grammarly-style error detection**
+  - **Red wavy underlines** - Grammar errors with high severity
+  - **Orange wavy underlines** - Grammar warnings and suggestions
+  - **Blue wavy underlines** - Style improvements and recommendations
+  - **Yellow wavy underlines** - Punctuation and formatting issues
+  - **Red dotted underlines** - Spelling errors and typos
+  - **Hover tooltips** - See error type and correction without leaving the editor
+  - **Minimap integration** - Errors shown in editor overview for quick navigation
+  - **Color legend** - Collapsible guide explains what each color represents
 - **Online Grammar Checking via LanguageTool API** - **Professional-grade accuracy, PhD-Level quality!**
   - **Fundamental Grammar** - Subject-verb agreement, tenses, articles, commonly confused words
   - **Academic Tone & Formality** - Contractions, informal language, first-person usage, absolute terms
@@ -92,8 +101,12 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 ### 🎨 User Experience
 - **Dark Mode** - Easy on the eyes for extended writing sessions
 - **Auto-save** - Automatically saves to browser localStorage
-- **Accept/Dismiss Suggestions** - One-click to apply or ignore recommendations
+- **Inline Error Highlighting** - Color-coded underlines show errors directly in the editor
+- **Enhanced Suggestion Display** - Clear "Issue" and "Correction" boxes with visual feedback
+- **Accept/Dismiss Suggestions** - One-click to apply or ignore recommendations with prominent buttons
 - **Categorized Suggestions** - Filter by Grammar, Style, or Punctuation
+- **Hover Tooltips** - See corrections without clicking, directly in the editor
+- **Color Legend** - Expandable guide showing what each highlight color means
 - **Responsive Design** - Works on desktop, tablet, and mobile
 
 ## 🖼️ Screenshots
