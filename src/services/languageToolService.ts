@@ -53,7 +53,7 @@ interface LanguageToolConfig {
 const defaultConfig: LanguageToolConfig = {
   apiUrl: import.meta.env.VITE_LANGUAGETOOL_API_URL || 'https://api.languagetool.org/v2',
   language: 'en-US',
-  timeout: 10000, // 10 seconds
+  timeout: 30000, // 30 seconds - increased for better reliability
 };
 
 /**
@@ -99,7 +99,7 @@ function mapTypeNameToSeverity(typeName?: string): Suggestion['severity'] {
 }
 
 /**
- * Check text using LanguageTool API
+ * Check text using LanguageTool API with retry logic
  * FREE - No API key required, delivers professional accuracy
  */
 export async function checkWithLanguageTool(
@@ -112,52 +112,98 @@ export async function checkWithLanguageTool(
     return [];
   }
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), mergedConfig.timeout);
+  // Retry configuration
+  const maxRetries = 3;
+  const retryDelay = 1000; // 1 second between retries
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), mergedConfig.timeout);
 
-    const formData = new URLSearchParams();
-    formData.append('text', text);
-    formData.append('language', mergedConfig.language);
-    
-    if (mergedConfig.enabledRules && mergedConfig.enabledRules.length > 0) {
-      formData.append('enabledRules', mergedConfig.enabledRules.join(','));
-    }
-    
-    if (mergedConfig.disabledRules && mergedConfig.disabledRules.length > 0) {
-      formData.append('disabledRules', mergedConfig.disabledRules.join(','));
-    }
+      const formData = new URLSearchParams();
+      formData.append('text', text);
+      formData.append('language', mergedConfig.language);
+      
+      if (mergedConfig.enabledRules && mergedConfig.enabledRules.length > 0) {
+        formData.append('enabledRules', mergedConfig.enabledRules.join(','));
+      }
+      
+      if (mergedConfig.disabledRules && mergedConfig.disabledRules.length > 0) {
+        formData.append('disabledRules', mergedConfig.disabledRules.join(','));
+      }
 
-    const response = await fetch(`${mergedConfig.apiUrl}/check`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json',
-      },
-      body: formData.toString(),
-      signal: controller.signal,
-    });
+      const response = await fetch(`${mergedConfig.apiUrl}/check`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body: formData.toString(),
+        signal: controller.signal,
+      });
 
-    clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      throw new Error(`LanguageTool API error: ${response.status} ${response.statusText}`);
-    }
+      if (!response.ok) {
+        // Handle rate limiting with retry
+        if (response.status === 429 && attempt < maxRetries) {
+          console.warn(`LanguageTool API rate limited. Retrying (${attempt}/${maxRetries})...`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+          continue;
+        }
+        
+        // Handle server errors with retry
+        if (response.status >= 500 && attempt < maxRetries) {
+          console.warn(`LanguageTool API server error (${response.status}). Retrying (${attempt}/${maxRetries})...`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+          continue;
+        }
+        
+        throw new Error(`LanguageTool API error: ${response.status} ${response.statusText}`);
+      }
 
-    const data: LanguageToolResponse = await response.json();
-    
-    return convertLanguageToolMatches(text, data.matches);
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.name === 'AbortError') {
-        console.warn('LanguageTool API request timed out');
-      } else {
-        console.error('LanguageTool API error:', error.message);
+      const data: LanguageToolResponse = await response.json();
+      
+      // Success - log if this was a retry
+      if (attempt > 1) {
+        console.info(`LanguageTool API succeeded on attempt ${attempt}/${maxRetries}`);
+      }
+      
+      return convertLanguageToolMatches(text, data.matches);
+    } catch (error) {
+      const isLastAttempt = attempt === maxRetries;
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          if (!isLastAttempt) {
+            console.warn(`LanguageTool API request timed out. Retrying (${attempt}/${maxRetries})...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+            continue;
+          }
+          console.error('LanguageTool API request timed out after all retries');
+        } else if (error.message.includes('fetch')) {
+          // Network errors
+          if (!isLastAttempt) {
+            console.warn(`LanguageTool API network error. Retrying (${attempt}/${maxRetries})...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+            continue;
+          }
+          console.error('LanguageTool API network error after all retries:', error.message);
+        } else {
+          console.error('LanguageTool API error:', error.message);
+        }
+      }
+      
+      // If this was the last attempt, re-throw
+      if (isLastAttempt) {
+        throw error;
       }
     }
-    // Re-throw the error so callers can implement fallback logic
-    throw error;
   }
+  
+  // Should never reach here, but TypeScript needs it
+  throw new Error('LanguageTool API failed after all retries');
 }
 
 /**

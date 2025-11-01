@@ -85,41 +85,66 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, []);
 
-  // Analyze text with debouncing
+  // Analyze text with debouncing and performance optimization
   useEffect(() => {
     const timer = setTimeout(async () => {
       if (content) {
-        // Initialize services
-        const plagiarismChecker = new PlagiarismChecker();
-        const statisticsCalculator = new StatisticsCalculator();
-
-        // Grammar check - runs automatically
-        const newSuggestions = await analyzeText(content);
-        setSuggestions(newSuggestions);
+        // PERFORMANCE OPTIMIZATION: Run lightweight checks immediately
+        // Heavy checks are batched and run less frequently
         
-        // Readability analysis - runs automatically
+        // 1. FAST: Basic metrics (synchronous, instant)
         const newMetrics = calculateReadabilityMetrics(content);
         setMetrics(newMetrics);
 
-        // Analyze document structure - runs automatically
-        const structure = analyzeDocumentStructure(content);
-        setStructureAnalysis(structure);
-
-        // Validate scientific notation - runs automatically
-        const notation = validateScientificNotation(content);
-        setNotationErrors(notation);
-
-        // Analyze language style - runs automatically
-        const language = analyzeLanguageStyle(content);
-        setLanguageAnalysis(language);
-
-        // Plagiarism check - runs automatically
-        const plagiarism = await plagiarismChecker.checkPlagiarism(content);
-        setPlagiarismResults(plagiarism);
-
-        // Statistics panel - runs automatically
+        // 2. FAST: Statistics (synchronous, instant)
+        const statisticsCalculator = new StatisticsCalculator();
         const stats = statisticsCalculator.calculate(content);
         setStatistics(stats);
+
+        // 3. MEDIUM: Grammar check (async, but critical for UX)
+        // Run in background without blocking
+        analyzeText(content).then(newSuggestions => {
+          setSuggestions(newSuggestions);
+        }).catch(err => {
+          console.error('Grammar check failed:', err);
+          setSuggestions([]);
+        });
+
+        // 4. SLOW: Heavy analysis - only run for longer documents
+        const wordCount = content.split(/\s+/).length;
+        
+        if (wordCount > 100) {
+          // Run heavy checks asynchronously without blocking
+          Promise.all([
+            analyzeDocumentStructure(content),
+            validateScientificNotation(content),
+            analyzeLanguageStyle(content),
+          ]).then(([structure, notation, language]) => {
+            setStructureAnalysis(structure);
+            setNotationErrors(notation);
+            setLanguageAnalysis(language);
+          }).catch(err => {
+            console.error('Document analysis failed:', err);
+          });
+
+          // 5. VERY SLOW: Plagiarism check - only for documents > 500 words
+          if (wordCount > 500) {
+            const plagiarismChecker = new PlagiarismChecker();
+            plagiarismChecker.checkPlagiarism(content).then(plagiarism => {
+              setPlagiarismResults(plagiarism);
+            }).catch(err => {
+              console.error('Plagiarism check failed:', err);
+            });
+          } else {
+            setPlagiarismResults([]);
+          }
+        } else {
+          // Clear heavy analysis results for short documents
+          setStructureAnalysis(null);
+          setNotationErrors([]);
+          setLanguageAnalysis(null);
+          setPlagiarismResults([]);
+        }
       } else {
         setSuggestions([]);
         setMetrics({
@@ -140,7 +165,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setPlagiarismResults([]);
         setStatistics(null);
       }
-    }, 1000);
+    }, 2000); // Increased from 1000ms to 2000ms for better performance
 
     return () => clearTimeout(timer);
   }, [content]);

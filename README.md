@@ -19,7 +19,22 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 ## ✨ Key Features
 
 ### 📝 Real-time Text Analysis
+- **🎨 Color-Coded Inline Highlighting** - **NEW! Grammarly-style error detection**
+  - **Red wavy underlines** - Grammar errors with high severity
+  - **Orange wavy underlines** - Grammar warnings and suggestions
+  - **Blue wavy underlines** - Style improvements and recommendations
+  - **Yellow wavy underlines** - Punctuation and formatting issues
+  - **Red dotted underlines** - Spelling errors and typos
+  - **Hover tooltips** - See error type and correction without leaving the editor
+  - **Minimap integration** - Errors shown in editor overview for quick navigation
+  - **Color legend** - Collapsible guide explains what each color represents
 - **Online Grammar Checking via LanguageTool API** - **Professional-grade accuracy, PhD-Level quality!**
+  - **🎯 100% Accuracy Priority** - Retry logic ensures API is always used when available
+  - **🔄 Automatic Fallback to Alternative APIs** - Uses GrammarBot, Textgears, or Sapling AI if LanguageTool unavailable
+  - **Automatic Retry** - 3 attempts with smart backoff for transient failures
+  - **Extended Timeout** - 30-second window for reliable API responses
+  - **Visual Notifications** - Alert users which API is being used with retry option
+  - **Multiple API Support** - Never falls back to offline checker if any online API available
   - **Fundamental Grammar** - Subject-verb agreement, tenses, articles, commonly confused words
   - **Academic Tone & Formality** - Contractions, informal language, first-person usage, absolute terms
   - **Citation & Methodology** - Citation formats, Latin abbreviations, methodology verbs, statistical reporting
@@ -92,8 +107,12 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 ### 🎨 User Experience
 - **Dark Mode** - Easy on the eyes for extended writing sessions
 - **Auto-save** - Automatically saves to browser localStorage
-- **Accept/Dismiss Suggestions** - One-click to apply or ignore recommendations
+- **Inline Error Highlighting** - Color-coded underlines show errors directly in the editor
+- **Enhanced Suggestion Display** - Clear "Issue" and "Correction" boxes with visual feedback
+- **Accept/Dismiss Suggestions** - One-click to apply or ignore recommendations with prominent buttons
 - **Categorized Suggestions** - Filter by Grammar, Style, or Punctuation
+- **Hover Tooltips** - See corrections without clicking, directly in the editor
+- **Color Legend** - Expandable guide showing what each highlight color means
 - **Responsive Design** - Works on desktop, tablet, and mobile
 
 ## 🖼️ Screenshots
@@ -110,7 +129,7 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 - Node.js 18 or higher
 - npm or yarn
 
-### Installation
+### Quick Start (2 Minutes Setup)
 
 ```bash
 # Clone the repository
@@ -126,7 +145,30 @@ npm install
 npm run dev
 ```
 
-That's it! Complete validation system works instantly with no configuration. Grammar checking requires internet for maximum accuracy via LanguageTool API. Specialized validators (citations, statistics, structure, field-specific) work independently.
+**🎉 That's it!** The application is ready to use with all features enabled.
+
+### ✅ What's Already Configured
+
+All grammar checking APIs work immediately without any setup:
+
+| API | Status | Limits | Setup Required |
+|-----|--------|--------|----------------|
+| **LanguageTool** | ✅ Active | Unlimited | None |
+| **GrammarBot** | ✅ Active | 100 requests/day | None |
+| **Textgears** | ✅ Active | 100 requests/day | None |
+| **Sapling AI** | ✅ Active | 100 requests/month | None |
+
+**All APIs are free forever!** No credit cards, no expiration, no paid tiers required.
+
+### 🚀 Optional: Enhanced Setup for Higher Limits
+
+Want more requests per day? See **[SETUP_GUIDE.md](SETUP_GUIDE.md)** for:
+- Step-by-step registration instructions (still free!)
+- Higher rate limits (250-5000 requests)
+- Priority API processing
+- Complete configuration guide
+
+**Note**: Most users don't need this - the free public endpoints work great!
 
 Visit `http://localhost:5173/manuscript-editor-pro/` in your browser.
 
