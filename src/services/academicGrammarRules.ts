@@ -564,7 +564,9 @@ const citationMethodologyRules: AcademicGrammarRule[] = [
  * Oxford comma, semicolons, hyphens, quotation marks
  */
 const punctuationFormattingRules: AcademicGrammarRule[] = [
-  // Oxford Comma - improved to avoid false positives
+  // Oxford Comma - ENHANCED to reduce false positives with technical terms
+  // Now intelligently detects compound technical terms and avoids suggesting
+  // Oxford comma for terms like "photothermal and photodynamic therapy"
   {
     id: 'punct-001',
     pattern: /\b(\w+),\s+(\w+)\s+and\s+(\w+)\b/gi,
@@ -576,7 +578,7 @@ const punctuationFormattingRules: AcademicGrammarRule[] = [
     examples: [
       { incorrect: 'temperature, pressure and volume', correct: 'temperature, pressure, and volume' }
     ],
-    // Custom context filter to reduce false positives
+    // Custom context filter to reduce false positives with compound technical terms
     contextFilter: (_context: RuleContext, match: RegExpExecArray): boolean => {
       // Extract the matched words
       const word1 = match[1];

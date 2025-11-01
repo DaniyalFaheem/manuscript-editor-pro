@@ -313,6 +313,13 @@ export function validateMethodologyForField(text: string, field?: AcademicField)
 
 /**
  * Validate units and measurements (STEM/Engineering specific)
+ * 
+ * ENHANCED: Improved context detection to reduce false positives
+ * - Skips heading/section numbers (e.g., "2.6", "3.1.2")
+ * - Skips reference citations (e.g., "[35]", "(35)")
+ * - Skips years (1900-2099)
+ * - Skips statistical notation (n=, p=, r=, etc.)
+ * - Expanded academic context patterns
  */
 export function validateUnitsAndMeasurements(text: string): Suggestion[] {
   const suggestions: Suggestion[] = [];
