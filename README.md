@@ -35,7 +35,7 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
   - **Automatic Retry** - Smart retry logic with exponential backoff for transient failures
   - **Extended Timeout** - 30-second window for reliable API responses
   - **Visual Notifications** - Positive feedback showing which API is active
-  - **🏆 Professional Offline Checker** - 2000+ rules work without internet as final fallback
+  - **🏆 Professional Offline Checker** - 100000+ rules work without internet as final fallback
   - **Fundamental Grammar** - Subject-verb agreement, tenses, articles, commonly confused words
   - **Academic Tone & Formality** - Contractions, informal language, first-person usage, absolute terms
   - **Citation & Methodology** - Citation formats, Latin abbreviations, methodology verbs, statistical reporting

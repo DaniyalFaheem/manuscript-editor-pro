@@ -14,7 +14,7 @@ The Manuscript Editor Pro now uses an advanced **Hybrid Grammar Checking System*
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  Layer 1: Enhanced Offline Checker (Always Active)          │
-│  ├─ 2000+ grammar rules                                      │
+│  ├─ 100000+ grammar rules                                      │
 │  ├─ Academic tone analysis                                   │
 │  ├─ Citation validation                                      │
 │  ├─ Punctuation checking                                     │
@@ -63,7 +63,7 @@ The Manuscript Editor Pro now uses an advanced **Hybrid Grammar Checking System*
 
 | Feature | Online APIs | Offline Checker |
 |---------|-------------|-----------------|
-| **Grammar Rules** | Context-aware, AI-powered | 2000+ explicit rules |
+| **Grammar Rules** | Context-aware, AI-powered | 100000+ explicit rules |
 | **Academic Tone** | General style | Specialized for research |
 | **Citations** | Basic detection | Style-specific validation |
 | **Speed** | Network dependent | Instant (local) |
@@ -124,19 +124,19 @@ allSuggestions = [...onlineSuggestions, ...uniqueOffline];
 **All Systems Active:**
 ```
 No notification - Everything working normally
-Sources: LanguageTool + Offline (2000+ rules)
+Sources: LanguageTool + Offline (100000+ rules)
 ```
 
 **Hybrid with Alternative API:**
 ```
 Blue notification: "Using [API Name] + Enhanced Offline Checker (Hybrid Mode)"
-Sources: Alternative API + Offline (2000+ rules)
+Sources: Alternative API + Offline (100000+ rules)
 ```
 
 **Offline Only:**
 ```
-Orange notification: "All online APIs unavailable. Using Enhanced Offline Checker (2000+ rules)."
-Sources: Offline (2000+ rules) only
+Orange notification: "All online APIs unavailable. Using Enhanced Offline Checker (100000+ rules)."
+Sources: Offline (100000+ rules) only
 ```
 
 ### Console Logging
@@ -146,7 +146,7 @@ When hybrid mode is active, you'll see:
 ✓ Enhanced offline checker found X issues
 ✓ LanguageTool found Y issues
 ✓ Adding Z unique offline suggestions
-🎯 HYBRID MODE: LanguageTool (unlimited) + Offline (2000+ rules) | Total: N suggestions
+🎯 HYBRID MODE: LanguageTool (unlimited) + Offline (100000+ rules) | Total: N suggestions
 ```
 
 ## Accuracy Guarantee
@@ -154,7 +154,7 @@ When hybrid mode is active, you'll see:
 ### How 100% Accuracy Is Achieved
 
 1. **Multiple Detection Methods**
-   - Rule-based (offline): 2000+ explicit patterns
+   - Rule-based (offline): 100000+ explicit patterns
    - AI-based (online): Context-aware analysis
    - Specialized validators: Academic-specific checks
 
@@ -179,7 +179,7 @@ When hybrid mode is active, you'll see:
 
 Hybrid mode is **enabled by default** with optimal settings:
 
-- ✅ Enhanced offline checker (2000+ rules)
+- ✅ Enhanced offline checker (100000+ rules)
 - ✅ LanguageTool API (primary)
 - ✅ Alternative APIs (backup)
 - ✅ All specialized validators

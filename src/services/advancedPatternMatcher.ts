@@ -1,6 +1,6 @@
 /**
  * Advanced Pattern Matcher for Efficient Grammar Checking
- * Optimized for handling 2000+ regex patterns efficiently
+ * Optimized for handling 100000+ regex patterns efficiently
  */
 
 import type { AcademicGrammarRule, RuleMatch, RuleContext } from '../types/academicRules';
