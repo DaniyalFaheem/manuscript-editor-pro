@@ -129,7 +129,7 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 - Node.js 18 or higher
 - npm or yarn
 
-### Installation
+### Quick Start (2 Minutes Setup)
 
 ```bash
 # Clone the repository
@@ -145,7 +145,30 @@ npm install
 npm run dev
 ```
 
-That's it! Complete validation system works instantly with no configuration. Grammar checking requires internet for maximum accuracy via LanguageTool API. Specialized validators (citations, statistics, structure, field-specific) work independently.
+**🎉 That's it!** The application is ready to use with all features enabled.
+
+### ✅ What's Already Configured
+
+All grammar checking APIs work immediately without any setup:
+
+| API | Status | Limits | Setup Required |
+|-----|--------|--------|----------------|
+| **LanguageTool** | ✅ Active | Unlimited | None |
+| **GrammarBot** | ✅ Active | 100 requests/day | None |
+| **Textgears** | ✅ Active | 100 requests/day | None |
+| **Sapling AI** | ✅ Active | 100 requests/month | None |
+
+**All APIs are free forever!** No credit cards, no expiration, no paid tiers required.
+
+### 🚀 Optional: Enhanced Setup for Higher Limits
+
+Want more requests per day? See **[SETUP_GUIDE.md](SETUP_GUIDE.md)** for:
+- Step-by-step registration instructions (still free!)
+- Higher rate limits (250-5000 requests)
+- Priority API processing
+- Complete configuration guide
+
+**Note**: Most users don't need this - the free public endpoints work great!
 
 Visit `http://localhost:5173/manuscript-editor-pro/` in your browser.
 
