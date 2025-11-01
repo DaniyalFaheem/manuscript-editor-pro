@@ -384,6 +384,7 @@ export function validateUnitsAndMeasurements(text: string): Suggestion[] {
     ];
     
     // Check if this is a heading number (e.g., "2.6", "3.1.2")
+    // Note: Pattern requires at least one dot - single digits like "2" could be measurements
     const isHeadingNumber = /^\d+(\.\d+)+/.test(number) || 
                            (contextBefore.match(/\n\s*$/) && contextAfter.match(/^\s+[A-Z]/));
     

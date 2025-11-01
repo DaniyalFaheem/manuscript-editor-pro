@@ -585,7 +585,8 @@ const punctuationFormattingRules: AcademicGrammarRule[] = [
       const word2 = match[2];
       const word3 = match[3];
       
-      // Skip if words are too similar (likely technical compound terms like "photothermal and photodynamic")
+      // Skip if this is just two related technical terms (not a true list)
+      // e.g., "photothermal and photodynamic" should not trigger Oxford comma
       if (word2.length > 5 && word3.length > 5) {
         const prefix2 = word2.toLowerCase().substring(0, Math.min(6, word2.length));
         const prefix3 = word3.toLowerCase().substring(0, Math.min(6, word3.length));
