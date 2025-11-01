@@ -346,6 +346,7 @@ function parseBibliographyEntry(text: string, style: CitationStyle): Bibliograph
  * Cross-reference in-text citations with bibliography
  */
 export function crossReferenceCitations(
+  text: string,
   inTextCitations: CitationMatch[],
   bibliography: BibliographyEntry[]
 ): Suggestion[] {
@@ -368,7 +369,7 @@ export function crossReferenceCitations(
       const key = `${author}${year}`.toLowerCase();
       
       if (!bibRefs.has(key)) {
-        const pos = getPositionFromOffset(citation.text, citation.startOffset);
+        const pos = getPositionFromOffset(text, citation.startOffset);
         suggestions.push({
           id: `cite-missing-${citation.startOffset}`,
           type: 'grammar',
@@ -452,7 +453,7 @@ export function validateAllCitations(text: string, preferredStyle?: CitationStyl
   const bibliography = extractBibliography(text, style);
   
   // Cross-reference citations with bibliography
-  const crossRefSuggestions = crossReferenceCitations(citations, bibliography);
+  const crossRefSuggestions = crossReferenceCitations(text, citations, bibliography);
   suggestions.push(...crossRefSuggestions);
   
   return suggestions;

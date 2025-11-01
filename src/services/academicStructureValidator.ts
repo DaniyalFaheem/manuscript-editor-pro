@@ -277,12 +277,12 @@ export function validateStructure(text: string, type: DocumentType): Suggestion[
   }
   
   // Validate section order
-  const sectionOrder = validateSectionOrder(sections, type);
+  const sectionOrder = validateSectionOrder(text, sections, type);
   suggestions.push(...sectionOrder);
   
   // Validate section content
   for (const section of sections) {
-    const contentIssues = validateSectionContent(section, type);
+    const contentIssues = validateSectionContent(text, section, type);
     suggestions.push(...contentIssues);
   }
   
@@ -292,7 +292,7 @@ export function validateStructure(text: string, type: DocumentType): Suggestion[
 /**
  * Validate section order
  */
-function validateSectionOrder(sections: Section[], type: DocumentType): Suggestion[] {
+function validateSectionOrder(text: string, sections: Section[], type: DocumentType): Suggestion[] {
   const suggestions: Suggestion[] = [];
   const expectedOrder = getStructureRequirements(type).map(r => r.section.toLowerCase());
   
@@ -311,7 +311,7 @@ function validateSectionOrder(sections: Section[], type: DocumentType): Suggesti
       if (expectedIndex < lastExpectedIndex) {
         const section = sections.find(s => s.name.toLowerCase() === actual);
         if (section) {
-          const pos = getPositionFromOffset('', section.startOffset);
+          const pos = getPositionFromOffset(text, section.startOffset);
           suggestions.push({
             id: `structure-order-${section.startOffset}`,
             type: 'style',
@@ -338,7 +338,7 @@ function validateSectionOrder(sections: Section[], type: DocumentType): Suggesti
 /**
  * Validate section content
  */
-function validateSectionContent(section: Section, type: DocumentType): Suggestion[] {
+function validateSectionContent(text: string, section: Section, type: DocumentType): Suggestion[] {
   const suggestions: Suggestion[] = [];
   const sectionName = section.name.toLowerCase();
   const wordCount = section.content.split(/\s+/).filter(w => w.length > 0).length;
@@ -357,7 +357,7 @@ function validateSectionContent(section: Section, type: DocumentType): Suggestio
     }
     
     if (wordCount < minWords) {
-      const pos = getPositionFromOffset('', section.startOffset);
+      const pos = getPositionFromOffset(text, section.startOffset);
       suggestions.push({
         id: `structure-abstract-short-${section.startOffset}`,
         type: 'style',
@@ -373,7 +373,7 @@ function validateSectionContent(section: Section, type: DocumentType): Suggestio
         endOffset: section.endOffset,
       });
     } else if (wordCount > maxWords) {
-      const pos = getPositionFromOffset('', section.startOffset);
+      const pos = getPositionFromOffset(text, section.startOffset);
       suggestions.push({
         id: `structure-abstract-long-${section.startOffset}`,
         type: 'style',
@@ -393,7 +393,7 @@ function validateSectionContent(section: Section, type: DocumentType): Suggestio
   
   // Check for empty sections
   if (wordCount < 10) {
-    const pos = getPositionFromOffset('', section.startOffset);
+    const pos = getPositionFromOffset(text, section.startOffset);
     suggestions.push({
       id: `structure-empty-${section.startOffset}`,
       type: 'style',
@@ -541,7 +541,7 @@ export function validateMethodologySection(text: string): Suggestion[] {
     const found = component.term.some(term => content.includes(term));
     
     if (!found) {
-      const pos = getPositionFromOffset('', methodSection.startOffset);
+      const pos = getPositionFromOffset(text, methodSection.startOffset);
       suggestions.push({
         id: `methodology-missing-${component.term[0]}`,
         type: 'style',

@@ -148,7 +148,7 @@ const engineeringTerminology: FieldTerminology = {
   deprecatedTerms: [
     'perfect solution',
     'ideal system',
-    'optimal' // when not mathematically proven
+    // Note: 'optimal' should only be used when mathematically proven
   ],
   requiredElements: [
     'specifications',

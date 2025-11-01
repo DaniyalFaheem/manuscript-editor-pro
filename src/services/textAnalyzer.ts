@@ -6,6 +6,13 @@ import { validateAllStatistics } from './enhancedStatisticsValidator';
 import { validateStructure, validateHeadingHierarchy, validateNumberedElements, validateMethodologySection } from './academicStructureValidator';
 import { validateAllFieldSpecific, detectAcademicField } from './fieldSpecificValidator';
 
+// Enable debug logging (set to false for production)
+const DEBUG = false;
+
+const log = (...args: unknown[]) => {
+  if (DEBUG) log(...args);
+};
+
 /**
  * Analyze text and return all suggestions
  * ENHANCED: Comprehensive validation for PhD-level research papers
@@ -24,26 +31,26 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
 
   try {
     // PRIMARY: Try LanguageTool API first (95%+ accuracy)
-    console.log('Checking with LanguageTool API...');
+    log('Checking with LanguageTool API...');
     const apiSuggestions = await checkWithLanguageTool(text);
     
     if (apiSuggestions && apiSuggestions.length > 0) {
-      console.log(`LanguageTool found ${apiSuggestions.length} issues`);
+      log(`LanguageTool found ${apiSuggestions.length} issues`);
       allSuggestions.push(...apiSuggestions);
     } else {
-      console.log('LanguageTool returned no suggestions');
+      log('LanguageTool returned no suggestions');
     }
   } catch (error) {
-    console.error('LanguageTool API failed:', error);
+    if (DEBUG) if (DEBUG) console.error('LanguageTool API failed:', error);
   }
 
   // BACKUP: Add offline academic grammar checker
   try {
-    console.log('Adding offline grammar checks...');
+    log('Adding offline grammar checks...');
     const offlineSuggestions = checkAcademicGrammar(text);
     
     if (offlineSuggestions && offlineSuggestions.length > 0) {
-      console.log(`Offline checker found ${offlineSuggestions.length} issues`);
+      log(`Offline checker found ${offlineSuggestions.length} issues`);
       
       // Merge with API suggestions, avoiding duplicates
       for (const suggestion of offlineSuggestions) {
@@ -59,41 +66,41 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       }
     }
   } catch (error) {
-    console.error('Offline checker failed:', error);
+    if (DEBUG) console.error('Offline checker failed:', error);
   }
 
   // ENHANCED: Citation validation for research papers
   try {
-    console.log('Validating citations...');
+    log('Validating citations...');
     const citationStyle = detectCitationStyle(text);
     if (citationStyle) {
       const citationSuggestions = validateAllCitations(text, citationStyle);
       if (citationSuggestions.length > 0) {
-        console.log(`Found ${citationSuggestions.length} citation issues`);
+        log(`Found ${citationSuggestions.length} citation issues`);
         allSuggestions.push(...citationSuggestions);
       }
     }
   } catch (error) {
-    console.error('Citation validation failed:', error);
+    if (DEBUG) console.error('Citation validation failed:', error);
   }
 
   // ENHANCED: Statistical notation validation
   try {
-    console.log('Validating statistical notation...');
+    log('Validating statistical notation...');
     const statsSuggestions = validateAllStatistics(text);
     if (statsSuggestions.length > 0) {
-      console.log(`Found ${statsSuggestions.length} statistical notation issues`);
+      log(`Found ${statsSuggestions.length} statistical notation issues`);
       allSuggestions.push(...statsSuggestions);
     }
   } catch (error) {
-    console.error('Statistics validation failed:', error);
+    if (DEBUG) console.error('Statistics validation failed:', error);
   }
 
   // ENHANCED: Academic structure validation (for longer documents)
   try {
     const wordCount = text.split(/\s+/).length;
     if (wordCount > 500) { // Only check structure for substantial documents
-      console.log('Validating document structure...');
+      log('Validating document structure...');
       
       // Detect document type (simple heuristic based on content)
       let docType: 'journal-article' | 'dissertation' | 'thesis' | 'conference-paper' = 'journal-article';
@@ -114,7 +121,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
                              numberingSuggestions.length + methodologySuggestions.length;
       
       if (totalStructure > 0) {
-        console.log(`Found ${totalStructure} structure issues`);
+        log(`Found ${totalStructure} structure issues`);
         allSuggestions.push(...structureSuggestions);
         allSuggestions.push(...hierarchySuggestions);
         allSuggestions.push(...numberingSuggestions);
@@ -122,31 +129,31 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       }
     }
   } catch (error) {
-    console.error('Structure validation failed:', error);
+    if (DEBUG) console.error('Structure validation failed:', error);
   }
 
   // ENHANCED: Field-specific terminology and methodology validation
   try {
     const wordCount = text.split(/\s+/).length;
     if (wordCount > 200) { // Only for substantial documents
-      console.log('Validating field-specific terminology...');
+      log('Validating field-specific terminology...');
       const academicField = detectAcademicField(text);
-      console.log(`Detected academic field: ${academicField}`);
+      log(`Detected academic field: ${academicField}`);
       
       const fieldSuggestions = validateAllFieldSpecific(text, academicField);
       if (fieldSuggestions.length > 0) {
-        console.log(`Found ${fieldSuggestions.length} field-specific issues`);
+        log(`Found ${fieldSuggestions.length} field-specific issues`);
         allSuggestions.push(...fieldSuggestions);
       }
     }
   } catch (error) {
-    console.error('Field-specific validation failed:', error);
+    if (DEBUG) console.error('Field-specific validation failed:', error);
   }
 
   // Sort by position
   allSuggestions.sort((a, b) => a.startOffset - b.startOffset);
   
-  console.log(`Total suggestions found: ${allSuggestions.length}`);
+  log(`Total suggestions found: ${allSuggestions.length}`);
   
   return allSuggestions;
 }
