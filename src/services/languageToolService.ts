@@ -155,7 +155,8 @@ export async function checkWithLanguageTool(
         console.error('LanguageTool API error:', error.message);
       }
     }
-    return [];
+    // Re-throw the error so callers can implement fallback logic
+    throw error;
   }
 }
 
