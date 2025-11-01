@@ -111,6 +111,12 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 - **Inline Error Highlighting** - Color-coded underlines show errors directly in the editor
 - **Enhanced Suggestion Display** - Clear "Issue" and "Correction" boxes with visual feedback
 - **Accept/Dismiss Suggestions** - One-click to apply or ignore recommendations with prominent buttons
+- **🎯 Auto-Correct Feature** - **NEW! Apply corrections automatically**
+  - **Auto-Correct All** - Fix all errors with one click
+  - **Auto-Correct by Type** - Apply corrections by category (Grammar, Style, Punctuation, Spelling)
+  - **Auto-Correct by Severity** - Fix errors or warnings selectively
+  - **Safety Confirmation** - Prevents accidental bulk changes
+  - **Flexible Options** - Choose what to correct and when
 - **Categorized Suggestions** - Filter by Grammar, Style, or Punctuation
 - **Hover Tooltips** - See corrections without clicking, directly in the editor
 - **Color Legend** - Expandable guide showing what each highlight color means
