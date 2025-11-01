@@ -1,5 +1,6 @@
 import type { Suggestion } from '../types';
 import { checkWithLanguageTool } from './languageToolService';
+import { checkAcademicGrammar } from './offlineAcademicChecker';
 import { validateAllCitations, detectCitationStyle } from './citationValidator';
 import { validateAllStatistics } from './enhancedStatisticsValidator';
 import { validateStructure, validateHeadingHierarchy, validateNumberedElements, validateMethodologySection } from './academicStructureValidator';
@@ -9,7 +10,7 @@ import { validateAllFieldSpecific, detectAcademicField } from './fieldSpecificVa
 const DEBUG = false;
 
 const log = (...args: unknown[]) => {
-  if (DEBUG) log(...args);
+  if (DEBUG) console.log(...args);
 };
 
 /**
@@ -31,6 +32,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   const allSuggestions: Suggestion[] = [];
 
   // PRIMARY: Use LanguageTool API for grammar checking (requires internet for maximum accuracy)
+  let languageToolSuccess = false;
   try {
     log('Checking with LanguageTool API...');
     const apiSuggestions = await checkWithLanguageTool(text);
@@ -38,13 +40,30 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     if (apiSuggestions && apiSuggestions.length > 0) {
       log(`LanguageTool found ${apiSuggestions.length} issues`);
       allSuggestions.push(...apiSuggestions);
+      languageToolSuccess = true;
     } else {
       log('LanguageTool returned no suggestions');
+      // Even with no suggestions, if API call succeeded, don't fallback
+      languageToolSuccess = true;
     }
   } catch (error) {
-    if (DEBUG) console.error('LanguageTool API failed:', error);
-    // Note: Grammar checking requires internet connection for maximum accuracy
-    // If API fails, only specialized validators (citations, statistics, structure) will run
+    // Always log API failures so users know grammar checking isn't working
+    console.warn('LanguageTool API failed. Falling back to offline grammar checking.', error);
+    languageToolSuccess = false;
+  }
+
+  // FALLBACK: Use offline academic grammar checker when LanguageTool API fails
+  if (!languageToolSuccess) {
+    try {
+      log('Using offline academic grammar checker...');
+      const offlineSuggestions = checkAcademicGrammar(text);
+      if (offlineSuggestions.length > 0) {
+        log(`Offline checker found ${offlineSuggestions.length} issues`);
+        allSuggestions.push(...offlineSuggestions);
+      }
+    } catch (error) {
+      console.error('Offline grammar checking also failed:', error);
+    }
   }
 
   // ENHANCED: Citation validation for research papers
