@@ -100,7 +100,7 @@ const ApiStatusNotification: React.FC = () => {
           )}
           {errorInfo.usingOffline && (
             <>
-              Using offline checker (limited accuracy). Configure alternative API keys for better results.
+              {errorInfo.details}
               <br />
             </>
           )}

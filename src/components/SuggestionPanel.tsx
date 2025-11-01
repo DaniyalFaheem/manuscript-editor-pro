@@ -206,7 +206,7 @@ const SuggestionPanel: React.FC = () => {
                     {!suggestion.suggestion && suggestion.original && (
                       <Box sx={{ mt: 1, p: 1, bgcolor: 'info.light', borderRadius: 1, border: '1px solid', borderColor: 'info.main' }}>
                         <Typography variant="caption" color="info.dark" fontStyle="italic">
-                          ℹ️ Manual review recommended - no automatic correction available
+                          💡 Please review this manually - Consider rephrasing for clarity
                         </Typography>
                       </Box>
                     )}
