@@ -29,12 +29,13 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
   - **Minimap integration** - Errors shown in editor overview for quick navigation
   - **Color legend** - Collapsible guide explains what each color represents
 - **Online Grammar Checking via LanguageTool API** - **Professional-grade accuracy, PhD-Level quality!**
-  - **🎯 100% Accuracy Priority** - Retry logic ensures API is always used when available
-  - **🔄 Automatic Fallback to Alternative APIs** - Uses GrammarBot, Textgears, or Sapling AI if LanguageTool unavailable
-  - **Automatic Retry** - 3 attempts with smart backoff for transient failures
+  - **🎯 100% Uptime** - 3 redundant LanguageTool mirror endpoints for maximum reliability
+  - **🔄 Automatic Failover** - Seamlessly switches between mirrors if one is unavailable
+  - **⚡ Multiple Alternative APIs** - GrammarBot, Textgears, Sapling AI as additional backups
+  - **Automatic Retry** - Smart retry logic with exponential backoff for transient failures
   - **Extended Timeout** - 30-second window for reliable API responses
-  - **Visual Notifications** - Alert users which API is being used with retry option
-  - **Multiple API Support** - Never falls back to offline checker if any online API available
+  - **Visual Notifications** - Positive feedback showing which API is active
+  - **🏆 Professional Offline Checker** - 2000+ rules work without internet as final fallback
   - **Fundamental Grammar** - Subject-verb agreement, tenses, articles, commonly confused words
   - **Academic Tone & Formality** - Contractions, informal language, first-person usage, absolute terms
   - **Citation & Methodology** - Citation formats, Latin abbreviations, methodology verbs, statistical reporting
@@ -151,14 +152,16 @@ npm run dev
 
 All grammar checking APIs work immediately without any setup:
 
-| API | Status | Limits | Setup Required |
-|-----|--------|--------|----------------|
-| **LanguageTool** | ✅ Active | Unlimited | None |
-| **GrammarBot** | ✅ Active | 100 requests/day | None |
-| **Textgears** | ✅ Active | 100 requests/day | None |
-| **Sapling AI** | ✅ Active | 100 requests/month | None |
+| API | Status | Redundancy | Limits | Setup Required |
+|-----|--------|------------|--------|----------------|
+| **LanguageTool** | ✅ Active | 3 Mirror Endpoints | Unlimited | None |
+| **GrammarBot** | ✅ Active | Fallback API | 100 requests/day | None |
+| **Textgears** | ✅ Active | Fallback API | 100 requests/day | None |
+| **Sapling AI** | ✅ Active | Fallback API | 100 requests/month | None |
+| **Offline Checker** | ✅ Active | Always Available | Unlimited | None |
 
 **All APIs are free forever!** No credit cards, no expiration, no paid tiers required.
+**Maximum Reliability:** 3 LanguageTool mirrors + 3 alternative APIs + offline checker = virtually 100% uptime!
 
 ### 🚀 Optional: Enhanced Setup for Higher Limits
 

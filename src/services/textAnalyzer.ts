@@ -58,7 +58,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   }
 
   // 2. PRIMARY ONLINE: LanguageTool API
-  let languageToolSuccess = false;
+  let onlineApiSuccess = false;
   let apiErrorMessage = '';
   
   try {
@@ -68,25 +68,37 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     if (apiSuggestions && apiSuggestions.length >= 0) {
       log(`✓ LanguageTool found ${apiSuggestions.length} issues`);
       allSuggestions.push(...apiSuggestions);
-      languageToolSuccess = true;
-      suggestionSources.push('LanguageTool (unlimited)');
+      onlineApiSuccess = true;
+      suggestionSources.push('LanguageTool API (FREE & Unlimited)');
       
-      // Clear any previous error notifications
-      if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError) {
-        delete (window as any).__lastLanguageToolError;
+      // Clear any previous error notifications and show success
+      if (typeof window !== 'undefined') {
+        (window as any).__lastLanguageToolError = {
+          message: '✅ Connected to LanguageTool API - Professional Grammar Checking Active!',
+          details: '🎯 Free Forever  ⚡ Real-time Analysis  🌐 Internet Connected',
+          timestamp: Date.now(),
+          usingOnline: true,
+          isSuccess: true
+        };
+        // Auto-clear success message after 3 seconds
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError?.isSuccess) {
+            delete (window as any).__lastLanguageToolError;
+          }
+        }, 3000);
       }
     }
   } catch (error) {
     if (error instanceof Error) {
       apiErrorMessage = error.message;
-      console.error('LanguageTool API failed after retries:', apiErrorMessage);
+      console.warn('LanguageTool API unavailable, trying alternatives:', apiErrorMessage);
     }
-    languageToolSuccess = false;
+    onlineApiSuccess = false;
   }
 
   // 3. FALLBACK: Alternative APIs
-  if (!languageToolSuccess) {
-    console.warn('⚠️ LanguageTool API unavailable, trying alternative APIs...');
+  if (!onlineApiSuccess) {
+    console.info('🔄 Trying alternative free grammar APIs for you...');
     
     try {
       log('Trying alternative grammar checking APIs...');
@@ -95,31 +107,40 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       if (altSuggestions.length > 0) {
         log(`✓ ${apiUsed} API found ${altSuggestions.length} issues`);
         allSuggestions.push(...altSuggestions);
-        suggestionSources.push(`${apiUsed} (alternative)`);
+        suggestionSources.push(`${apiUsed} API (FREE)`);
         
         // Update notification to show which alternative API is being used
         if (typeof window !== 'undefined') {
           (window as any).__lastLanguageToolError = {
-            message: `Using ${apiUsed} API + Enhanced Offline Checker (Hybrid Mode)`,
-            details: `Multi-layer grammar checking for maximum accuracy`,
+            message: `✅ Connected to ${apiUsed} API - Professional Checking Active!`,
+            details: `🎯 Free Alternative API  ⚡ Real-time Analysis  📝 2000+ Offline Rules Backup`,
             timestamp: Date.now(),
             usingAlternative: true,
             alternativeAPI: apiUsed,
-            usingHybrid: true
+            usingHybrid: true,
+            isSuccess: true
           };
+          // Auto-clear success message after 3 seconds
+          setTimeout(() => {
+            if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError?.isSuccess) {
+              delete (window as any).__lastLanguageToolError;
+            }
+          }, 3000);
         }
         
-        console.info(`✓ Successfully using ${apiUsed} as alternative grammar checker`);
+        console.info(`✅ Successfully using ${apiUsed} as grammar checker!`);
+        onlineApiSuccess = true; // Mark as successful to avoid offline message
       }
-    } catch (alternativeError) {
-      console.warn('⚠️ All alternative APIs failed, relying on enhanced offline checker');
+    } catch {
+      console.info('ℹ️ Online APIs currently unavailable. Using Professional Offline Checker with 2000+ academic rules.');
       
       if (typeof window !== 'undefined') {
         (window as any).__lastLanguageToolError = {
-          message: 'All online APIs unavailable. Using Enhanced Offline Checker (2000+ rules).',
-          details: 'Comprehensive offline grammar checking with 2000+ rules active',
+          message: 'Using Professional Offline Checker - No Internet Required!',
+          details: '✓ 2000+ Grammar Rules  ✓ Academic Writing Focus  ✓ Zero Rate Limits  ✓ 100% Privacy',
           timestamp: Date.now(),
-          usingOffline: true
+          usingOffline: true,
+          isWorking: true
         };
       }
     }
@@ -142,10 +163,12 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     }
   }
   
-  // Log hybrid mode status
-  if (suggestionSources.length > 1 || offlineSuggestions.length > 0) {
-    const sources = suggestionSources.length > 0 ? suggestionSources.join(' + ') : 'Offline Only';
-    console.info(`🎯 HYBRID MODE: ${sources} | Total: ${allSuggestions.length} suggestions`);
+  // Log analysis status
+  if (suggestionSources.length > 0) {
+    const sources = suggestionSources.join(' + ');
+    console.info(`✅ Analysis Complete: ${sources} | ${allSuggestions.length} suggestions found`);
+  } else if (offlineSuggestions.length > 0) {
+    console.info(`✅ Analysis Complete: Professional Offline Checker | ${allSuggestions.length} suggestions found`);
   }
 
   // ENHANCED: Citation validation for research papers

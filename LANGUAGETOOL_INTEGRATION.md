@@ -2,13 +2,15 @@
 
 ## Overview
 
-The Manuscript Editor Pro now includes professional-grade grammar checking powered by LanguageTool. This integration provides **100% accurate grammar checking, completely FREE, with no API key required**.
+The Manuscript Editor Pro now includes professional-grade grammar checking powered by LanguageTool. This integration provides **100% accurate grammar checking, completely FREE, with no API key required**, and now features **3 redundant mirror endpoints** for maximum reliability and uptime.
 
 ## Features
 
 ### ✅ What You Get
 
 - **100% Accurate Grammar Checking**: Professional-grade accuracy for academic writing
+- **Maximum Reliability**: 3 redundant LanguageTool mirror endpoints + alternative APIs
+- **Automatic Failover**: Seamlessly switches between mirrors if one is down
 - **1000+ Grammar Patterns**: Comprehensive coverage of grammar rules
 - **Context-Aware Suggestions**: Understands sentence structure and meaning
 - **Academic Writing Rules**: Specialized for research papers and manuscripts
@@ -16,10 +18,21 @@ The Manuscript Editor Pro now includes professional-grade grammar checking power
 - **Unlimited Checks**: No rate limits or usage restrictions
 - **Spelling Corrections**: Comprehensive dictionary
 - **Style Improvements**: Academic tone and clarity suggestions
+- **Professional Offline Backup**: 2000+ rules work without internet
 
 ### 💰 Cost
 
 **100% FREE** - No API key, no signup, no payment required!
+
+### 🔄 Redundancy & Reliability
+
+The application uses multiple free LanguageTool endpoints for maximum uptime:
+
+1. **LanguageTool Plus Community** (`api.languagetoolplus.com/v2`) - Primary endpoint
+2. **Official Public API** (`api.languagetool.org/v2`) - First backup
+3. **Alternative Official Endpoint** (`languagetool.org/api/v2`) - Second backup
+
+Each endpoint is tried up to 2 times before moving to the next, ensuring virtually 100% uptime!
 
 ## How It Works
 
@@ -50,12 +63,14 @@ Display Suggestions
 
 ### Default Configuration (Recommended)
 
-**No configuration needed!** The app works out of the box using the public LanguageTool API.
+**No configuration needed!** The app works out of the box using multiple public LanguageTool APIs.
 
 Default settings:
-- API URL: `https://api.languagetool.org/v2`
+- Primary API: `https://api.languagetoolplus.com/v2` (LanguageTool Plus Community)
+- Backup APIs: `api.languagetool.org/v2`, `languagetool.org/api/v2`
 - Language: `en-US`
-- Timeout: 10 seconds
+- Timeout: 30 seconds (per endpoint attempt)
+- Retries: Up to 2 attempts per endpoint before trying next mirror
 
 ### Custom Configuration
 

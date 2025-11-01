@@ -49,9 +49,17 @@ interface LanguageToolConfig {
   timeout?: number;
 }
 
+// Multiple LanguageTool mirror endpoints for redundancy
+// These are all FREE public endpoints with no API key required
+const LANGUAGETOOL_MIRRORS = [
+  { url: 'https://api.languagetoolplus.com/v2', name: 'LanguageTool Plus Community' },
+  { url: 'https://api.languagetool.org/v2', name: 'LanguageTool Official' },
+  { url: 'https://languagetool.org/api/v2', name: 'LanguageTool Alt' },
+];
+
 // Default configuration - FREE, no API key needed
 const defaultConfig: LanguageToolConfig = {
-  apiUrl: import.meta.env.VITE_LANGUAGETOOL_API_URL || 'https://api.languagetool.org/v2',
+  apiUrl: import.meta.env.VITE_LANGUAGETOOL_API_URL || LANGUAGETOOL_MIRRORS[0].url,
   language: 'en-US',
   timeout: 30000, // 30 seconds - increased for better reliability
 };
@@ -99,8 +107,57 @@ function mapTypeNameToSeverity(typeName?: string): Suggestion['severity'] {
 }
 
 /**
- * Check text using LanguageTool API with retry logic
+ * Try to call LanguageTool API with a specific endpoint
+ */
+async function tryLanguageToolEndpoint(
+  apiUrl: string,
+  text: string,
+  config: LanguageToolConfig
+): Promise<Suggestion[]> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), config.timeout);
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append('text', text);
+    formData.append('language', config.language);
+    
+    if (config.enabledRules && config.enabledRules.length > 0) {
+      formData.append('enabledRules', config.enabledRules.join(','));
+    }
+    
+    if (config.disabledRules && config.disabledRules.length > 0) {
+      formData.append('disabledRules', config.disabledRules.join(','));
+    }
+
+    const response = await fetch(`${apiUrl}/check`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      },
+      body: formData.toString(),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data: LanguageToolResponse = await response.json();
+    return convertLanguageToolMatches(text, data.matches);
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+}
+
+/**
+ * Check text using LanguageTool API with multiple mirror endpoints
  * FREE - No API key required, delivers professional accuracy
+ * Tries multiple endpoints for maximum reliability
  */
 export async function checkWithLanguageTool(
   text: string,
@@ -112,98 +169,88 @@ export async function checkWithLanguageTool(
     return [];
   }
 
-  // Retry configuration
-  const maxRetries = 3;
-  const retryDelay = 1000; // 1 second between retries
+  // If user specified a custom API URL, try only that
+  const endpointsToTry = config.apiUrl 
+    ? [{ url: config.apiUrl, name: 'Custom LanguageTool' }]
+    : LANGUAGETOOL_MIRRORS;
+
+  // Try each mirror endpoint
+  const errors: string[] = [];
   
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), mergedConfig.timeout);
-
-      const formData = new URLSearchParams();
-      formData.append('text', text);
-      formData.append('language', mergedConfig.language);
-      
-      if (mergedConfig.enabledRules && mergedConfig.enabledRules.length > 0) {
-        formData.append('enabledRules', mergedConfig.enabledRules.join(','));
-      }
-      
-      if (mergedConfig.disabledRules && mergedConfig.disabledRules.length > 0) {
-        formData.append('disabledRules', mergedConfig.disabledRules.join(','));
-      }
-
-      const response = await fetch(`${mergedConfig.apiUrl}/check`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
-        },
-        body: formData.toString(),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        // Handle rate limiting with retry
-        if (response.status === 429 && attempt < maxRetries) {
-          console.warn(`LanguageTool API rate limited. Retrying (${attempt}/${maxRetries})...`);
-          await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
-          continue;
+  for (let mirrorIndex = 0; mirrorIndex < endpointsToTry.length; mirrorIndex++) {
+    const mirror = endpointsToTry[mirrorIndex];
+    const apiUrl = mirror.url;
+    const mirrorName = mirror.name;
+    
+    // Try each endpoint up to 2 times
+    const maxRetries = 2;
+    const retryDelay = 1000;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        if (mirrorIndex === 0 && attempt === 1) {
+          console.log(`🔍 Checking with ${mirrorName}...`);
+        } else if (attempt === 1) {
+          console.log(`🔄 Trying ${mirrorName} (mirror ${mirrorIndex + 1}/${endpointsToTry.length})...`);
         }
         
-        // Handle server errors with retry
-        if (response.status >= 500 && attempt < maxRetries) {
-          console.warn(`LanguageTool API server error (${response.status}). Retrying (${attempt}/${maxRetries})...`);
-          await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
-          continue;
-        }
+        const suggestions = await tryLanguageToolEndpoint(apiUrl, text, {
+          ...mergedConfig,
+          apiUrl
+        });
         
-        throw new Error(`LanguageTool API error: ${response.status} ${response.statusText}`);
-      }
-
-      const data: LanguageToolResponse = await response.json();
-      
-      // Success - log if this was a retry
-      if (attempt > 1) {
-        console.info(`LanguageTool API succeeded on attempt ${attempt}/${maxRetries}`);
-      }
-      
-      return convertLanguageToolMatches(text, data.matches);
-    } catch (error) {
-      const isLastAttempt = attempt === maxRetries;
-      
-      if (error instanceof Error) {
-        if (error.name === 'AbortError') {
+        // Success!
+        console.info(`✅ ${mirrorName} succeeded! Found ${suggestions.length} suggestions.`);
+        return suggestions;
+        
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        const isLastAttempt = attempt === maxRetries;
+        const isLastMirror = mirrorIndex === endpointsToTry.length - 1;
+        
+        if (error instanceof Error && error.name === 'AbortError') {
+          errors.push(`${mirrorName}: Timeout`);
           if (!isLastAttempt) {
-            console.warn(`LanguageTool API request timed out. Retrying (${attempt}/${maxRetries})...`);
-            await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+            console.warn(`⏱️ ${mirrorName} timed out, retrying (${attempt}/${maxRetries})...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
             continue;
           }
-          console.error('LanguageTool API request timed out after all retries');
-        } else if (error.message.includes('fetch')) {
-          // Network errors
+        } else if (errorMsg.includes('429')) {
+          errors.push(`${mirrorName}: Rate limited`);
           if (!isLastAttempt) {
-            console.warn(`LanguageTool API network error. Retrying (${attempt}/${maxRetries})...`);
-            await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+            console.warn(`⏸️ ${mirrorName} rate limited, retrying (${attempt}/${maxRetries})...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay * 2));
             continue;
           }
-          console.error('LanguageTool API network error after all retries:', error.message);
+        } else if (errorMsg.includes('5')) {
+          errors.push(`${mirrorName}: Server error`);
+          if (!isLastAttempt) {
+            console.warn(`⚠️ ${mirrorName} server error, retrying (${attempt}/${maxRetries})...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+            continue;
+          }
         } else {
-          console.error('LanguageTool API error:', error.message);
+          errors.push(`${mirrorName}: ${errorMsg}`);
         }
-      }
-      
-      // If this was the last attempt, re-throw
-      if (isLastAttempt) {
-        throw error;
+        
+        // If last attempt on this mirror, try next mirror
+        if (isLastAttempt && !isLastMirror) {
+          console.warn(`❌ ${mirrorName} failed after ${maxRetries} attempts, trying next mirror...`);
+          break;
+        }
+        
+        // If last attempt on last mirror, throw error
+        if (isLastAttempt && isLastMirror) {
+          const allErrors = errors.join('; ');
+          console.error(`❌ All LanguageTool mirrors failed. Errors: ${allErrors}`);
+          throw new Error(`All LanguageTool endpoints failed: ${allErrors}`);
+        }
       }
     }
   }
   
   // Should never reach here, but TypeScript needs it
-  throw new Error('LanguageTool API failed after all retries');
+  throw new Error('LanguageTool API failed after trying all mirrors');
 }
 
 /**
