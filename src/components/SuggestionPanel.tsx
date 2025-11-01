@@ -252,6 +252,11 @@ const SuggestionPanel: React.FC = () => {
               <Typography variant="caption">Punct.</Typography>
             </Badge>
           </ToggleButton>
+          <ToggleButton value="spelling">
+            <Badge badgeContent={getTypeCount('spelling')} color="primary">
+              <Typography variant="caption">Spelling</Typography>
+            </Badge>
+          </ToggleButton>
         </ToggleButtonGroup>
 
         {correctableCount > 0 && (
