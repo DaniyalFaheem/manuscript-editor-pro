@@ -57,13 +57,15 @@ const EDITOR_DECORATION_STYLES = `
 `;
 
 const EditorPanel: React.FC = () => {
-    const { content, setContent, isDarkMode, suggestions } = useDocument();
+    const { content, setContent, isDarkMode, suggestions, setEditorRef } = useDocument();
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
     const decorationsRef = useRef<string[]>([]);
 
     // Handle editor mount
     const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor) => {
         editorRef.current = editor;
+        // Pass the editor ref to the context so other components can access it
+        setEditorRef(editorRef);
     };
 
     // Update decorations when suggestions change

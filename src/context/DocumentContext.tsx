@@ -29,11 +29,14 @@ interface DocumentContextType {
   presentationMode: boolean;
   plagiarismResults: PlagiarismResult[];
   statistics: DocumentStatistics | null;
+  editorRef: React.MutableRefObject<any> | null;
   setContent: (content: string) => void;
   toggleDarkMode: () => void;
   setFileName: (name: string) => void;
   acceptSuggestion: (id: string) => void;
   dismissSuggestion: (id: string) => void;
+  navigateToSuggestion: (suggestionId: string) => void;
+  setEditorRef: (ref: React.MutableRefObject<any>) => void;
   setLanguageVariant: (variant: LanguageVariant) => void;
   convertLanguageVariant: (targetVariant: LanguageVariant) => void;
   togglePresentationMode: () => void;
@@ -76,6 +79,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [presentationMode, setPresentationMode] = useState(false);
   const [plagiarismResults, setPlagiarismResults] = useState<PlagiarismResult[]>([]);
   const [statistics, setStatistics] = useState<DocumentStatistics | null>(null);
+  const [editorRef, setEditorRefState] = useState<React.MutableRefObject<any> | null>(null);
 
   // Load content from localStorage on mount
   useEffect(() => {
@@ -230,6 +234,42 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setSuggestions(prev => prev.filter(s => s.id !== id));
   }, []);
 
+  const navigateToSuggestion = useCallback((suggestionId: string) => {
+    const suggestion = suggestions.find(s => s.id === suggestionId);
+    if (!suggestion || !editorRef?.current) return;
+
+    const editor = editorRef.current;
+    const model = editor.getModel();
+    if (!model) return;
+
+    // Get the position from offset
+    const startPos = model.getPositionAt(suggestion.startOffset);
+    const endPos = model.getPositionAt(suggestion.endOffset);
+
+    // Reveal the range in the editor (scroll to it)
+    editor.revealRangeInCenter({
+      startLineNumber: startPos.lineNumber,
+      startColumn: startPos.column,
+      endLineNumber: endPos.lineNumber,
+      endColumn: endPos.column,
+    });
+
+    // Set selection to highlight the text
+    editor.setSelection({
+      startLineNumber: startPos.lineNumber,
+      startColumn: startPos.column,
+      endLineNumber: endPos.lineNumber,
+      endColumn: endPos.column,
+    });
+
+    // Focus the editor
+    editor.focus();
+  }, [suggestions, editorRef]);
+
+  const setEditorRef = useCallback((ref: React.MutableRefObject<any>) => {
+    setEditorRefState(ref);
+  }, []);
+
   const value: DocumentContextType = {
     content,
     suggestions,
@@ -243,11 +283,14 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     presentationMode,
     plagiarismResults,
     statistics,
+    editorRef,
     setContent,
     toggleDarkMode,
     setFileName,
     acceptSuggestion,
     dismissSuggestion,
+    navigateToSuggestion,
+    setEditorRef,
     setLanguageVariant,
     convertLanguageVariant,
     togglePresentationMode,

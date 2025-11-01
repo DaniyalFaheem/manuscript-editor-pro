@@ -18,7 +18,7 @@ import { Check, Close, Error, Warning, Info, HelpOutline } from '@mui/icons-mate
 import { useDocument } from '../context/DocumentContext';
 
 const SuggestionPanel: React.FC = () => {
-  const { suggestions, acceptSuggestion, dismissSuggestion } = useDocument();
+  const { suggestions, acceptSuggestion, dismissSuggestion, navigateToSuggestion } = useDocument();
   const [filter, setFilter] = useState<string>('all');
   const [showLegend, setShowLegend] = useState<boolean>(false);
 
@@ -156,7 +156,12 @@ const SuggestionPanel: React.FC = () => {
                   flexDirection: 'column',
                   alignItems: 'stretch',
                   py: 2,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
                 }}
+                onClick={() => navigateToSuggestion(suggestion.id)}
               >
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', width: '100%', mb: 1 }}>
                   <Box sx={{ mr: 1, mt: 0.5 }}>
@@ -175,7 +180,7 @@ const SuggestionPanel: React.FC = () => {
                         sx={{ mr: 1 }}
                       />
                       <Typography variant="caption" color="text.secondary">
-                        Line {suggestion.startLine}
+                        Line {suggestion.startLine} • Click to navigate
                       </Typography>
                     </Box>
 
@@ -209,7 +214,10 @@ const SuggestionPanel: React.FC = () => {
                       <IconButton
                         size="medium"
                         color="success"
-                        onClick={() => acceptSuggestion(suggestion.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          acceptSuggestion(suggestion.id);
+                        }}
                         sx={{
                           bgcolor: 'success.light',
                           '&:hover': { bgcolor: 'success.main', color: 'white' }
@@ -223,7 +231,10 @@ const SuggestionPanel: React.FC = () => {
                     <IconButton
                       size="medium"
                       color="error"
-                      onClick={() => dismissSuggestion(suggestion.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        dismissSuggestion(suggestion.id);
+                      }}
                       sx={{
                         bgcolor: 'error.light',
                         '&:hover': { bgcolor: 'error.main', color: 'white' }
