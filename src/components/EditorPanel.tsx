@@ -4,6 +4,58 @@ import type { editor } from 'monaco-editor';
 import { useDocument } from '../context/DocumentContext';
 import { Paper } from '@mui/material';
 
+// CSS styles for inline error highlighting
+// These styles provide color-coded wavy underlines for different error types
+const EDITOR_DECORATION_STYLES = `
+    /* Grammar errors - red underline */
+    .editor-grammar-error {
+        border-bottom: 2px solid #f44336;
+    }
+    .editor-grammar-error-inline {
+        text-decoration: underline wavy #f44336;
+    }
+    
+    /* Grammar warnings - orange underline */
+    .editor-grammar-warning {
+        border-bottom: 2px solid #ff9800;
+    }
+    .editor-grammar-warning-inline {
+        text-decoration: underline wavy #ff9800;
+    }
+    
+    /* Style warnings - blue underline */
+    .editor-style-warning {
+        border-bottom: 2px solid #2196f3;
+    }
+    .editor-style-warning-inline {
+        text-decoration: underline wavy #2196f3;
+    }
+    
+    /* Punctuation warnings - yellow underline */
+    .editor-punctuation-warning {
+        border-bottom: 2px solid #ffc107;
+    }
+    .editor-punctuation-warning-inline {
+        text-decoration: underline wavy #ffc107;
+    }
+    
+    /* Spelling errors - red dotted underline */
+    .editor-spelling-error {
+        border-bottom: 2px solid #d32f2f;
+    }
+    .editor-spelling-error-inline {
+        text-decoration: underline dotted #d32f2f;
+    }
+    
+    /* Generic error fallback */
+    .editor-error-decoration {
+        border-bottom: 2px solid #f44336;
+    }
+    .editor-error-inline {
+        text-decoration: underline wavy #f44336;
+    }
+`;
+
 const EditorPanel: React.FC = () => {
     const { content, setContent, isDarkMode, suggestions } = useDocument();
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
@@ -28,27 +80,25 @@ const EditorPanel: React.FC = () => {
             const startPos = model.getPositionAt(suggestion.startOffset);
             const endPos = model.getPositionAt(suggestion.endOffset);
 
-            // Determine color based on type and severity
-            let className = 'editor-error-decoration';
-            let inlineClassName = 'editor-error-inline';
-            
-            if (suggestion.type === 'grammar') {
-                className = suggestion.severity === 'error' 
-                    ? 'editor-grammar-error' 
-                    : 'editor-grammar-warning';
-                inlineClassName = suggestion.severity === 'error'
-                    ? 'editor-grammar-error-inline'
-                    : 'editor-grammar-warning-inline';
-            } else if (suggestion.type === 'style') {
-                className = 'editor-style-warning';
-                inlineClassName = 'editor-style-warning-inline';
-            } else if (suggestion.type === 'punctuation') {
-                className = 'editor-punctuation-warning';
-                inlineClassName = 'editor-punctuation-warning-inline';
-            } else if (suggestion.type === 'spelling') {
-                className = 'editor-spelling-error';
-                inlineClassName = 'editor-spelling-error-inline';
-            }
+            // Determine color based on type and severity using mapping object
+            const getDecorationClasses = (): { className: string; inlineClassName: string } => {
+                switch (suggestion.type) {
+                    case 'grammar':
+                        return suggestion.severity === 'error'
+                            ? { className: 'editor-grammar-error', inlineClassName: 'editor-grammar-error-inline' }
+                            : { className: 'editor-grammar-warning', inlineClassName: 'editor-grammar-warning-inline' };
+                    case 'style':
+                        return { className: 'editor-style-warning', inlineClassName: 'editor-style-warning-inline' };
+                    case 'punctuation':
+                        return { className: 'editor-punctuation-warning', inlineClassName: 'editor-punctuation-warning-inline' };
+                    case 'spelling':
+                        return { className: 'editor-spelling-error', inlineClassName: 'editor-spelling-error-inline' };
+                    default:
+                        return { className: 'editor-error-decoration', inlineClassName: 'editor-error-inline' };
+                }
+            };
+
+            const { className, inlineClassName } = getDecorationClasses();
 
             // Create hover message with correction
             const hoverMessage: string[] = [
@@ -87,55 +137,7 @@ const EditorPanel: React.FC = () => {
 
     return (
         <Paper sx={{ height: '100%', overflow: 'hidden' }}>
-            <style>{`
-                /* Grammar errors - red underline */
-                .editor-grammar-error {
-                    border-bottom: 2px solid #f44336;
-                }
-                .editor-grammar-error-inline {
-                    text-decoration: underline wavy #f44336;
-                }
-                
-                /* Grammar warnings - orange underline */
-                .editor-grammar-warning {
-                    border-bottom: 2px solid #ff9800;
-                }
-                .editor-grammar-warning-inline {
-                    text-decoration: underline wavy #ff9800;
-                }
-                
-                /* Style warnings - blue underline */
-                .editor-style-warning {
-                    border-bottom: 2px solid #2196f3;
-                }
-                .editor-style-warning-inline {
-                    text-decoration: underline wavy #2196f3;
-                }
-                
-                /* Punctuation warnings - yellow underline */
-                .editor-punctuation-warning {
-                    border-bottom: 2px solid #ffc107;
-                }
-                .editor-punctuation-warning-inline {
-                    text-decoration: underline wavy #ffc107;
-                }
-                
-                /* Spelling errors - red dotted underline */
-                .editor-spelling-error {
-                    border-bottom: 2px solid #d32f2f;
-                }
-                .editor-spelling-error-inline {
-                    text-decoration: underline dotted #d32f2f;
-                }
-                
-                /* Generic error fallback */
-                .editor-error-decoration {
-                    border-bottom: 2px solid #f44336;
-                }
-                .editor-error-inline {
-                    text-decoration: underline wavy #f44336;
-                }
-            `}</style>
+            <style>{EDITOR_DECORATION_STYLES}</style>
             <Editor
                 height="100%"
                 defaultLanguage="markdown"
