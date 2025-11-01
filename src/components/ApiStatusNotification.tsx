@@ -12,6 +12,9 @@ const ApiStatusNotification: React.FC = () => {
     message: string;
     details: string;
     timestamp: number;
+    usingAlternative?: boolean;
+    alternativeAPI?: string;
+    usingOffline?: boolean;
   } | null>(null);
 
   useEffect(() => {
@@ -48,6 +51,9 @@ const ApiStatusNotification: React.FC = () => {
 
   if (!errorInfo) return null;
 
+  // Determine alert severity based on fallback type
+  const severity = errorInfo.usingAlternative ? 'info' : 'warning';
+
   return (
     <Snackbar
       open={open}
@@ -56,7 +62,7 @@ const ApiStatusNotification: React.FC = () => {
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
     >
       <Alert
-        severity="warning"
+        severity={severity}
         variant="filled"
         onClose={handleClose}
         action={
@@ -85,8 +91,25 @@ const ApiStatusNotification: React.FC = () => {
         <strong>{errorInfo.message}</strong>
         <br />
         <small>
-          Check your internet connection. Using offline checker (limited accuracy).
-          <br />
+          {errorInfo.usingAlternative && (
+            <>
+              Maintaining high accuracy with {errorInfo.alternativeAPI} API.
+              <br />
+              LanguageTool will be used automatically when available.
+            </>
+          )}
+          {errorInfo.usingOffline && (
+            <>
+              Using offline checker (limited accuracy). Configure alternative API keys for better results.
+              <br />
+            </>
+          )}
+          {!errorInfo.usingAlternative && !errorInfo.usingOffline && (
+            <>
+              Check your internet connection.
+              <br />
+            </>
+          )}
           <Link
             href="https://languagetool.org/status"
             target="_blank"

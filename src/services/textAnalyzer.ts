@@ -1,5 +1,6 @@
 import type { Suggestion } from '../types';
 import { checkWithLanguageTool } from './languageToolService';
+import { checkWithAlternativeAPIs } from './alternativeGrammarAPIs';
 import { checkAcademicGrammar } from './offlineAcademicChecker';
 import { validateAllCitations, detectCitationStyle } from './citationValidator';
 import { validateAllStatistics } from './enhancedStatisticsValidator';
@@ -68,21 +69,56 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     languageToolSuccess = false;
   }
 
-  // FALLBACK: Use offline academic grammar checker when LanguageTool API fails
-  // Note: Offline checker has limited accuracy compared to LanguageTool API
+  // FALLBACK: Use alternative APIs instead of offline checker
   if (!languageToolSuccess) {
-    console.warn('⚠️ Using offline grammar checker - accuracy may be reduced');
-    console.warn('💡 Tip: Check your internet connection for better grammar checking');
+    console.warn('⚠️ LanguageTool API unavailable, trying alternative APIs...');
     
     try {
-      log('Using offline academic grammar checker...');
-      const offlineSuggestions = checkAcademicGrammar(text);
-      if (offlineSuggestions.length > 0) {
-        log(`Offline checker found ${offlineSuggestions.length} issues`);
-        allSuggestions.push(...offlineSuggestions);
+      log('Trying alternative grammar checking APIs...');
+      const { suggestions: altSuggestions, apiUsed } = await checkWithAlternativeAPIs(text);
+      
+      if (altSuggestions.length > 0) {
+        log(`${apiUsed} API found ${altSuggestions.length} issues`);
+        allSuggestions.push(...altSuggestions);
+        
+        // Update notification to show which alternative API is being used
+        if (typeof window !== 'undefined') {
+          (window as any).__lastLanguageToolError = {
+            message: `Using ${apiUsed} API as alternative (LanguageTool unavailable)`,
+            details: `Grammar checking via ${apiUsed}`,
+            timestamp: Date.now(),
+            usingAlternative: true,
+            alternativeAPI: apiUsed
+          };
+        }
+        
+        console.info(`✓ Successfully using ${apiUsed} as alternative grammar checker`);
       }
-    } catch (error) {
-      console.error('Offline grammar checking also failed:', error);
+    } catch (alternativeError) {
+      // All alternative APIs failed, fall back to offline checker as last resort
+      console.warn('⚠️ All alternative APIs failed, using offline checker as last resort');
+      console.warn('💡 Tip: Check your internet connection or configure alternative API keys');
+      
+      try {
+        log('Using offline academic grammar checker...');
+        const offlineSuggestions = checkAcademicGrammar(text);
+        if (offlineSuggestions.length > 0) {
+          log(`Offline checker found ${offlineSuggestions.length} issues`);
+          allSuggestions.push(...offlineSuggestions);
+        }
+        
+        // Update notification
+        if (typeof window !== 'undefined') {
+          (window as any).__lastLanguageToolError = {
+            message: 'All online APIs unavailable. Using offline checker (limited accuracy).',
+            details: 'Configure alternative API keys in .env for better accuracy',
+            timestamp: Date.now(),
+            usingOffline: true
+          };
+        }
+      } catch (error) {
+        console.error('Offline grammar checking also failed:', error);
+      }
     }
   }
 

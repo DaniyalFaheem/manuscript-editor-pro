@@ -30,9 +30,11 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
   - **Color legend** - Collapsible guide explains what each color represents
 - **Online Grammar Checking via LanguageTool API** - **Professional-grade accuracy, PhD-Level quality!**
   - **🎯 100% Accuracy Priority** - Retry logic ensures API is always used when available
+  - **🔄 Automatic Fallback to Alternative APIs** - Uses GrammarBot, Textgears, or Sapling AI if LanguageTool unavailable
   - **Automatic Retry** - 3 attempts with smart backoff for transient failures
   - **Extended Timeout** - 30-second window for reliable API responses
-  - **Visual Notifications** - Alert users when API is unavailable with retry option
+  - **Visual Notifications** - Alert users which API is being used with retry option
+  - **Multiple API Support** - Never falls back to offline checker if any online API available
   - **Fundamental Grammar** - Subject-verb agreement, tenses, articles, commonly confused words
   - **Academic Tone & Formality** - Contractions, informal language, first-person usage, absolute terms
   - **Citation & Methodology** - Citation formats, Latin abbreviations, methodology verbs, statistical reporting
