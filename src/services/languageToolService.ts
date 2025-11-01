@@ -52,14 +52,14 @@ interface LanguageToolConfig {
 // Multiple LanguageTool mirror endpoints for redundancy
 // These are all FREE public endpoints with no API key required
 const LANGUAGETOOL_MIRRORS = [
-  'https://api.languagetoolplus.com/v2', // LanguageTool Plus Community (priority)
-  'https://api.languagetool.org/v2',      // Official public API
-  'https://languagetool.org/api/v2',      // Alternative official endpoint
+  { url: 'https://api.languagetoolplus.com/v2', name: 'LanguageTool Plus Community' },
+  { url: 'https://api.languagetool.org/v2', name: 'LanguageTool Official' },
+  { url: 'https://languagetool.org/api/v2', name: 'LanguageTool Alt' },
 ];
 
 // Default configuration - FREE, no API key needed
 const defaultConfig: LanguageToolConfig = {
-  apiUrl: import.meta.env.VITE_LANGUAGETOOL_API_URL || LANGUAGETOOL_MIRRORS[0],
+  apiUrl: import.meta.env.VITE_LANGUAGETOOL_API_URL || LANGUAGETOOL_MIRRORS[0].url,
   language: 'en-US',
   timeout: 30000, // 30 seconds - increased for better reliability
 };
@@ -171,19 +171,16 @@ export async function checkWithLanguageTool(
 
   // If user specified a custom API URL, try only that
   const endpointsToTry = config.apiUrl 
-    ? [config.apiUrl]
+    ? [{ url: config.apiUrl, name: 'Custom LanguageTool' }]
     : LANGUAGETOOL_MIRRORS;
 
   // Try each mirror endpoint
   const errors: string[] = [];
   
   for (let mirrorIndex = 0; mirrorIndex < endpointsToTry.length; mirrorIndex++) {
-    const apiUrl = endpointsToTry[mirrorIndex];
-    const mirrorName = apiUrl.includes('languagetoolplus') 
-      ? 'LanguageTool Plus Community'
-      : apiUrl.includes('languagetool.org/api')
-      ? 'LanguageTool Alt'
-      : 'LanguageTool Official';
+    const mirror = endpointsToTry[mirrorIndex];
+    const apiUrl = mirror.url;
+    const mirrorName = mirror.name;
     
     // Try each endpoint up to 2 times
     const maxRetries = 2;

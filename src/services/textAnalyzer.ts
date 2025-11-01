@@ -58,7 +58,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   }
 
   // 2. PRIMARY ONLINE: LanguageTool API
-  let languageToolSuccess = false;
+  let onlineApiSuccess = false;
   let apiErrorMessage = '';
   
   try {
@@ -68,7 +68,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     if (apiSuggestions && apiSuggestions.length >= 0) {
       log(`✓ LanguageTool found ${apiSuggestions.length} issues`);
       allSuggestions.push(...apiSuggestions);
-      languageToolSuccess = true;
+      onlineApiSuccess = true;
       suggestionSources.push('LanguageTool API (FREE & Unlimited)');
       
       // Clear any previous error notifications and show success
@@ -93,11 +93,11 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       apiErrorMessage = error.message;
       console.warn('LanguageTool API unavailable, trying alternatives:', apiErrorMessage);
     }
-    languageToolSuccess = false;
+    onlineApiSuccess = false;
   }
 
   // 3. FALLBACK: Alternative APIs
-  if (!languageToolSuccess) {
+  if (!onlineApiSuccess) {
     console.info('🔄 Trying alternative free grammar APIs for you...');
     
     try {
@@ -129,7 +129,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
         }
         
         console.info(`✅ Successfully using ${apiUsed} as grammar checker!`);
-        languageToolSuccess = true; // Mark as successful to avoid offline message
+        onlineApiSuccess = true; // Mark as successful to avoid offline message
       }
     } catch {
       console.info('ℹ️ Online APIs currently unavailable. Using Professional Offline Checker with 2000+ academic rules.');
