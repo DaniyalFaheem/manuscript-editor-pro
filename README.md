@@ -1,8 +1,14 @@
 # 📝 Manuscript Editor Pro
 
-A comprehensive, **100% FREE**, and open-source manuscript paper editing software with professional-grade features. Edit, analyze, and perfect your academic papers with advanced grammar checking, scientific writing analysis, and real-time feedback.
+A comprehensive, **100% FREE**, and open-source manuscript paper editing software with professional-grade features. Specifically designed for PhD dissertations, M.Phil theses, and international research papers. Edit, analyze, and perfect your academic papers with advanced grammar checking, citation validation, statistical notation verification, and real-time feedback.
 
-**✨ NEW: Complete Offline Academic Grammar Checking - 90+ core rules (extensible to 2000+), PhD-level accuracy, 100% OFFLINE!**
+**✨ NEW: PhD-Level Enhancements for Research Papers!**
+- **Citation Validation** - APA 7, MLA 9, Chicago 17, IEEE, Harvard with auto-detection
+- **Statistical Notation Checking** - p-values, confidence intervals, effect sizes, sample sizes
+- **Academic Structure Validation** - Ensures all required sections for dissertations/theses
+- **Field-Specific Terminology** - Validates discipline-specific language (STEM, Medicine, Social Sciences, etc.)
+- **Enhanced Plagiarism Detection** - Self-plagiarism, excessive quotations, missing attributions
+- **100% OFFLINE** - Complete privacy, no data leaves your device
 
 ![Manuscript Editor Pro](https://github.com/user-attachments/assets/1bf9daf7-9234-4107-8992-f24b04900d85)
 
@@ -24,6 +30,51 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
   - **100% OFFLINE** - No internet connection required, complete privacy
   - **Extensible architecture** - Easy to expand to 2000+ rules for specific needs
   - **Specifically designed for PhD-level research papers and dissertations**
+
+### 📚 Citation Management & Validation (NEW!)
+- **Multi-Format Support** - APA 7th, MLA 9th, Chicago 17th, IEEE, Harvard
+- **Auto-Detection** - Automatically identifies citation style from your document
+- **In-Text Citation Validation** - Ensures proper formatting and syntax
+- **Cross-Referencing** - Verifies citations match bibliography entries
+- **DOI & ISBN Validation** - Checks identifier formats
+- **Bibliography Generator** - Auto-formats references in any citation style
+- **Missing Citation Detection** - Identifies statements requiring attribution
+
+### 📊 Statistical Notation Validation (NEW!)
+- **P-Value Formatting** - APA 7th edition compliance (p = .001, p < .001)
+- **Confidence Intervals** - Format and range validation (95% CI [lower, upper])
+- **Effect Sizes** - Cohen's d, eta-squared, omega-squared, Cramer's V
+- **Sample Size Notation** - Correct use of N (total) vs n (subsample)
+- **Statistical Tests** - Complete reporting for t-tests, F-tests, ANOVA, chi-square, correlations
+- **Descriptive Statistics** - Mean (M), Standard Deviation (SD), Standard Error (SE)
+- **Significant Figures** - Proper rounding and decimal places
+
+### 🏗️ Academic Structure Validation (NEW!)
+- **Document Type Detection** - Journal article, dissertation, thesis, conference paper
+- **Required Sections** - Abstract, Introduction, Methods, Results, Discussion, Conclusion
+- **Section Order** - Ensures proper sequencing of document sections
+- **Abstract Length** - Validates word count (150-300 for articles, 300-500 for dissertations)
+- **Heading Hierarchy** - Checks for proper heading levels without skips
+- **Table & Figure Numbering** - Sequential numbering validation
+- **Methodology Completeness** - Ensures all required elements are present
+
+### 🔬 Field-Specific Validation (NEW!)
+- **Auto-Detection** - Identifies academic field (STEM, Medicine, Engineering, Social Sciences, Humanities, Business)
+- **Terminology Checking** - Validates discipline-specific language
+- **Preferred Terms** - Suggests field-appropriate alternatives
+- **Deprecated Terms** - Warns against outdated or inappropriate terminology
+- **Units Validation** - SI units for STEM/Engineering fields
+- **Ethical Requirements** - IRB/ethics approval for human research (Medicine, Social Sciences)
+- **Methodology Standards** - Field-specific methodology requirements
+
+### 🔍 Enhanced Plagiarism Detection (NEW!)
+- **Self-Plagiarism** - Detects repetitive content within your document
+- **Paragraph Similarity** - Identifies similar paragraphs (>70% similarity)
+- **Excessive Quotations** - Warns when quoted material exceeds 15%
+- **Long Quotations** - Flags quotes over 100 words
+- **Missing Attributions** - Identifies statements requiring citations
+- **Paraphrasing Quality** - Analyzes content word overlap in consecutive sentences
+- **Common Phrase Detection** - Identifies overused academic phrases
 
 ### 📊 Comprehensive Metrics
 - **Flesch Reading Ease Score** - 0-100 scale readability measurement
@@ -75,7 +126,7 @@ npm install
 npm run dev
 ```
 
-That's it! Complete offline grammar checking (2000+ rules) works instantly with no configuration or internet required.
+That's it! Complete validation system (grammar, citations, statistics, structure, field-specific) works instantly with no configuration or internet required.
 
 Visit `http://localhost:5173/manuscript-editor-pro/` in your browser.
 
@@ -93,9 +144,14 @@ The built files will be in the `dist` directory.
 - **Build Tool**: Vite
 - **UI Library**: Material-UI (MUI) v5
 - **Text Editor**: Monaco Editor (with textarea fallback)
-- **Grammar Checking**: 
-  - **Custom Offline Academic Checker** - 2000+ rules, **100% OFFLINE, PhD-level accuracy**
-  - Specifically designed for academic and research writing
+- **Validation System**: 
+  - **Grammar Checker** - 90+ core rules (extensible to 2000+), **100% OFFLINE, PhD-level accuracy**
+  - **Citation Validator** - APA, MLA, Chicago, IEEE, Harvard with auto-detection
+  - **Statistics Checker** - APA 7th edition compliance for all statistical notation
+  - **Structure Analyzer** - Document type-specific validation
+  - **Field Validator** - Discipline-specific terminology and methodology
+  - **Plagiarism Detector** - Multi-strategy originality checking
+  - Specifically designed for PhD dissertations, theses, and research papers
   - No internet connection required, complete privacy
 - **NLP Libraries**: Compromise.js, Natural (for supplementary analysis)
 - **File Processing**: 
@@ -196,18 +252,27 @@ The built files will be in the `dist` directory.
 
 - **Passive Voice %**: Percentage of sentences using passive voice. Aim for <10% for clear, direct writing.
 
-## ⚙️ Offline Grammar Checking
+## ⚙️ Advanced Validation System
 
-The editor uses a **custom-built offline academic grammar checker** with 2000+ rules designed specifically for PhD-level research papers.
+The editor uses a **comprehensive offline validation system** designed specifically for PhD-level research papers and international journal submissions.
 
 ### Key Advantages
-- **100% OFFLINE** - No internet connection required
+- **100% OFFLINE** - No internet connection required for any validation
 - **Complete Privacy** - Your text never leaves your device
 - **No Configuration** - Works instantly out of the box
-- **Academic Focus** - Rules specifically designed for research papers and dissertations
-- **Context-Aware** - Understands sentence and paragraph structure
-- **Performance** - Can check 10,000 words in under 2 seconds
+- **PhD-Level Accuracy** - Designed for dissertations, theses, and journal articles
+- **Multi-Domain Support** - Validates grammar, citations, statistics, structure, and field-specific terminology
+- **Context-Aware** - Understands document structure and academic conventions
+- **Performance** - Can check 50,000+ words efficiently
 - **100% FREE** - No API keys, no limits, no restrictions
+
+### Validation Modules
+1. **Grammar Checker** - 90+ core rules (extensible to 2000+)
+2. **Citation Validator** - 5 major citation styles with cross-referencing
+3. **Statistics Validator** - APA 7th edition compliance for all statistical notation
+4. **Structure Analyzer** - Document type-specific structure validation
+5. **Field Validator** - Terminology and methodology for 6+ academic disciplines
+6. **Plagiarism Detector** - Multi-strategy originality checking
 
 ## 🔒 Privacy & Security
 
@@ -255,18 +320,30 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
-- [x] **Offline grammar checking** - 2000+ rules, 100% offline, PhD-level accuracy
+### ✅ Completed Features
+- [x] **Offline grammar checking** - 90+ core rules, extensible to 2000+, PhD-level accuracy
 - [x] **Academic writing focus** - Specialized rules for research papers
 - [x] **Context-aware analysis** - Sentence and paragraph structure understanding
-- [x] **Complete privacy** - No data leaves your device
-- [ ] Additional rule sets for specific disciplines (STEM, Humanities, Social Sciences)
+- [x] **Complete privacy** - No data leaves your device, 100% offline
+- [x] **Citation validation** - APA, MLA, Chicago, IEEE, Harvard with auto-detection
+- [x] **Statistical notation checking** - p-values, CI, effect sizes, sample sizes
+- [x] **Academic structure validation** - Document type-specific requirements
+- [x] **Field-specific validation** - STEM, Medicine, Engineering, Social Sciences, Humanities, Business
+- [x] **Enhanced plagiarism detection** - Self-plagiarism, quotation analysis, attribution checking
+- [x] **Bibliography management** - Reference formatting and cross-referencing
+
+### 🚀 Future Enhancements
+- [ ] Version control and change tracking
+- [ ] Comments and annotations system
 - [ ] Real-time collaboration features
-- [ ] Browser extension
-- [ ] Mobile app version
-- [ ] Integration with reference managers (Zotero, Mendeley)
+- [ ] Browser extension for writing in web apps
+- [ ] Mobile app version (iOS and Android)
+- [ ] Integration with reference managers (Zotero, Mendeley, EndNote)
 - [ ] Custom dictionary and user-defined rules
-- [ ] Export to LaTeX with formatting
-- [ ] Enhanced citation format checking
+- [ ] Export to LaTeX with formatting preservation
+- [ ] Journal-specific style guides (Nature, Science, PLOS, etc.)
+- [ ] AI-powered writing suggestions
+- [ ] Multi-language support beyond English
 
 ---
 
