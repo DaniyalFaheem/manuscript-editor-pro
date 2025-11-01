@@ -13,14 +13,43 @@ import {
   Badge,
   Tooltip,
   Collapse,
+  Button,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
-import { Check, Close, Error, Warning, Info, HelpOutline } from '@mui/icons-material';
+import { 
+  Check, 
+  Close, 
+  Error, 
+  Warning, 
+  Info, 
+  HelpOutline,
+  AutoFixHigh,
+  ExpandMore,
+} from '@mui/icons-material';
 import { useDocument } from '../context/DocumentContext';
 
 const SuggestionPanel: React.FC = () => {
-  const { suggestions, acceptSuggestion, dismissSuggestion, navigateToSuggestion } = useDocument();
+  const { 
+    suggestions, 
+    acceptSuggestion, 
+    dismissSuggestion, 
+    navigateToSuggestion,
+    autoCorrectAll,
+    autoCorrectByType,
+    autoCorrectBySeverity,
+  } = useDocument();
   const [filter, setFilter] = useState<string>('all');
   const [showLegend, setShowLegend] = useState<boolean>(false);
+  const [autoCorrectMenuAnchor, setAutoCorrectMenuAnchor] = useState<null | HTMLElement>(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmDialogAction, setConfirmDialogAction] = useState<(() => void) | null>(null);
+  const [confirmDialogMessage, setConfirmDialogMessage] = useState('');
 
   // Memoize filtered suggestions to avoid re-filtering on every render
   const filteredSuggestions = useMemo(() => {
@@ -52,6 +81,92 @@ const SuggestionPanel: React.FC = () => {
   const getTypeCount = (type: string) => {
     if (type === 'all') return suggestions.length;
     return suggestions.filter(s => s.type === type).length;
+  };
+
+  // Count correctable suggestions
+  const correctableCount = useMemo(() => {
+    return suggestions.filter(s => s.suggestion && s.suggestion.trim() !== '').length;
+  }, [suggestions]);
+
+  const correctableByType = useMemo(() => {
+    return (type: string) => {
+      return suggestions.filter(
+        s => s.type === type && s.suggestion && s.suggestion.trim() !== ''
+      ).length;
+    };
+  }, [suggestions]);
+
+  const handleAutoCorrectClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAutoCorrectMenuAnchor(event.currentTarget);
+  };
+
+  const handleAutoCorrectMenuClose = () => {
+    setAutoCorrectMenuAnchor(null);
+  };
+
+  const openConfirmDialog = (message: string, action: () => void) => {
+    setConfirmDialogMessage(message);
+    setConfirmDialogAction(() => action);
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDialogClose = () => {
+    setConfirmDialogOpen(false);
+    setConfirmDialogAction(null);
+  };
+
+  const handleConfirmDialogAccept = () => {
+    if (confirmDialogAction) {
+      confirmDialogAction();
+    }
+    handleConfirmDialogClose();
+  };
+
+  const handleAutoCorrectAll = () => {
+    handleAutoCorrectMenuClose();
+    const count = correctableCount;
+    if (count === 0) {
+      return;
+    }
+    openConfirmDialog(
+      `Are you sure you want to auto-correct all ${count} suggestions? This action will apply all available corrections to your document.`,
+      () => {
+        const applied = autoCorrectAll();
+        console.log(`Auto-corrected ${applied} suggestions`);
+      }
+    );
+  };
+
+  const handleAutoCorrectByType = (type: 'grammar' | 'style' | 'punctuation' | 'spelling') => {
+    handleAutoCorrectMenuClose();
+    const count = correctableByType(type);
+    if (count === 0) {
+      return;
+    }
+    openConfirmDialog(
+      `Are you sure you want to auto-correct all ${count} ${type} suggestions?`,
+      () => {
+        const applied = autoCorrectByType(type);
+        console.log(`Auto-corrected ${applied} ${type} suggestions`);
+      }
+    );
+  };
+
+  const handleAutoCorrectBySeverity = (severity: 'error' | 'warning' | 'info') => {
+    handleAutoCorrectMenuClose();
+    const count = suggestions.filter(
+      s => s.severity === severity && s.suggestion && s.suggestion.trim() !== ''
+    ).length;
+    if (count === 0) {
+      return;
+    }
+    openConfirmDialog(
+      `Are you sure you want to auto-correct all ${count} ${severity} level suggestions?`,
+      () => {
+        const applied = autoCorrectBySeverity(severity);
+        console.log(`Auto-corrected ${applied} ${severity} suggestions`);
+      }
+    );
   };
 
   return (
@@ -138,6 +253,110 @@ const SuggestionPanel: React.FC = () => {
             </Badge>
           </ToggleButton>
         </ToggleButtonGroup>
+
+        {correctableCount > 0 && (
+          <Box sx={{ mt: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              startIcon={<AutoFixHigh />}
+              endIcon={<ExpandMore />}
+              onClick={handleAutoCorrectClick}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 600,
+              }}
+            >
+              Auto-Correct ({correctableCount})
+            </Button>
+            
+            <Menu
+              anchorEl={autoCorrectMenuAnchor}
+              open={Boolean(autoCorrectMenuAnchor)}
+              onClose={handleAutoCorrectMenuClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+            >
+              <MenuItem onClick={handleAutoCorrectAll} disabled={correctableCount === 0}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
+                  <Typography>All Suggestions</Typography>
+                  <Chip label={correctableCount} size="small" color="primary" />
+                </Box>
+              </MenuItem>
+              <Divider />
+              <MenuItem 
+                onClick={() => handleAutoCorrectByType('grammar')} 
+                disabled={correctableByType('grammar') === 0}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
+                  <Typography>Grammar Only</Typography>
+                  <Chip label={correctableByType('grammar')} size="small" color="error" />
+                </Box>
+              </MenuItem>
+              <MenuItem 
+                onClick={() => handleAutoCorrectByType('style')} 
+                disabled={correctableByType('style') === 0}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
+                  <Typography>Style Only</Typography>
+                  <Chip label={correctableByType('style')} size="small" color="info" />
+                </Box>
+              </MenuItem>
+              <MenuItem 
+                onClick={() => handleAutoCorrectByType('punctuation')} 
+                disabled={correctableByType('punctuation') === 0}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
+                  <Typography>Punctuation Only</Typography>
+                  <Chip label={correctableByType('punctuation')} size="small" color="warning" />
+                </Box>
+              </MenuItem>
+              <MenuItem 
+                onClick={() => handleAutoCorrectByType('spelling')} 
+                disabled={correctableByType('spelling') === 0}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
+                  <Typography>Spelling Only</Typography>
+                  <Chip label={correctableByType('spelling')} size="small" color="error" />
+                </Box>
+              </MenuItem>
+              <Divider />
+              <MenuItem 
+                onClick={() => handleAutoCorrectBySeverity('error')} 
+                disabled={suggestions.filter(s => s.severity === 'error' && s.suggestion && s.suggestion.trim() !== '').length === 0}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
+                  <Typography>Errors Only</Typography>
+                  <Chip 
+                    label={suggestions.filter(s => s.severity === 'error' && s.suggestion && s.suggestion.trim() !== '').length} 
+                    size="small" 
+                    color="error" 
+                  />
+                </Box>
+              </MenuItem>
+              <MenuItem 
+                onClick={() => handleAutoCorrectBySeverity('warning')} 
+                disabled={suggestions.filter(s => s.severity === 'warning' && s.suggestion && s.suggestion.trim() !== '').length === 0}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
+                  <Typography>Warnings Only</Typography>
+                  <Chip 
+                    label={suggestions.filter(s => s.severity === 'warning' && s.suggestion && s.suggestion.trim() !== '').length} 
+                    size="small" 
+                    color="warning" 
+                  />
+                </Box>
+              </MenuItem>
+            </Menu>
+          </Box>
+        )}
       </Box>
 
       <List sx={{ flex: 1, overflow: 'auto', p: 0 }}>
@@ -250,6 +469,41 @@ const SuggestionPanel: React.FC = () => {
           ))
         )}
       </List>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={confirmDialogOpen}
+        onClose={handleConfirmDialogClose}
+        aria-labelledby="auto-correct-confirm-title"
+        aria-describedby="auto-correct-confirm-description"
+      >
+        <DialogTitle id="auto-correct-confirm-title">
+          Confirm Auto-Correct
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="auto-correct-confirm-description">
+            {confirmDialogMessage}
+          </DialogContentText>
+          <Box sx={{ mt: 2, p: 2, bgcolor: 'warning.light', borderRadius: 1 }}>
+            <Typography variant="body2" color="warning.dark">
+              ⚠️ <strong>Note:</strong> This action cannot be easily undone. Please review the corrections before applying them.
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleConfirmDialogClose} color="inherit">
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleConfirmDialogAccept} 
+            color="primary" 
+            variant="contained"
+            autoFocus
+          >
+            Apply Corrections
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 };

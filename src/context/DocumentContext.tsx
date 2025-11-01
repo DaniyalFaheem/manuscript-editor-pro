@@ -41,6 +41,9 @@ interface DocumentContextType {
   convertLanguageVariant: (targetVariant: LanguageVariant) => void;
   togglePresentationMode: () => void;
   handleShortcutAction: (action: ShortcutAction) => void;
+  autoCorrectAll: () => number;
+  autoCorrectByType: (type: Suggestion['type']) => number;
+  autoCorrectBySeverity: (severity: Suggestion['severity']) => number;
 }
 
 const DocumentContext = createContext<DocumentContextType | undefined>(undefined);
@@ -270,6 +273,109 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setEditorRefState(ref);
   }, []);
 
+  /**
+   * Auto-correct all suggestions that have a correction available
+   * Returns the number of corrections applied
+   */
+  const autoCorrectAll = useCallback(() => {
+    const correctableSuggestions = suggestions.filter(s => s.suggestion && s.suggestion.trim() !== '');
+    
+    if (correctableSuggestions.length === 0) {
+      return 0;
+    }
+
+    // Sort by position in reverse order to maintain offsets
+    const sortedSuggestions = [...correctableSuggestions].sort((a, b) => b.startOffset - a.startOffset);
+    
+    let newContent = content;
+    let appliedCount = 0;
+
+    // Apply corrections from end to start to maintain offsets
+    for (const suggestion of sortedSuggestions) {
+      newContent = 
+        newContent.substring(0, suggestion.startOffset) +
+        suggestion.suggestion +
+        newContent.substring(suggestion.endOffset);
+      appliedCount++;
+    }
+
+    setContentState(newContent);
+    // Remove all corrected suggestions
+    setSuggestions(prev => prev.filter(s => !s.suggestion || s.suggestion.trim() === ''));
+    
+    return appliedCount;
+  }, [suggestions, content]);
+
+  /**
+   * Auto-correct suggestions by type (grammar, style, punctuation, spelling)
+   * Returns the number of corrections applied
+   */
+  const autoCorrectByType = useCallback((type: Suggestion['type']) => {
+    const correctableSuggestions = suggestions.filter(
+      s => s.type === type && s.suggestion && s.suggestion.trim() !== ''
+    );
+    
+    if (correctableSuggestions.length === 0) {
+      return 0;
+    }
+
+    // Sort by position in reverse order to maintain offsets
+    const sortedSuggestions = [...correctableSuggestions].sort((a, b) => b.startOffset - a.startOffset);
+    
+    let newContent = content;
+    let appliedCount = 0;
+
+    // Apply corrections from end to start to maintain offsets
+    for (const suggestion of sortedSuggestions) {
+      newContent = 
+        newContent.substring(0, suggestion.startOffset) +
+        suggestion.suggestion +
+        newContent.substring(suggestion.endOffset);
+      appliedCount++;
+    }
+
+    setContentState(newContent);
+    // Remove corrected suggestions of this type
+    setSuggestions(prev => prev.filter(s => s.type !== type || !s.suggestion || s.suggestion.trim() === ''));
+    
+    return appliedCount;
+  }, [suggestions, content]);
+
+  /**
+   * Auto-correct suggestions by severity (error, warning, info)
+   * Returns the number of corrections applied
+   */
+  const autoCorrectBySeverity = useCallback((severity: Suggestion['severity']) => {
+    const correctableSuggestions = suggestions.filter(
+      s => s.severity === severity && s.suggestion && s.suggestion.trim() !== ''
+    );
+    
+    if (correctableSuggestions.length === 0) {
+      return 0;
+    }
+
+    // Sort by position in reverse order to maintain offsets
+    const sortedSuggestions = [...correctableSuggestions].sort((a, b) => b.startOffset - a.startOffset);
+    
+    let newContent = content;
+    let appliedCount = 0;
+
+    // Apply corrections from end to start to maintain offsets
+    for (const suggestion of sortedSuggestions) {
+      newContent = 
+        newContent.substring(0, suggestion.startOffset) +
+        suggestion.suggestion +
+        newContent.substring(suggestion.endOffset);
+      appliedCount++;
+    }
+
+    setContentState(newContent);
+    // Remove corrected suggestions of this severity
+    setSuggestions(prev => prev.filter(s => s.severity !== severity || !s.suggestion || s.suggestion.trim() === ''));
+    
+    return appliedCount;
+  }, [suggestions, content]);
+
   const value: DocumentContextType = {
     content,
     suggestions,
@@ -295,6 +401,9 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     convertLanguageVariant,
     togglePresentationMode,
     handleShortcutAction,
+    autoCorrectAll,
+    autoCorrectByType,
+    autoCorrectBySeverity,
   };
 
   return (
