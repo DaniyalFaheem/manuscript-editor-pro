@@ -17,7 +17,7 @@ export function countSyllables(word: string): number {
   
   // Count vowel groups
   const vowelGroups = word.match(/[aeiouy]+/g);
-  let syllableCount = vowelGroups ? vowelGroups.length : 0;
+  const syllableCount = vowelGroups ? vowelGroups.length : 0;
   
   // Ensure at least 1 syllable
   return Math.max(1, syllableCount);
