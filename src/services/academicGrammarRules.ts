@@ -3,7 +3,7 @@
  * Designed for PhD-level research papers and academic writing
  */
 
-import type { AcademicGrammarRule } from '../types/academicRules';
+import type { AcademicGrammarRule, RuleContext } from '../types/academicRules';
 
 /**
  * A. FUNDAMENTAL GRAMMAR RULES (400+ rules)
@@ -564,17 +564,45 @@ const citationMethodologyRules: AcademicGrammarRule[] = [
  * Oxford comma, semicolons, hyphens, quotation marks
  */
 const punctuationFormattingRules: AcademicGrammarRule[] = [
-  // Oxford Comma
+  // Oxford Comma - ENHANCED to reduce false positives with technical terms
+  // Now intelligently detects compound technical terms and avoids suggesting
+  // Oxford comma for terms like "photothermal and photodynamic therapy"
   {
     id: 'punct-001',
-    pattern: /\b(\w+)\s+(\w+)\s+and\s+(\w+)\b/gi,
+    pattern: /\b(\w+),\s+(\w+)\s+and\s+(\w+)\b/gi,
     message: 'Consider using Oxford comma: "A, B, and C" for clarity in academic writing.',
     type: 'punctuation',
     severity: 'info',
     category: 'punctuation',
+    explanation: 'Oxford comma (serial comma) can improve clarity in lists of three or more items.',
     examples: [
       { incorrect: 'temperature, pressure and volume', correct: 'temperature, pressure, and volume' }
-    ]
+    ],
+    // Custom context filter to reduce false positives with compound technical terms
+    contextFilter: (_context: RuleContext, match: RegExpExecArray): boolean => {
+      // Extract the matched words
+      const word1 = match[1];
+      const word2 = match[2];
+      const word3 = match[3];
+      
+      // Skip if this is just two related technical terms (not a true list)
+      // e.g., "photothermal and photodynamic" should not trigger Oxford comma
+      if (word2.length > 5 && word3.length > 5) {
+        const prefix2 = word2.toLowerCase().substring(0, Math.min(6, word2.length));
+        const prefix3 = word3.toLowerCase().substring(0, Math.min(6, word3.length));
+        // Check if they share a common prefix (technical compound terms)
+        if (prefix2 === prefix3 || word2.toLowerCase().indexOf(prefix3) === 0 || word3.toLowerCase().indexOf(prefix2) === 0) {
+          return false;
+        }
+      }
+      
+      // Skip very short lists of single words (often not true lists)
+      if (word1.length <= 3 && word2.length <= 3 && word3.length <= 3) {
+        return false;
+      }
+      
+      return true;
+    }
   },
   
   // Semicolon Usage
