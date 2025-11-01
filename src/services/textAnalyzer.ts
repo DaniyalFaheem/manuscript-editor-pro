@@ -131,7 +131,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
         console.info(`✅ Successfully using ${apiUsed} as grammar checker!`);
         languageToolSuccess = true; // Mark as successful to avoid offline message
       }
-    } catch (alternativeError) {
+    } catch {
       console.info('ℹ️ Online APIs currently unavailable. Using Professional Offline Checker with 2000+ academic rules.');
       
       if (typeof window !== 'undefined') {

@@ -292,7 +292,7 @@ export async function checkWithAlternativeAPIs(text: string): Promise<{
         suggestions,
         apiUsed: api.name,
       };
-    } catch (error) {
+    } catch {
       console.warn(`${api.name} API failed, trying next...`);
       continue;
     }
