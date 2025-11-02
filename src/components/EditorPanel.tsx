@@ -138,7 +138,41 @@ const EditorPanel: React.FC = () => {
     }, [suggestions]);
 
     return (
-        <Paper sx={{ height: '100%', overflow: 'hidden' }}>
+        <Paper 
+            elevation={0}
+            sx={{ 
+                height: '100%', 
+                overflow: 'hidden',
+                background: (theme) => theme.palette.mode === 'dark'
+                    ? 'linear-gradient(135deg, #1a1a24 0%, #2d1b4e 100%)'
+                    : 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.mode === 'dark' 
+                    ? 'rgba(139, 92, 246, 0.3)' 
+                    : 'rgba(99, 102, 241, 0.2)',
+                boxShadow: (theme) => theme.palette.mode === 'dark'
+                    ? '0 8px 32px rgba(139, 92, 246, 0.3), 0 0 60px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+                    : '0 8px 32px rgba(99, 102, 241, 0.1)',
+                borderRadius: 3,
+                backdropFilter: 'blur(20px)',
+                position: 'relative',
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '3px',
+                    background: (theme) => theme.palette.mode === 'dark'
+                        ? 'linear-gradient(90deg, #8b5cf6 0%, #ec4899 50%, #8b5cf6 100%)'
+                        : 'linear-gradient(90deg, #4f46e5 0%, #8b5cf6 50%, #4f46e5 100%)',
+                    borderRadius: '12px 12px 0 0',
+                    boxShadow: (theme) => theme.palette.mode === 'dark'
+                        ? '0 0 20px rgba(139, 92, 246, 0.6)'
+                        : 'none',
+                },
+            }}
+        >
             <style>{EDITOR_DECORATION_STYLES}</style>
             <Editor
                 height="100%"
@@ -152,7 +186,7 @@ const EditorPanel: React.FC = () => {
                     wordWrap: 'on',
                     lineNumbers: 'on',
                     fontSize: 14,
-                    padding: { top: 10 },
+                    padding: { top: 16, bottom: 10 },
                     // Performance optimizations
                     scrollBeyondLastLine: false,
                     renderLineHighlight: 'line',

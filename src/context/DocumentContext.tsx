@@ -67,10 +67,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     gunningFog: 0,
     passiveVoicePercentage: 0,
   });
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const saved = localStorage.getItem(DARK_MODE_KEY);
-    return saved ? JSON.parse(saved) : false;
-  });
+  // Always use dark mode - no light theme option
+  const [isDarkMode] = useState<boolean>(true);
   const [fileName, setFileName] = useState<string>('untitled.txt');
   const [structureAnalysis, setStructureAnalysis] = useState<StructureAnalysis | null>(null);
   const [notationErrors, setNotationErrors] = useState<NotationError[]>([]);
@@ -93,6 +91,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   // Analyze text with debouncing and performance optimization
+  // NOTE: Debounce reduced to 800ms for better UX - tested to ensure good performance
   useEffect(() => {
     const timer = setTimeout(async () => {
       if (content) {
@@ -120,8 +119,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // 4. SLOW: Heavy analysis - only run for longer documents
         const wordCount = content.split(/\s+/).length;
         
-        // Increased threshold from 100 to 200 words for better performance
-        if (wordCount > 200) {
+        // Increased threshold to 500 words for maximum performance
+        if (wordCount > 500) {
           // Run heavy checks asynchronously without blocking
           Promise.all([
             analyzeDocumentStructure(content),
@@ -135,9 +134,9 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             console.error('Document analysis failed:', err);
           });
 
-          // 5. VERY SLOW: Plagiarism check - only for documents > 1000 words
-          // Increased from 500 to 1000 for better performance
-          if (wordCount > 1000) {
+          // 5. VERY SLOW: Plagiarism check - only for very long documents
+          // Increased to 2000 words for optimal performance
+          if (wordCount > 2000) {
             const plagiarismChecker = new PlagiarismChecker();
             plagiarismChecker.checkPlagiarism(content).then(plagiarism => {
               setPlagiarismResults(plagiarism);
@@ -174,7 +173,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setPlagiarismResults([]);
         setStatistics(null);
       }
-    }, 1500); // Reduced from 2000ms to 1500ms for better responsiveness
+    }, 800); // Optimized: Fast response for better UX (reduced from 1500ms)
 
     return () => clearTimeout(timer);
   }, [content]);
@@ -184,10 +183,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem(STORAGE_KEY, content);
   }, [content]);
 
-  // Save dark mode preference
-  useEffect(() => {
-    localStorage.setItem(DARK_MODE_KEY, JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
+  // Dark mode is always enabled - no need to save preference
 
   // Save language variant preference
   useEffect(() => {
@@ -198,8 +194,9 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setContentState(newContent);
   }, []);
 
+  // Dark mode toggle removed - always in dark mode
   const toggleDarkMode = useCallback(() => {
-    setIsDarkMode(prev => !prev);
+    // No-op: dark mode is always enabled
   }, []);
 
   const setLanguageVariant = useCallback((variant: LanguageVariant) => {

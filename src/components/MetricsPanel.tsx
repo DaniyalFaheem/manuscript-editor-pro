@@ -41,49 +41,171 @@ const MetricsPanel: React.FC = () => {
 
   return (
     <Paper
-      elevation={2}
+      elevation={0}
       sx={{
         height: '100%',
         overflow: 'auto',
-        p: 2,
+        p: 2.5,
+        background: (theme) => theme.palette.mode === 'dark'
+          ? 'linear-gradient(135deg, #1a1a24 0%, #2d1b4e 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
+        border: '1px solid',
+        borderColor: (theme) => theme.palette.mode === 'dark' 
+          ? 'rgba(139, 92, 246, 0.3)' 
+          : 'rgba(99, 102, 241, 0.2)',
+        boxShadow: (theme) => theme.palette.mode === 'dark'
+          ? '0 8px 32px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+          : '0 8px 32px rgba(99, 102, 241, 0.1)',
+        borderRadius: 3,
+        backdropFilter: 'blur(20px)',
+        position: 'relative',
+        '&::before': (theme) => theme.palette.mode === 'dark' ? {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '3px',
+          background: 'linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%)',
+          borderRadius: '12px 12px 0 0',
+        } : {},
       }}
     >
-      <Typography variant="h6" gutterBottom>
+      <Typography 
+        variant="h6" 
+        gutterBottom
+        sx={{
+          fontWeight: 800,
+          background: (theme) => theme.palette.mode === 'dark'
+            ? 'linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #f0abfc 100%)'
+            : 'linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          letterSpacing: '-0.01em',
+          mb: 2,
+          filter: (theme) => theme.palette.mode === 'dark' ? 'drop-shadow(0 0 8px rgba(139, 92, 246, 0.3))' : 'none',
+        }}
+      >
         Document Metrics
       </Typography>
 
-      <Divider sx={{ my: 2 }} />
+      <Divider sx={{ 
+        my: 2,
+        borderColor: (theme) => theme.palette.mode === 'dark' 
+          ? 'rgba(139, 92, 246, 0.2)' 
+          : 'rgba(99, 102, 241, 0.1)',
+        boxShadow: (theme) => theme.palette.mode === 'dark'
+          ? '0 1px 3px rgba(139, 92, 246, 0.2)'
+          : 'none',
+      }} />
 
       {/* Word Count Section */}
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <TextFields sx={{ mr: 1, color: 'primary.main' }} />
-          <Typography variant="subtitle2">Word Statistics</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+          <TextFields sx={{ 
+            mr: 1, 
+            color: 'primary.main',
+            fontSize: 20,
+          }} />
+          <Typography 
+            variant="subtitle2"
+            sx={{ fontWeight: 600, letterSpacing: '0.01em' }}
+          >
+            Word Statistics
+          </Typography>
         </Box>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(99, 102, 241, 0.1)'
+              : 'rgba(99, 102, 241, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(99, 102, 241, 0.2)'
+              : 'rgba(99, 102, 241, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Words
             </Typography>
-            <Typography variant="h5">{metrics.wordCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
+              {metrics.wordCount}
+            </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(245, 158, 11, 0.1)'
+              : 'rgba(245, 158, 11, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(245, 158, 11, 0.2)'
+              : 'rgba(245, 158, 11, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(245, 158, 11, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Characters
             </Typography>
-            <Typography variant="h5">{metrics.characterCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'secondary.main' }}>
+              {metrics.characterCount}
+            </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(16, 185, 129, 0.1)'
+              : 'rgba(16, 185, 129, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(16, 185, 129, 0.2)'
+              : 'rgba(16, 185, 129, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Sentences
             </Typography>
-            <Typography variant="h5">{metrics.sentenceCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
+              {metrics.sentenceCount}
+            </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(59, 130, 246, 0.1)'
+              : 'rgba(59, 130, 246, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(59, 130, 246, 0.2)'
+              : 'rgba(59, 130, 246, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Paragraphs
             </Typography>
-            <Typography variant="h5">{metrics.paragraphCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'info.main' }}>
+              {metrics.paragraphCount}
+            </Typography>
           </Box>
         </Box>
       </Box>
@@ -92,14 +214,14 @@ const MetricsPanel: React.FC = () => {
 
       {/* Readability Section */}
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
           <Assessment sx={{ mr: 1, color: 'primary.main' }} />
-          <Typography variant="subtitle2">Readability Scores</Typography>
+          <Typography variant="subtitle2">Readability</Typography>
         </Box>
 
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 1.5 }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            Flesch Reading Ease
+            Flesch Score
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box sx={{ flex: 1 }}>
@@ -107,7 +229,7 @@ const MetricsPanel: React.FC = () => {
                 variant="determinate"
                 value={metrics.fleschReadingEase}
                 sx={{
-                  height: 8,
+                  height: 6,
                   borderRadius: 1,
                   bgcolor: 'grey.300',
                   '& .MuiLinearProgress-bar': {
@@ -117,7 +239,7 @@ const MetricsPanel: React.FC = () => {
               />
             </Box>
             <Typography variant="body2" fontWeight="bold" sx={{ minWidth: 40 }}>
-              {metrics.fleschReadingEase.toFixed(1)}
+              {metrics.fleschReadingEase.toFixed(0)}
             </Typography>
           </Box>
           <Typography variant="caption" color="text.secondary">
@@ -125,31 +247,23 @@ const MetricsPanel: React.FC = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Grade Level (Flesch-Kincaid)
-          </Typography>
-          <Typography variant="h6">
-            {metrics.fleschKincaidGrade.toFixed(1)}
-          </Typography>
-        </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Gunning Fog Index
-          </Typography>
-          <Typography variant="h6">
-            {metrics.gunningFog.toFixed(1)}
-          </Typography>
-        </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Complex Words
-          </Typography>
-          <Typography variant="h6">
-            {metrics.complexWordCount}
-          </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Grade Level
+            </Typography>
+            <Typography variant="h6">
+              {metrics.fleschKincaidGrade.toFixed(1)}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Complex Words
+            </Typography>
+            <Typography variant="h6">
+              {metrics.complexWordCount}
+            </Typography>
+          </Box>
         </Box>
       </Box>
 
@@ -157,12 +271,12 @@ const MetricsPanel: React.FC = () => {
 
       {/* Writing Quality Section */}
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
           <Spellcheck sx={{ mr: 1, color: 'primary.main' }} />
-          <Typography variant="subtitle2">Writing Quality</Typography>
+          <Typography variant="subtitle2">Quality</Typography>
         </Box>
 
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 1.5 }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Passive Voice
           </Typography>
@@ -172,7 +286,7 @@ const MetricsPanel: React.FC = () => {
                 variant="determinate"
                 value={Math.min(metrics.passiveVoicePercentage, 100)}
                 sx={{
-                  height: 8,
+                  height: 6,
                   borderRadius: 1,
                   bgcolor: 'grey.300',
                   '& .MuiLinearProgress-bar': {
@@ -181,41 +295,39 @@ const MetricsPanel: React.FC = () => {
                 }}
               />
             </Box>
-            <Typography variant="body2" fontWeight="bold" sx={{ minWidth: 50 }}>
-              {metrics.passiveVoicePercentage.toFixed(1)}%
+            <Typography variant="body2" fontWeight="bold" sx={{ minWidth: 45 }}>
+              {metrics.passiveVoicePercentage.toFixed(0)}%
             </Typography>
           </Box>
           <Typography variant="caption" color="text.secondary">
-            {metrics.passiveVoicePercentage <= 10 ? 'Good' : metrics.passiveVoicePercentage <= 20 ? 'Acceptable' : 'Too High'}
+            {metrics.passiveVoicePercentage <= 10 ? 'Good' : metrics.passiveVoicePercentage <= 20 ? 'OK' : 'High'}
           </Typography>
         </Box>
 
         <Box>
           <Typography variant="body2" color="text.secondary">
-            Avg. Words per Sentence
+            Avg Words/Sentence
           </Typography>
           <Typography variant="h6">
-            {metrics.averageWordsPerSentence.toFixed(1)}
+            {metrics.averageWordsPerSentence.toFixed(0)}
           </Typography>
         </Box>
       </Box>
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Tips Section */}
+      {/* Tips Section - Compact */}
       <Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <Article sx={{ mr: 1, color: 'primary.main' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+          <Article sx={{ mr: 1, color: 'primary.main', fontSize: '1rem' }} />
           <Typography variant="subtitle2">Tips</Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary">
-          • Aim for Flesch Reading Ease score above 60
+        <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.4 }}>
+          • Flesch score &gt; 60
           <br />
-          • Keep passive voice below 10%
+          • Passive voice &lt; 10%
           <br />
-          • Target 15-20 words per sentence
-          <br />
-          • Minimize complex words
+          • 15-20 words/sentence
         </Typography>
       </Box>
     </Paper>
