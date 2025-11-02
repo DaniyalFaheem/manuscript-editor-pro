@@ -4,6 +4,7 @@ import { checkWithAlternativeAPIs } from './alternativeGrammarAPIs';
 import { checkAcademicGrammar } from './offlineAcademicChecker';
 import { validateAllCitations, detectCitationStyle } from './citationValidator';
 import { validateAllStatistics } from './enhancedStatisticsValidator';
+import { quickSpellCheck } from './advancedSpellChecker';
 
 // Enable debug logging (set to false for production)
 const DEBUG = false;
@@ -12,7 +13,7 @@ const log = (...args: unknown[]) => {
   if (DEBUG) console.log(...args);
 };
 
-// Simple cache for recently analyzed text to avoid redundant processing
+// Enhanced cache with multiple entries for better performance
 interface AnalysisCache {
   text: string;
   hash: string;
@@ -20,8 +21,30 @@ interface AnalysisCache {
   timestamp: number;
 }
 
-let analysisCache: AnalysisCache | null = null;
-const CACHE_DURATION = 60000; // 60 seconds (increased to reduce API calls and processing overhead)
+// Store multiple cache entries for better hit rate
+const cacheMap = new Map<string, AnalysisCache>();
+const MAX_CACHE_ENTRIES = 5;
+const CACHE_DURATION = 90000; // 90 seconds (increased to reduce API calls and processing overhead)
+
+// Clean up old cache entries periodically
+function cleanCache() {
+  const now = Date.now();
+  const entries = Array.from(cacheMap.entries());
+  
+  // Remove expired entries
+  for (const [hash, cache] of entries) {
+    if (now - cache.timestamp > CACHE_DURATION) {
+      cacheMap.delete(hash);
+    }
+  }
+  
+  // If still too many, remove oldest
+  if (cacheMap.size > MAX_CACHE_ENTRIES) {
+    const sortedEntries = entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+    const toRemove = sortedEntries.slice(0, cacheMap.size - MAX_CACHE_ENTRIES);
+    toRemove.forEach(([hash]) => cacheMap.delete(hash));
+  }
+}
 
 /**
  * Generate a hash for text caching
@@ -67,43 +90,68 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   const textHash = simpleHash(text);
   const now = Date.now();
   
-  // Cache hit only if hash matches AND text length matches (double check for safety)
-  if (analysisCache && 
-      analysisCache.hash === textHash && 
-      analysisCache.text.length === text.length &&
-      (now - analysisCache.timestamp) < CACHE_DURATION) {
+  // Clean up old cache entries
+  cleanCache();
+  
+  // Check if we have a cache hit
+  const cachedResult = cacheMap.get(textHash);
+  if (cachedResult && 
+      cachedResult.text.length === text.length &&
+      (now - cachedResult.timestamp) < CACHE_DURATION) {
     log('Using cached analysis results');
-    return analysisCache.suggestions;
+    return cachedResult.suggestions;
   }
 
   const allSuggestions: Suggestion[] = [];
   const suggestionSources: string[] = [];
 
-  // HYBRID APPROACH: Run offline checker ALONGSIDE online APIs for maximum coverage
+  // ENHANCED HYBRID APPROACH: Run multiple checkers in parallel for maximum coverage
   // This ensures 100% accuracy by combining multiple detection methods
   
-  // 1. OFFLINE CHECKER (runs in parallel for comprehensive coverage)
-  log('Running enhanced offline checker for comprehensive coverage...');
-  let offlineSuggestions: Suggestion[] = [];
-  try {
-    // Run offline checker with enhanced configuration for maximum accuracy
-    offlineSuggestions = checkAcademicGrammar(text, {
-      enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
-      enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
-      enabledSeverities: ['error', 'warning', 'info'],
-      maxSuggestions: 1000,
-      removeOverlapping: true
-    });
+  // Start parallel checking for better performance
+  const offlineChecksPromise = Promise.all([
+    // 1. OFFLINE GRAMMAR CHECKER (130+ comprehensive rules)
+    (async () => {
+      try {
+        log('Running enhanced offline checker for comprehensive coverage...');
+        const suggestions = checkAcademicGrammar(text, {
+          enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
+          enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
+          enabledSeverities: ['error', 'warning', 'info'],
+          maxSuggestions: 1000,
+          removeOverlapping: true
+        });
+        
+        if (suggestions.length > 0) {
+          log(`✓ Enhanced offline checker found ${suggestions.length} issues`);
+        }
+        return suggestions;
+      } catch (error) {
+        console.error('Offline grammar checking failed:', error);
+        return [];
+      }
+    })(),
     
-    if (offlineSuggestions.length > 0) {
-      log(`✓ Enhanced offline checker found ${offlineSuggestions.length} issues`);
-      suggestionSources.push('Offline (100000+ rules)');
-    }
-  } catch (error) {
-    console.error('Offline grammar checking failed:', error);
-  }
+    // 2. ADVANCED NLP SPELL CHECKER (Natural library)
+    (async () => {
+      try {
+        log('Running advanced NLP spell checker...');
+        const suggestions = quickSpellCheck(text);
+        
+        if (suggestions.length > 0) {
+          log(`✓ Advanced spell checker found ${suggestions.length} issues`);
+        }
+        return suggestions;
+      } catch (error) {
+        console.error('Advanced spell checking failed:', error);
+        return [];
+      }
+    })()
+  ]);
+  
+  let offlineSuggestions: Suggestion[] = [];
 
-  // 2. PRIMARY ONLINE: LanguageTool API
+  // 3. PRIMARY ONLINE: LanguageTool API
   let onlineApiSuccess = false;
   let apiErrorMessage = '';
   
@@ -131,7 +179,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     onlineApiSuccess = false;
   }
 
-  // 3. FALLBACK: Alternative APIs
+  // 4. FALLBACK: Alternative APIs (parallel with enhanced coverage)
   if (!onlineApiSuccess) {
     console.info('🔄 Trying alternative free grammar APIs for you...');
     
@@ -154,7 +202,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
         onlineApiSuccess = true; // Mark as successful to avoid offline message
       }
     } catch {
-      console.info('✅ Using Professional Offline Checker with 100000+ academic rules - Perfect for research papers and PhD dissertations!');
+      console.info('✅ Using Professional Offline Checker with 130+ comprehensive rules + Advanced NLP - Perfect for research papers!');
       
       // No notification needed (removed per user request)
       if (typeof window !== 'undefined') {
@@ -164,8 +212,13 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     }
   }
   
-  // 4. MERGE: Add offline suggestions (remove duplicates based on position and message)
+  // 5. MERGE: Wait for offline checks and merge results
+  const [offlineGrammarSuggestions, advancedSpellSuggestions] = await offlineChecksPromise;
+  offlineSuggestions = [...offlineGrammarSuggestions, ...advancedSpellSuggestions];
+  
   if (offlineSuggestions.length > 0) {
+    suggestionSources.push(`Offline (130+ rules) + Advanced NLP`);
+    
     const existingKeys = new Set(
       allSuggestions.map(s => `${s.startOffset}-${s.endOffset}-${s.message}`)
     );
@@ -238,12 +291,12 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   log(`Total suggestions found: ${allSuggestions.length}`);
   
   // Cache the results for future use
-  analysisCache = {
+  cacheMap.set(textHash, {
     text,
     hash: textHash,
     suggestions: allSuggestions,
     timestamp: Date.now()
-  };
+  });
   
   return allSuggestions;
 }

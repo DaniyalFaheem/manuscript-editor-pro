@@ -265,11 +265,124 @@ async function checkWithGrammarBot(text: string): Promise<Suggestion[]> {
 }
 
 // ============================================================================
-// MAIN ALTERNATIVE API CHECKER
+// AFTER THE DEADLINE API
 // ============================================================================
 
 /**
- * Try alternative grammar checking APIs in order
+ * Check text using After The Deadline API
+ * Free and open source API
+ */
+async function checkWithAfterTheDeadline(text: string): Promise<Suggestion[]> {
+  // After The Deadline has multiple free public endpoints
+  const endpoints = [
+    'https://service.afterthedeadline.com/checkDocument',
+    'https://api.afterthedeadline.com/checkDocument'
+  ];
+  
+  let lastError: Error | null = null;
+  
+  for (const apiUrl of endpoints) {
+    try {
+      const formData = new URLSearchParams();
+      formData.append('key', 'manuscript-editor-pro');
+      formData.append('data', text);
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
+        signal: AbortSignal.timeout(20000), // 20 second timeout
+      });
+
+      if (!response.ok) {
+        throw new Error(`After The Deadline API error: ${response.status}`);
+      }
+
+      const xmlText = await response.text();
+      
+      // Parse XML response
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+      const errors = xmlDoc.getElementsByTagName('error');
+      
+      const suggestions: Suggestion[] = [];
+      
+      for (let i = 0; i < errors.length; i++) {
+        const error = errors[i];
+        const errorString = error.getElementsByTagName('string')[0]?.textContent || '';
+        const description = error.getElementsByTagName('description')[0]?.textContent || '';
+        const precontext = error.getElementsByTagName('precontext')[0]?.textContent || '';
+        const errorType = error.getElementsByTagName('type')[0]?.textContent || '';
+        const suggestionsElements = error.getElementsByTagName('suggestions')[0]?.getElementsByTagName('option');
+        
+        const suggestionsList: string[] = [];
+        if (suggestionsElements) {
+          for (let j = 0; j < suggestionsElements.length; j++) {
+            const option = suggestionsElements[j].textContent;
+            if (option) suggestionsList.push(option);
+          }
+        }
+        
+        // Find the position of the error in the text
+        const searchText = precontext + errorString;
+        const startOffset = text.indexOf(searchText);
+        
+        if (startOffset !== -1) {
+          const actualStart = startOffset + precontext.length;
+          const endOffset = actualStart + errorString.length;
+          const startPos = getPositionFromOffset(text, actualStart);
+          const endPos = getPositionFromOffset(text, endOffset);
+          
+          // Map ATD error types to our types
+          let type: Suggestion['type'] = 'grammar';
+          let severity: Suggestion['severity'] = 'warning';
+          
+          if (errorType === 'spelling') {
+            type = 'spelling';
+            severity = 'error';
+          } else if (errorType === 'style') {
+            type = 'style';
+          } else if (errorType === 'grammar') {
+            type = 'grammar';
+            severity = 'error';
+          }
+          
+          suggestions.push({
+            id: generateId(),
+            type,
+            severity,
+            message: description,
+            original: errorString,
+            suggestion: suggestionsList.length > 0 ? suggestionsList[0] : '',
+            startLine: startPos.line,
+            endLine: endPos.line,
+            startColumn: startPos.column,
+            endColumn: endPos.column,
+            startOffset: actualStart,
+            endOffset,
+          });
+        }
+      }
+      
+      return suggestions;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      continue; // Try next endpoint
+    }
+  }
+  
+  console.error('After The Deadline API failed:', lastError);
+  throw lastError || new Error('All After The Deadline endpoints failed');
+}
+
+// ============================================================================
+// MAIN ALTERNATIVE API CHECKER WITH ENHANCED SUPPORT
+// ============================================================================
+
+/**
+ * Try alternative grammar checking APIs in order with parallel execution
  * Used as fallback when LanguageTool is unavailable
  */
 export async function checkWithAlternativeAPIs(text: string): Promise<{
@@ -277,24 +390,26 @@ export async function checkWithAlternativeAPIs(text: string): Promise<{
   apiUsed: string;
 }> {
   const apis = [
+    { name: 'After The Deadline', fn: checkWithAfterTheDeadline },
     { name: 'GrammarBot', fn: checkWithGrammarBot },
     { name: 'Textgears', fn: checkWithTextgears },
     { name: 'Sapling AI', fn: checkWithSaplingAI },
   ];
 
-  for (const api of apis) {
-    try {
+  // Try APIs in parallel for faster results
+  const results = await Promise.allSettled(
+    apis.map(async (api) => {
       console.log(`Trying ${api.name} API...`);
       const suggestions = await api.fn(text);
       console.log(`✓ ${api.name} API succeeded with ${suggestions.length} suggestions`);
-      
-      return {
-        suggestions,
-        apiUsed: api.name,
-      };
-    } catch {
-      console.warn(`${api.name} API failed, trying next...`);
-      continue;
+      return { suggestions, apiUsed: api.name };
+    })
+  );
+
+  // Return the first successful result
+  for (const result of results) {
+    if (result.status === 'fulfilled' && result.value.suggestions.length >= 0) {
+      return result.value;
     }
   }
 
