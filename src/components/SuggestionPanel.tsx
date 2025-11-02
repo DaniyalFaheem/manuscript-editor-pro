@@ -439,14 +439,78 @@ const SuggestionPanel: React.FC = () => {
                     </Typography>
                     
                     {suggestion.original && suggestion.suggestion && (
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 0.5 }}>
-                        <Typography variant="body2" sx={{ textDecoration: 'line-through', color: 'error.main' }}>
-                          {suggestion.original}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">→</Typography>
-                        <Typography variant="body2" sx={{ color: 'success.main' }}>
-                          {suggestion.suggestion}
-                        </Typography>
+                      <Box sx={{ mt: 1.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Box sx={{ 
+                          p: 1.5, 
+                          borderRadius: 1, 
+                          bgcolor: (theme) => theme.palette.mode === 'dark' 
+                            ? 'rgba(239, 68, 68, 0.1)' 
+                            : 'rgba(239, 68, 68, 0.05)',
+                          border: '1px solid',
+                          borderColor: (theme) => theme.palette.mode === 'dark'
+                            ? 'rgba(239, 68, 68, 0.3)'
+                            : 'rgba(239, 68, 68, 0.2)',
+                        }}>
+                          <Typography 
+                            variant="caption" 
+                            fontWeight={700} 
+                            sx={{ 
+                              color: 'error.main',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.05em',
+                              display: 'block',
+                              mb: 0.5
+                            }}
+                          >
+                            Issue
+                          </Typography>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              color: 'error.main',
+                              fontWeight: 500,
+                              textDecoration: 'line-through',
+                              fontFamily: 'monospace',
+                            }}
+                          >
+                            {suggestion.original}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ 
+                          p: 1.5, 
+                          borderRadius: 1, 
+                          bgcolor: (theme) => theme.palette.mode === 'dark' 
+                            ? 'rgba(16, 185, 129, 0.1)' 
+                            : 'rgba(16, 185, 129, 0.05)',
+                          border: '1px solid',
+                          borderColor: (theme) => theme.palette.mode === 'dark'
+                            ? 'rgba(16, 185, 129, 0.3)'
+                            : 'rgba(16, 185, 129, 0.2)',
+                        }}>
+                          <Typography 
+                            variant="caption" 
+                            fontWeight={700} 
+                            sx={{ 
+                              color: 'success.main',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.05em',
+                              display: 'block',
+                              mb: 0.5
+                            }}
+                          >
+                            Correction
+                          </Typography>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              color: 'success.main',
+                              fontWeight: 600,
+                              fontFamily: 'monospace',
+                            }}
+                          >
+                            {suggestion.suggestion}
+                          </Typography>
+                        </Box>
                       </Box>
                     )}
                     
