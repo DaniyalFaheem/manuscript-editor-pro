@@ -15,6 +15,13 @@ const fundamentalGrammarRules: AcademicGrammarRule[] = [
     id: 'svagr-001',
     pattern: /\b(the|this|that|a|an)\s+(\w+)\s+(are|were|have)\b/gi,
     message: 'Possible subject-verb agreement error. Singular subject with plural verb.',
+    suggestion: (match) => {
+      // Replace plural verb with singular
+      const text = match[0];
+      return text.replace(/\bare\b/i, m => m[0] === 'A' ? 'Is' : 'is')
+                 .replace(/\bwere\b/i, m => m[0] === 'W' ? 'Was' : 'was')
+                 .replace(/\bhave\b/i, m => m[0] === 'H' ? 'Has' : 'has');
+    },
     type: 'grammar',
     severity: 'error',
     category: 'grammar',
@@ -28,6 +35,13 @@ const fundamentalGrammarRules: AcademicGrammarRule[] = [
     id: 'svagr-002',
     pattern: /\b(these|those|both|several|many|few)\s+(\w+)\s+(is|was|has)\b/gi,
     message: 'Possible subject-verb agreement error. Plural subject with singular verb.',
+    suggestion: (match) => {
+      // Replace singular verb with plural
+      const text = match[0];
+      return text.replace(/\bis\b/i, m => m[0] === 'I' ? 'Are' : 'are')
+                 .replace(/\bwas\b/i, m => m[0] === 'W' ? 'Were' : 'were')
+                 .replace(/\bhas\b/i, m => m[0] === 'H' ? 'Have' : 'have');
+    },
     type: 'grammar',
     severity: 'error',
     category: 'grammar',
@@ -64,6 +78,13 @@ const fundamentalGrammarRules: AcademicGrammarRule[] = [
     id: 'svagr-004',
     pattern: /\b(criteria|phenomena|analyses|hypotheses|theses)\s+(is|was|has)\b/gi,
     message: 'Plural Latin/Greek term with singular verb. These words are plural.',
+    suggestion: (match) => {
+      // Replace singular verb with plural for Latin/Greek plurals
+      const text = match[0];
+      return text.replace(/\bis\b/i, m => m[0] === 'I' ? 'Are' : 'are')
+                 .replace(/\bwas\b/i, m => m[0] === 'W' ? 'Were' : 'were')
+                 .replace(/\bhas\b/i, m => m[0] === 'H' ? 'Have' : 'have');
+    },
     type: 'grammar',
     severity: 'error',
     category: 'spelling',
@@ -114,6 +135,10 @@ const fundamentalGrammarRules: AcademicGrammarRule[] = [
     id: 'conf-004',
     pattern: /\b(then)\s+(the|this|these|those|it|they)\b/gi,
     message: 'Did you mean "than" for comparison?',
+    suggestion: (match) => {
+      // Replace "then" with "than" preserving case
+      return match[0].replace(/\bthen\b/i, m => m[0] === 'T' ? 'Than' : 'than');
+    },
     type: 'grammar',
     severity: 'warning',
     category: 'grammar',
