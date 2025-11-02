@@ -32,14 +32,15 @@ export interface OfflineCheckerConfig {
 
 /**
  * Default configuration
+ * OPTIMIZED: Larger chunk size for better performance
  */
 const defaultConfig: Required<OfflineCheckerConfig> = {
   enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
   enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
   enabledSeverities: ['error', 'warning', 'info'],
-  maxSuggestions: 1000,
+  maxSuggestions: 500, // Reduced from 1000 to 500 for better performance
   removeOverlapping: true,
-  chunkSize: 5000
+  chunkSize: 8000 // Increased from 5000 to 8000 for fewer chunks
 };
 
 /**

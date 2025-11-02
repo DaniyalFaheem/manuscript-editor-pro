@@ -380,7 +380,12 @@ export function validateUnitsAndMeasurements(text: string): Suggestion[] {
       'sample', 'group', 'study', 'trial', 'experiment',
       'version', 'step', 'phase', 'stage', 'week', 'day', 'month',
       'equation', 'formula', 'model', 'id', 'number', 'no.',
-      'df =', 'α =', 'β =', 'r² =', 'sd =', 'm =', 'age'
+      'df =', 'α =', 'β =', 'r² =', 'sd =', 'm =', 'age',
+      // CRITICAL: Add word count and text metrics context
+      'word', 'character', 'sentence', 'paragraph', 'line',
+      'item', 'point', 'percent', '%', 'times', 'fold',
+      'level', 'grade', 'score', 'rank', 'position',
+      'count', 'total', 'sum', 'average', 'mean'
     ];
     
     // Check if this is a heading number (e.g., "2.6", "3.1.2")
@@ -481,10 +486,10 @@ export function validateAllFieldSpecific(text: string, field?: AcademicField): S
   suggestions.push(...validateFieldTerminology(text, targetField));
   suggestions.push(...validateMethodologyForField(text, targetField));
   
-  // Add field-specific validators
-  if (['STEM', 'Engineering', 'Medicine'].includes(targetField)) {
-    suggestions.push(...validateUnitsAndMeasurements(text));
-  }
+  // DISABLED: Units validation removed per user request due to too many false positives
+  // if (['STEM', 'Engineering', 'Medicine'].includes(targetField)) {
+  //   suggestions.push(...validateUnitsAndMeasurements(text));
+  // }
   
   if (['Medicine', 'Social Sciences'].includes(targetField)) {
     suggestions.push(...validateEthicalConsiderations(text, targetField));
