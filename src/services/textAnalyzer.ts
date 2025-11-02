@@ -137,8 +137,9 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
 
   // DISABLED: Citation validation - can generate false positives
   // Users reported too many incorrect suggestions
-  // Re-enable if needed by uncommenting this block
+  // Re-enable if needed by uncommenting this block (restore imports at top of file too)
   /*
+  const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
   if (wordCount > 200 && (text.includes('(') || text.includes('['))) {
     try {
       log('Validating citations...');
@@ -154,12 +155,10 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       if (DEBUG) console.error('Citation validation failed:', error);
     }
   }
-  */
-
+  
   // DISABLED: Statistical notation validation - can generate false positives
   // Users reported too many incorrect suggestions
-  // Re-enable if needed by uncommenting this block
-  /*
+  // Re-enable if needed by uncommenting this block (restore imports at top of file too)
   if (wordCount > 500 && (/\bp\s*[=<>]|confidence interval|CI|effect size/i.test(text))) {
     try {
       log('Validating statistical notation...');
