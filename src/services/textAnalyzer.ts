@@ -1,8 +1,7 @@
 import type { Suggestion } from '../types';
 import { checkAcademicGrammar } from './offlineAcademicChecker';
-import { validateAllCitations, detectCitationStyle } from './citationValidator';
-import { validateAllStatistics } from './enhancedStatisticsValidator';
 // ALL API DEPENDENCIES REMOVED - 100% OFFLINE OPERATION
+// Citation and statistics validation disabled to reduce false positives
 
 // Enable debug logging (set to false for production)
 const DEBUG = false;
@@ -111,15 +110,15 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   
   const startTime = Date.now();
   
-  // Run comprehensive offline grammar checking with all rule categories
-  // NOTE: maxSuggestions reduced to 300 for performance - focuses on critical issues
-  // For documents requiring more comprehensive coverage, this can be increased
+  // Run comprehensive offline grammar checking with essential rule categories only
+  // NOTE: Only checking for grammar and spelling errors - no style suggestions
+  // This focuses on actual errors rather than stylistic preferences
   try {
     const offlineSuggestions = checkAcademicGrammar(text, {
-      enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
-      enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
-      enabledSeverities: ['error', 'warning', 'info'],
-      maxSuggestions: 300, // Optimized: Focus on most important issues (94% reduction from 5000)
+      enabledCategories: ['grammar', 'spelling', 'punctuation'],
+      enabledTypes: ['grammar', 'spelling', 'punctuation'],
+      enabledSeverities: ['error', 'warning'],
+      maxSuggestions: 100, // Focus on most critical issues only
       removeOverlapping: true
     });
     
@@ -136,11 +135,11 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     console.log(`✅ Analysis complete: ${allSuggestions.length} suggestions in ${processingTime}ms`);
   }
 
-  // Calculate word count once for reuse
+  // DISABLED: Citation validation - can generate false positives
+  // Users reported too many incorrect suggestions
+  // Re-enable if needed by uncommenting this block (restore imports at top of file too)
+  /*
   const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
-
-  // ENHANCED: Citation validation for research papers
-  // OPTIMIZATION: Only run for longer documents with citations
   if (wordCount > 200 && (text.includes('(') || text.includes('['))) {
     try {
       log('Validating citations...');
@@ -156,9 +155,10 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       if (DEBUG) console.error('Citation validation failed:', error);
     }
   }
-
-  // ENHANCED: Statistical notation validation
-  // OPTIMIZATION: Only run for longer documents with statistical notation
+  
+  // DISABLED: Statistical notation validation - can generate false positives
+  // Users reported too many incorrect suggestions
+  // Re-enable if needed by uncommenting this block (restore imports at top of file too)
   if (wordCount > 500 && (/\bp\s*[=<>]|confidence interval|CI|effect size/i.test(text))) {
     try {
       log('Validating statistical notation...');
@@ -171,6 +171,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       if (DEBUG) console.error('Statistics validation failed:', error);
     }
   }
+  */
 
   // DISABLED: Academic structure validation per user request
   // Users only want actual grammar/style/spelling/punctuation corrections

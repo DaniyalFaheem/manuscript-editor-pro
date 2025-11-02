@@ -268,10 +268,6 @@ const SuggestionPanel: React.FC = () => {
                 <Typography variant="caption" fontSize="0.7rem">Grammar</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Box sx={{ width: 12, height: 2, bgcolor: '#2196f3' }} />
-                <Typography variant="caption" fontSize="0.7rem">Style</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Box sx={{ width: 12, height: 2, bgcolor: '#ffc107' }} />
                 <Typography variant="caption" fontSize="0.7rem">Punctuation</Typography>
               </Box>
@@ -299,11 +295,6 @@ const SuggestionPanel: React.FC = () => {
           <ToggleButton value="grammar">
             <Badge badgeContent={getTypeCount('grammar')} color="primary">
               <Typography variant="caption">Grammar</Typography>
-            </Badge>
-          </ToggleButton>
-          <ToggleButton value="style">
-            <Badge badgeContent={getTypeCount('style')} color="primary">
-              <Typography variant="caption">Style</Typography>
             </Badge>
           </ToggleButton>
           <ToggleButton value="punctuation">
@@ -362,15 +353,6 @@ const SuggestionPanel: React.FC = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
                   <Typography>Grammar Only</Typography>
                   <Chip label={correctableByType('grammar')} size="small" color="error" />
-                </Box>
-              </MenuItem>
-              <MenuItem 
-                onClick={() => handleAutoCorrectByType('style')} 
-                disabled={correctableByType('style') === 0}
-              >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: 2 }}>
-                  <Typography>Style Only</Typography>
-                  <Chip label={correctableByType('style')} size="small" color="info" />
                 </Box>
               </MenuItem>
               <MenuItem 
