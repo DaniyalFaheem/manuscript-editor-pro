@@ -246,10 +246,13 @@ export function generateSpellingRules(): AcademicGrammarRule[] {
     // Generate variations with common suffixes
     const suffixes = ['s', 'ed', 'ing', 'er', 'est', 'ly', 'tion', 'ment', 'ness'];
     suffixes.forEach(suffix => {
+      // Try to generate a reasonable correction by applying suffix to the correct form
+      const correctedForm = `${correct}${suffix}`;
       rules.push({
         id: `spell-${ruleId++}`,
         pattern: new RegExp(`\\b${wrong}${suffix}\\b`, 'gi'),
-        message: `Spelling error: "${wrong}${suffix}" - check spelling.`,
+        message: `Spelling error: "${wrong}${suffix}" should be "${correctedForm}".`,
+        suggestion: () => [correctedForm],
         type: 'spelling',
         severity: 'error',
         category: 'spelling'

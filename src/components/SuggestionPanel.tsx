@@ -392,7 +392,27 @@ const SuggestionPanel: React.FC = () => {
                     {getSeverityIcon(suggestion.severity)}
                   </Box>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography variant="body2" gutterBottom>
+                    {/* Quick summary showing the change */}
+                    {suggestion.original && suggestion.suggestion && (
+                      <Box sx={{ mb: 1.5, p: 1, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
+                        <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontWeight="bold">
+                          CORRECTION NEEDED:
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                          <Typography variant="body2" sx={{ textDecoration: 'line-through', color: 'error.main', fontWeight: 600 }}>
+                            "{suggestion.original}"
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            →
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: 'success.main', fontWeight: 600 }}>
+                            "{suggestion.suggestion}"
+                          </Typography>
+                        </Box>
+                      </Box>
+                    )}
+                    
+                    <Typography variant="body2" gutterBottom fontWeight="medium">
                       {suggestion.message}
                     </Typography>
                     
@@ -411,21 +431,33 @@ const SuggestionPanel: React.FC = () => {
                     {suggestion.original && (
                       <Box sx={{ mt: 1.5, p: 1.5, bgcolor: 'error.light', borderRadius: 1, border: '1px solid', borderColor: 'error.main' }}>
                         <Typography variant="caption" color="error.dark" fontWeight="bold" display="block" mb={0.5}>
-                          ❌ Issue:
+                          ❌ Issue Found:
                         </Typography>
-                        <Typography variant="body2" color="error.dark" sx={{ fontFamily: 'monospace' }}>
-                          {suggestion.original}
+                        <Typography variant="body2" color="error.dark" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                          "{suggestion.original}"
                         </Typography>
                       </Box>
                     )}
 
-                    {suggestion.suggestion && (
+                    {suggestion.suggestion ? (
                       <Box sx={{ mt: 1, p: 1.5, bgcolor: 'success.light', borderRadius: 1, border: '1px solid', borderColor: 'success.main' }}>
                         <Typography variant="caption" color="success.dark" fontWeight="bold" display="block" mb={0.5}>
-                          ✅ Correction:
+                          ✅ Suggested Correction:
                         </Typography>
-                        <Typography variant="body2" color="success.dark" sx={{ fontFamily: 'monospace' }}>
-                          {suggestion.suggestion}
+                        <Typography variant="body2" color="success.dark" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                          "{suggestion.suggestion}"
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Box sx={{ mt: 1, p: 1.5, bgcolor: 'info.light', borderRadius: 1, border: '1px solid', borderColor: 'info.main' }}>
+                        <Typography variant="caption" color="info.dark" fontWeight="bold" display="block" mb={0.5}>
+                          💡 Guidance:
+                        </Typography>
+                        <Typography variant="body2" color="info.dark" sx={{ fontStyle: 'italic' }}>
+                          {suggestion.message}
+                        </Typography>
+                        <Typography variant="caption" color="info.dark" display="block" mt={1}>
+                          Please review this text and make the appropriate correction manually.
                         </Typography>
                       </Box>
                     )}
