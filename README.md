@@ -22,77 +22,37 @@ A comprehensive, **100% FREE**, and open-source manuscript paper editing softwar
 ## ✨ Key Features
 
 ### 📝 Real-time Text Analysis
-- **🎨 Color-Coded Inline Highlighting** - **NEW! Grammarly-style error detection**
+- **🎨 Color-Coded Inline Highlighting** - **Focused error detection**
   - **Red wavy underlines** - Grammar errors with high severity
-  - **Orange wavy underlines** - Grammar warnings and suggestions
-  - **Blue wavy underlines** - Style improvements and recommendations
+  - **Orange wavy underlines** - Grammar warnings
   - **Yellow wavy underlines** - Punctuation and formatting issues
   - **Red dotted underlines** - Spelling errors and typos
   - **Hover tooltips** - See error type and correction without leaving the editor
   - **Minimap integration** - Errors shown in editor overview for quick navigation
   - **Color legend** - Collapsible guide explains what each color represents
-- **🏆 50,000+ COMPREHENSIVE OFFLINE RULES** - **Most Powerful 100% Offline Tool Available!**
-  - **🎯 10,000+ Grammar Rules** - Every grammar pattern imaginable (subject-verb, tenses, articles, modals, etc.)
-  - **📝 10,000+ Spelling Rules** - All common misspellings, typos, British/American variants, academic terms
-  - **✏️ 10,000+ Punctuation Rules** - Complete punctuation coverage (commas, quotes, hyphens, dashes, etc.)
-  - **🎓 10,000+ Academic Tone Rules** - Contractions, informal language, clichés, first-person, absolutes
-  - **✂️ 10,000+ Wordiness Rules** - Redundancies, wordy phrases, passive voice, nominalizations
+- **🏆 FOCUSED OFFLINE RULES** - **Accuracy Over Quantity!**
+  - **🎯 Grammar Rules** - Essential grammar patterns (subject-verb, tenses, articles, modals, etc.)
+  - **📝 Spelling Rules** - Common misspellings, typos, British/American variants, academic terms
+  - **✏️ Punctuation Rules** - Essential punctuation coverage (commas, quotes, hyphens, dashes, etc.)
   - **⚡ 100% OFFLINE** - NO APIs, NO internet required, NO data transmission
   - **🚀 INSTANT (0ms)** - Cached results return immediately, new text processes in milliseconds
-  - **🧠 INTELLIGENT** - Advanced pattern matching with context awareness and semantic understanding
-  - **✅ 100% ACCURATE** - Exhaustive rule coverage catches every possible error type
+  - **🧠 INTELLIGENT** - Advanced pattern matching with context awareness
+  - **✅ FEWER FALSE POSITIVES** - Focuses on actual errors, not stylistic preferences
   - **🔒 100% PRIVATE** - Everything runs in your browser, zero external connections
   - **📚 Academic Focus** - Specifically designed for PhD dissertations, theses, and research papers
-  - **⚡ ULTRA-FAST** - Optimized algorithms handle 100,000+ words in seconds
+  - **⚡ ULTRA-FAST** - Optimized algorithms handle large documents efficiently
   - **💾 Smart Caching** - Multi-document intelligent caching for instant repeat analysis
   - **🎯 100% EFFICIENT** - Parallel processing + chunking + de-duplication for maximum speed
-  - **🏅 PhD-Level Quality** - Exceeds all free and most premium tools
   - **100% Free Forever** - No limits, no APIs to fail, no paid features, unlimited usage
 
-### 📚 Citation Management & Validation (NEW!)
-- **Multi-Format Support** - APA 7th, MLA 9th, Chicago 17th, IEEE, Harvard
-- **Auto-Detection** - Automatically identifies citation style from your document
-- **In-Text Citation Validation** - Ensures proper formatting and syntax
-- **Cross-Referencing** - Verifies citations match bibliography entries
-- **DOI & ISBN Validation** - Checks identifier formats
-- **Bibliography Generator** - Auto-formats references in any citation style
-- **Missing Citation Detection** - Identifies statements requiring attribution
+### 📚 Advanced Features (Document Analysis)
+**Note:** The following advanced features are available for longer documents but have been optimized to reduce false positives:
 
-### 📊 Statistical Notation Validation (NEW!)
-- **P-Value Formatting** - APA 7th edition compliance (p = .001, p < .001)
-- **Confidence Intervals** - Format and range validation (95% CI [lower, upper])
-- **Effect Sizes** - Cohen's d, eta-squared, omega-squared, Cramer's V
-- **Sample Size Notation** - Correct use of N (total) vs n (subsample)
-- **Statistical Tests** - Complete reporting for t-tests, F-tests, ANOVA, chi-square, correlations
-- **Descriptive Statistics** - Mean (M), Standard Deviation (SD), Standard Error (SE)
-- **Significant Figures** - Proper rounding and decimal places
-
-### 🏗️ Academic Structure Validation (NEW!)
-- **Document Type Detection** - Journal article, dissertation, thesis, conference paper
-- **Required Sections** - Abstract, Introduction, Methods, Results, Discussion, Conclusion
-- **Section Order** - Ensures proper sequencing of document sections
-- **Abstract Length** - Validates word count (150-300 for articles, 300-500 for dissertations)
-- **Heading Hierarchy** - Checks for proper heading levels without skips
-- **Table & Figure Numbering** - Sequential numbering validation
-- **Methodology Completeness** - Ensures all required elements are present
-
-### 🔬 Field-Specific Validation (NEW!)
-- **Auto-Detection** - Identifies academic field (STEM, Medicine, Engineering, Social Sciences, Humanities, Business)
-- **Terminology Checking** - Validates discipline-specific language
-- **Preferred Terms** - Suggests field-appropriate alternatives
-- **Deprecated Terms** - Warns against outdated or inappropriate terminology
-- **Units Validation** - SI units for STEM/Engineering fields
-- **Ethical Requirements** - IRB/ethics approval for human research (Medicine, Social Sciences)
-- **Methodology Standards** - Field-specific methodology requirements
-
-### 🔍 Enhanced Plagiarism Detection (NEW!)
-- **Self-Plagiarism** - Detects repetitive content within your document
-- **Paragraph Similarity** - Identifies similar paragraphs (>70% similarity)
-- **Excessive Quotations** - Warns when quoted material exceeds 15%
-- **Long Quotations** - Flags quotes over 100 words
-- **Missing Attributions** - Identifies statements requiring citations
-- **Paraphrasing Quality** - Analyzes content word overlap in consecutive sentences
-- **Common Phrase Detection** - Identifies overused academic phrases
+- **Citation Management** - Support for APA, MLA, Chicago, IEEE, Harvard (disabled by default to improve accuracy)
+- **Statistical Notation** - Validation for p-values, confidence intervals, effect sizes (disabled by default to improve accuracy)
+- **Academic Structure** - Document type detection and structure validation (available for documents > 500 words)
+- **Field-Specific Validation** - Terminology checking for different academic disciplines (available for documents > 500 words)
+- **Plagiarism Detection** - Self-plagiarism and similarity detection (available for documents > 2000 words)
 
 ### 📊 Comprehensive Metrics
 - **Flesch Reading Ease Score** - 0-100 scale readability measurement
@@ -248,9 +208,11 @@ The built files will be in the `dist` directory.
 - Choose your preferred format
 - Download instantly
 
-## 🎯 Grammar & Style Rules (50,000+ Total Offline Rules - World's Most Comprehensive!)
+## 🎯 Grammar & Spelling Rules (Focused on Accuracy)
 
-### A. Fundamental Grammar Rules (10,000+ comprehensive offline rules)
+**Focus on Critical Issues Only** - The editor now checks for actual errors rather than stylistic preferences, reducing false positives and unnecessary suggestions.
+
+### A. Fundamental Grammar Rules
 - Subject-verb agreement (all forms and tenses)
 - Commonly confused words (affect/effect, than/then, its/it's, alot/a lot, etc.)
 - Countable vs uncountable nouns (fewer/less, number/amount)
@@ -263,62 +225,44 @@ The built files will be in the `dist` directory.
 - Comprise vs composed of
 - Irregardless → regardless
 
-### B. Academic Tone & Formality (10,000+ comprehensive offline rules)
-- Contractions elimination (don't → do not, it's → it is)
-- Informal language detection (gonna, wanna, stuff, things, big, really, get, got)
-- First-person usage warnings (I think, I believe, in my opinion)
-- Excessive hedging detection (maybe possibly, might perhaps)
-- Absolute terms warnings (always, never, proves, all)
-- Weak intensifiers (very, really, quite, rather)
-- Filler words (basically, actually, literally)
-- Clichés (at the end of the day, in today's society)
-- Informal expressions detection
-
-### C. Citation & Methodology Language (1,000+ offline rules - part of grammar set)
-- Citation format validation and corrections
-- "et al." formatting (proper spacing and punctuation)
-- Latin abbreviations (i.e., e.g., vs., etc.) with automatic fixes
-- Formal methodology verbs (conducted, examined, analyzed)
-- Sample size notation (n = X formatting)
-- Statistical reporting (p-values, confidence intervals)
-
-### D. Advanced Punctuation & Formatting (10,000+ comprehensive offline rules)
-- Oxford comma suggestions for clarity
+### B. Punctuation & Formatting
 - Semicolon and colon usage rules
 - Hyphenation of compound adjectives (well-known, long-term)
 - Quotation mark placement with punctuation
 - Spacing around punctuation (automatic corrections)
 - Apostrophe usage (possessives, contractions, decades, its vs it's)
 - Ellipsis and parentheses formatting
-- En dash for number ranges (10–20 not 10-20)
 - Contraction spacing (it ' s → it's)
 
-### E. Wordiness & Redundancy (10,000+ comprehensive offline rules)
-- Redundant phrases (absolutely essential → essential, past history → history)
-- Wordy constructions (in order to → to, due to the fact that → because)
-- Weak verb phrases (make use of → use, give consideration to → consider)
-- Passive voice suggestions where inappropriate
-- Very unique → unique (unique is absolute)
-- Nominalizations (utilization → use, implementation → implement)
-
-### F. Academic Spelling & Terminology (10,000+ comprehensive offline rules)
+### C. Spelling & Terminology
 - Common academic misspellings (occurred, separate, receive, definitely, accommodate, beginning)
 - Frequent typos (recieve → receive, beleive → believe, wich → which, untill → until)
 - Advanced misspellings (arguement → argument, independant → independent, concious → conscious)
 - Plural/singular academic terms (data, phenomena, criteria, hypotheses, analyses)
 - American vs British spelling consistency (color/colour, analyze/analyse, center/centre)
 - Latin/Greek term corrections with proper agreement
-- Technical term validation (50+ common misspellings database)
+- Technical term validation
 
-### G. 100% Offline Performance Features
+### D. 100% Offline Performance Features
 - **Zero-latency caching** - Instant results for previously analyzed text (0ms)
-- **Intelligent chunking** - Optimized 15KB chunks for maximum throughput
+- **Intelligent chunking** - Optimized processing for maximum throughput
 - **Parallel processing** - All rule categories checked simultaneously  
 - **De-duplication** - Overlapping matches automatically filtered
 - **Context awareness** - Rules understand surrounding text for accuracy
-- **One-time initialization** - 50,000+ rules loaded once and cached
+- **One-time initialization** - Rules loaded once and cached
 - **No external dependencies** - Everything runs in your browser
 - **Maximum privacy** - Zero data transmission, 100% local operation
+
+### What's Been Removed
+To improve accuracy and reduce false positives, the following checks have been **disabled**:
+- ❌ Style suggestions (passive voice, wordiness, hedge words)
+- ❌ Academic tone enforcement (contractions, informal language, first-person)
+- ❌ Citation format validation (often flagged correct citations)
+- ❌ Statistical notation validation (too many false positives)
+- ❌ Long sentence warnings
+- ❌ Weak intensifier detection
+
+The editor now focuses on **actual errors** that need correction rather than stylistic preferences.
 
 ## 📊 Readability Metrics Explained
 
