@@ -11,7 +11,7 @@
 
 import type { Suggestion } from '../types';
 import type { RuleMatch } from '../types/academicRules';
-import { allAcademicRules, rulesByCategory, TOTAL_RULES } from './academicGrammarRules';
+import { allAcademicRules, TOTAL_RULES } from './academicGrammarRules';
 import { generateAllOfflineRules } from './massiveOfflineRuleGenerator';
 import {
   applyRulesInChunks,
@@ -220,7 +220,8 @@ export function getCheckingStatistics(text: string, config: OfflineCheckerConfig
   averageMatchesPerWord: number;
 } {
   const mergedConfig = { ...defaultConfig, ...config };
-  const rules = selectRules(mergedConfig.enabledCategories);
+  const massiveRules = getMassiveRules();
+  const rules = selectRulesFromMassive(massiveRules, mergedConfig.enabledCategories);
   
   const matches = applyRulesInChunks(
     rules,
