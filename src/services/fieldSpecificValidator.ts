@@ -486,10 +486,10 @@ export function validateAllFieldSpecific(text: string, field?: AcademicField): S
   suggestions.push(...validateFieldTerminology(text, targetField));
   suggestions.push(...validateMethodologyForField(text, targetField));
   
-  // Add field-specific validators
-  if (['STEM', 'Engineering', 'Medicine'].includes(targetField)) {
-    suggestions.push(...validateUnitsAndMeasurements(text));
-  }
+  // DISABLED: Units validation removed per user request due to too many false positives
+  // if (['STEM', 'Engineering', 'Medicine'].includes(targetField)) {
+  //   suggestions.push(...validateUnitsAndMeasurements(text));
+  // }
   
   if (['Medicine', 'Social Sciences'].includes(targetField)) {
     suggestions.push(...validateEthicalConsiderations(text, targetField));

@@ -242,15 +242,16 @@ export function validateStructure(text: string, type: DocumentType): Suggestion[
   
   // OPTIMIZATION: Only validate structure for documents with clear section markers
   // This prevents false positives on short documents, drafts, or partial content
-  const wordCount = text.split(/\s+/).length;
+  const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
   const hasMultipleSections = sections.length >= 3;
   
-  // Only check for missing sections if:
+  // Only check for missing sections if BOTH conditions are met:
   // 1. Document is substantial (>2000 words for journal articles, >5000 for theses)
   // 2. Document already has clear section structure (3+ sections detected)
   const minWordCount = type === 'dissertation' ? 10000 : type === 'thesis' ? 5000 : 2000;
   
-  if (wordCount < minWordCount && !hasMultipleSections) {
+  // STRICTER: Require BOTH conditions (substantial word count AND multiple sections)
+  if (wordCount < minWordCount || !hasMultipleSections) {
     // Skip structure validation for short documents or documents without clear sections
     return suggestions;
   }
