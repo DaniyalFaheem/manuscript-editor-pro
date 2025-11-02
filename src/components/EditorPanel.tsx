@@ -102,13 +102,19 @@ const EditorPanel: React.FC = () => {
 
             const { className, inlineClassName } = getDecorationClasses();
 
-            // Create hover message with correction
+            // Create hover message with correction in Grammarly-style format
             const hoverMessage: string[] = [
                 `**${suggestion.type.toUpperCase()}**: ${suggestion.message}`
             ];
             
-            if (suggestion.suggestion) {
-                hoverMessage.push(`**Suggestion**: ${suggestion.suggestion}`);
+            // Add Issue and Correction labels like Grammarly Pro
+            if (suggestion.original && suggestion.suggestion) {
+                hoverMessage.push('');  // Empty line for spacing
+                hoverMessage.push(`**Issue**: ~~${suggestion.original}~~`);
+                hoverMessage.push(`**Correction**: ${suggestion.suggestion}`);
+            } else if (suggestion.suggestion) {
+                hoverMessage.push('');  // Empty line for spacing
+                hoverMessage.push(`**Correction**: ${suggestion.suggestion}`);
             }
 
             return {
