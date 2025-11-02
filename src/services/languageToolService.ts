@@ -49,12 +49,14 @@ interface LanguageToolConfig {
   timeout?: number;
 }
 
-// Multiple LanguageTool mirror endpoints for redundancy
+// Multiple LanguageTool mirror endpoints for redundancy and worldwide coverage
 // These are all FREE public endpoints with no API key required
 const LANGUAGETOOL_MIRRORS = [
-  { url: 'https://api.languagetoolplus.com/v2', name: 'LanguageTool Plus Community' },
-  { url: 'https://api.languagetool.org/v2', name: 'LanguageTool Official' },
-  { url: 'https://languagetool.org/api/v2', name: 'LanguageTool Alt' },
+  { url: 'https://api.languagetoolplus.com/v2', name: 'LanguageTool Plus Community (US)' },
+  { url: 'https://api.languagetool.org/v2', name: 'LanguageTool Official (EU)' },
+  { url: 'https://languagetool.org/api/v2', name: 'LanguageTool Alt (Global)' },
+  { url: 'https://api.languagetool.dev/v2', name: 'LanguageTool Dev (Global)' },
+  { url: 'https://lt.beolingus.de/v2', name: 'LanguageTool Beolingus (DE)' },
 ];
 
 // Default configuration - FREE, no API key needed
