@@ -192,35 +192,28 @@ const SuggestionPanel: React.FC = () => {
         </Box>
 
         <Collapse in={showLegend}>
-          <Box sx={{ mb: 2, p: 1.5, bgcolor: 'background.default', borderRadius: 1 }}>
-            <Typography variant="caption" fontWeight="bold" display="block" mb={1}>
-              Color Guide (In-Editor Highlights):
+          <Box sx={{ mb: 1, p: 1, bgcolor: 'background.default', borderRadius: 1, fontSize: '0.75rem' }}>
+            <Typography variant="caption" fontWeight="bold" display="block" mb={0.5}>
+              Editor Highlights:
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ width: 20, height: 2, bgcolor: '#f44336', borderRadius: 1 }} />
-                <Typography variant="caption">Grammar Errors (Red)</Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.5, fontSize: '0.7rem' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Box sx={{ width: 12, height: 2, bgcolor: '#f44336' }} />
+                <Typography variant="caption" fontSize="0.7rem">Grammar</Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ width: 20, height: 2, bgcolor: '#ff9800', borderRadius: 1 }} />
-                <Typography variant="caption">Grammar Warnings (Orange)</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Box sx={{ width: 12, height: 2, bgcolor: '#2196f3' }} />
+                <Typography variant="caption" fontSize="0.7rem">Style</Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ width: 20, height: 2, bgcolor: '#2196f3', borderRadius: 1 }} />
-                <Typography variant="caption">Style Issues (Blue)</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Box sx={{ width: 12, height: 2, bgcolor: '#ffc107' }} />
+                <Typography variant="caption" fontSize="0.7rem">Punctuation</Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ width: 20, height: 2, bgcolor: '#ffc107', borderRadius: 1 }} />
-                <Typography variant="caption">Punctuation (Yellow)</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ width: 20, height: 2, bgcolor: '#d32f2f', borderRadius: 1 }} />
-                <Typography variant="caption">Spelling Errors (Red Dots)</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Box sx={{ width: 12, height: 2, bgcolor: '#d32f2f' }} />
+                <Typography variant="caption" fontSize="0.7rem">Spelling</Typography>
               </Box>
             </Box>
-            <Typography variant="caption" display="block" mt={1} fontStyle="italic" color="text.secondary">
-              Hover over underlined text in the editor for correction suggestions.
-            </Typography>
           </Box>
         </Collapse>
         
@@ -379,7 +372,8 @@ const SuggestionPanel: React.FC = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'stretch',
-                  py: 2,
+                  py: 1.5,
+                  px: 2,
                   cursor: 'pointer',
                   '&:hover': {
                     bgcolor: 'action.hover',
@@ -392,113 +386,58 @@ const SuggestionPanel: React.FC = () => {
                     {getSeverityIcon(suggestion.severity)}
                   </Box>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                    {/* Quick summary showing the change */}
-                    {suggestion.original && suggestion.suggestion && (
-                      <Box sx={{ mb: 1.5, p: 1, bgcolor: 'background.default', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}>
-                        <Typography variant="caption" color="text.secondary" display="block" mb={0.5} fontWeight="bold">
-                          CORRECTION NEEDED:
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-                          <Typography variant="body2" sx={{ textDecoration: 'line-through', color: 'error.main', fontWeight: 600 }}>
-                            "{suggestion.original}"
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            →
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: 'success.main', fontWeight: 600 }}>
-                            "{suggestion.suggestion}"
-                          </Typography>
-                        </Box>
-                      </Box>
-                    )}
-                    
-                    <Typography variant="body2" gutterBottom fontWeight="medium">
+                    <Typography variant="body2" gutterBottom>
                       {suggestion.message}
                     </Typography>
                     
-                    <Box sx={{ mt: 1 }}>
+                    {suggestion.original && suggestion.suggestion && (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 0.5 }}>
+                        <Typography variant="body2" sx={{ textDecoration: 'line-through', color: 'error.main' }}>
+                          {suggestion.original}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">→</Typography>
+                        <Typography variant="body2" sx={{ color: 'success.main' }}>
+                          {suggestion.suggestion}
+                        </Typography>
+                      </Box>
+                    )}
+                    
+                    <Box sx={{ mt: 0.5, display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Chip
                         label={suggestion.type}
                         size="small"
                         color={getSeverityColor(suggestion.severity)}
-                        sx={{ mr: 1 }}
                       />
                       <Typography variant="caption" color="text.secondary">
-                        Line {suggestion.startLine} • Click to navigate
+                        Line {suggestion.startLine}
                       </Typography>
                     </Box>
-
-                    {suggestion.original && (
-                      <Box sx={{ mt: 1.5, p: 1.5, bgcolor: 'error.light', borderRadius: 1, border: '1px solid', borderColor: 'error.main' }}>
-                        <Typography variant="caption" color="error.dark" fontWeight="bold" display="block" mb={0.5}>
-                          ❌ Issue Found:
-                        </Typography>
-                        <Typography variant="body2" color="error.dark" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
-                          "{suggestion.original}"
-                        </Typography>
-                      </Box>
-                    )}
-
-                    {suggestion.suggestion ? (
-                      <Box sx={{ mt: 1, p: 1.5, bgcolor: 'success.light', borderRadius: 1, border: '1px solid', borderColor: 'success.main' }}>
-                        <Typography variant="caption" color="success.dark" fontWeight="bold" display="block" mb={0.5}>
-                          ✅ Suggested Correction:
-                        </Typography>
-                        <Typography variant="body2" color="success.dark" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
-                          "{suggestion.suggestion}"
-                        </Typography>
-                      </Box>
-                    ) : (
-                      <Box sx={{ mt: 1, p: 1.5, bgcolor: 'info.light', borderRadius: 1, border: '1px solid', borderColor: 'info.main' }}>
-                        <Typography variant="caption" color="info.dark" fontWeight="bold" display="block" mb={0.5}>
-                          💡 Guidance:
-                        </Typography>
-                        <Typography variant="body2" color="info.dark" sx={{ fontStyle: 'italic' }}>
-                          {suggestion.message}
-                        </Typography>
-                        <Typography variant="caption" color="info.dark" display="block" mt={1}>
-                          Please review this text and make the appropriate correction manually.
-                        </Typography>
-                      </Box>
-                    )}
                   </Box>
                 </Box>
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1 }}>
                   {suggestion.suggestion && (
-                    <Tooltip title="Apply this correction to your document">
-                      <IconButton
-                        size="medium"
-                        color="success"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          acceptSuggestion(suggestion.id);
-                        }}
-                        sx={{
-                          bgcolor: 'success.light',
-                          '&:hover': { bgcolor: 'success.main', color: 'white' }
-                        }}
-                      >
-                        <Check />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                  <Tooltip title="Ignore this suggestion">
                     <IconButton
-                      size="medium"
-                      color="error"
+                      size="small"
+                      color="success"
                       onClick={(e) => {
                         e.stopPropagation();
-                        dismissSuggestion(suggestion.id);
-                      }}
-                      sx={{
-                        bgcolor: 'error.light',
-                        '&:hover': { bgcolor: 'error.main', color: 'white' }
+                        acceptSuggestion(suggestion.id);
                       }}
                     >
-                      <Close />
+                      <Check fontSize="small" />
                     </IconButton>
-                  </Tooltip>
+                  )}
+                  <IconButton
+                    size="small"
+                    color="error"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dismissSuggestion(suggestion.id);
+                    }}
+                  >
+                    <Close fontSize="small" />
+                  </IconButton>
                 </Box>
               </ListItem>
               <Divider />

@@ -92,14 +92,14 @@ const MetricsPanel: React.FC = () => {
 
       {/* Readability Section */}
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
           <Assessment sx={{ mr: 1, color: 'primary.main' }} />
-          <Typography variant="subtitle2">Readability Scores</Typography>
+          <Typography variant="subtitle2">Readability</Typography>
         </Box>
 
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 1.5 }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            Flesch Reading Ease
+            Flesch Score
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box sx={{ flex: 1 }}>
@@ -107,7 +107,7 @@ const MetricsPanel: React.FC = () => {
                 variant="determinate"
                 value={metrics.fleschReadingEase}
                 sx={{
-                  height: 8,
+                  height: 6,
                   borderRadius: 1,
                   bgcolor: 'grey.300',
                   '& .MuiLinearProgress-bar': {
@@ -117,7 +117,7 @@ const MetricsPanel: React.FC = () => {
               />
             </Box>
             <Typography variant="body2" fontWeight="bold" sx={{ minWidth: 40 }}>
-              {metrics.fleschReadingEase.toFixed(1)}
+              {metrics.fleschReadingEase.toFixed(0)}
             </Typography>
           </Box>
           <Typography variant="caption" color="text.secondary">
@@ -125,31 +125,23 @@ const MetricsPanel: React.FC = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Grade Level (Flesch-Kincaid)
-          </Typography>
-          <Typography variant="h6">
-            {metrics.fleschKincaidGrade.toFixed(1)}
-          </Typography>
-        </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Gunning Fog Index
-          </Typography>
-          <Typography variant="h6">
-            {metrics.gunningFog.toFixed(1)}
-          </Typography>
-        </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Complex Words
-          </Typography>
-          <Typography variant="h6">
-            {metrics.complexWordCount}
-          </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Grade Level
+            </Typography>
+            <Typography variant="h6">
+              {metrics.fleschKincaidGrade.toFixed(1)}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Complex Words
+            </Typography>
+            <Typography variant="h6">
+              {metrics.complexWordCount}
+            </Typography>
+          </Box>
         </Box>
       </Box>
 
@@ -157,12 +149,12 @@ const MetricsPanel: React.FC = () => {
 
       {/* Writing Quality Section */}
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
           <Spellcheck sx={{ mr: 1, color: 'primary.main' }} />
-          <Typography variant="subtitle2">Writing Quality</Typography>
+          <Typography variant="subtitle2">Quality</Typography>
         </Box>
 
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 1.5 }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Passive Voice
           </Typography>
@@ -172,7 +164,7 @@ const MetricsPanel: React.FC = () => {
                 variant="determinate"
                 value={Math.min(metrics.passiveVoicePercentage, 100)}
                 sx={{
-                  height: 8,
+                  height: 6,
                   borderRadius: 1,
                   bgcolor: 'grey.300',
                   '& .MuiLinearProgress-bar': {
@@ -181,41 +173,39 @@ const MetricsPanel: React.FC = () => {
                 }}
               />
             </Box>
-            <Typography variant="body2" fontWeight="bold" sx={{ minWidth: 50 }}>
-              {metrics.passiveVoicePercentage.toFixed(1)}%
+            <Typography variant="body2" fontWeight="bold" sx={{ minWidth: 45 }}>
+              {metrics.passiveVoicePercentage.toFixed(0)}%
             </Typography>
           </Box>
           <Typography variant="caption" color="text.secondary">
-            {metrics.passiveVoicePercentage <= 10 ? 'Good' : metrics.passiveVoicePercentage <= 20 ? 'Acceptable' : 'Too High'}
+            {metrics.passiveVoicePercentage <= 10 ? 'Good' : metrics.passiveVoicePercentage <= 20 ? 'OK' : 'High'}
           </Typography>
         </Box>
 
         <Box>
           <Typography variant="body2" color="text.secondary">
-            Avg. Words per Sentence
+            Avg Words/Sentence
           </Typography>
           <Typography variant="h6">
-            {metrics.averageWordsPerSentence.toFixed(1)}
+            {metrics.averageWordsPerSentence.toFixed(0)}
           </Typography>
         </Box>
       </Box>
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Tips Section */}
+      {/* Tips Section - Compact */}
       <Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <Article sx={{ mr: 1, color: 'primary.main' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+          <Article sx={{ mr: 1, color: 'primary.main', fontSize: '1rem' }} />
           <Typography variant="subtitle2">Tips</Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary">
-          • Aim for Flesch Reading Ease score above 60
+        <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.4 }}>
+          • Flesch score &gt; 60
           <br />
-          • Keep passive voice below 10%
+          • Passive voice &lt; 10%
           <br />
-          • Target 15-20 words per sentence
-          <br />
-          • Minimize complex words
+          • 15-20 words/sentence
         </Typography>
       </Box>
     </Paper>
