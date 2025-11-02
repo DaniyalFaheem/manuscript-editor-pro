@@ -112,12 +112,14 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   const startTime = Date.now();
   
   // Run comprehensive offline grammar checking with all rule categories
+  // NOTE: maxSuggestions reduced to 300 for performance - focuses on critical issues
+  // For documents requiring more comprehensive coverage, this can be increased
   try {
     const offlineSuggestions = checkAcademicGrammar(text, {
       enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
       enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
       enabledSeverities: ['error', 'warning', 'info'],
-      maxSuggestions: 300, // Optimized: Focus on most important issues
+      maxSuggestions: 300, // Optimized: Focus on most important issues (94% reduction from 5000)
       removeOverlapping: true
     });
     

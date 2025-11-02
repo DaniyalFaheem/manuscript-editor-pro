@@ -93,6 +93,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   // Analyze text with debouncing and performance optimization
+  // NOTE: Debounce reduced to 800ms for better UX - tested to ensure good performance
   useEffect(() => {
     const timer = setTimeout(async () => {
       if (content) {

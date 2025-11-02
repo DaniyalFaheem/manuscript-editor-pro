@@ -28,6 +28,10 @@ import { getPositionFromOffset } from '../utils/textUtils';
 // This ensures maximum performance - rules are generated only once
 let massiveRuleCache: typeof allAcademicRules | null = null;
 
+// Performance optimization: Limit generated rules to balance speed vs coverage
+// Adjust MAX_GENERATED_RULES to tune performance (higher = slower but more thorough)
+const MAX_GENERATED_RULES = 2000;
+
 function getMassiveRules() {
   if (!massiveRuleCache) {
     console.log('🚀 Initializing optimized offline rules (one-time setup)...');
@@ -35,8 +39,8 @@ function getMassiveRules() {
     
     // Use core academic rules + limited generated rules for optimal performance
     const generatedRules = generateAllOfflineRules();
-    // Limit generated rules to avoid excessive overhead
-    const limitedGenerated = generatedRules.slice(0, 2000);
+    // Limit generated rules to avoid excessive overhead - configurable for performance tuning
+    const limitedGenerated = generatedRules.slice(0, MAX_GENERATED_RULES);
     massiveRuleCache = [...allAcademicRules, ...limitedGenerated];
     
     const initTime = Date.now() - startTime;
@@ -61,12 +65,14 @@ export interface OfflineCheckerConfig {
 /**
  * Default configuration
  * OPTIMIZED: Balanced performance with comprehensive coverage
+ * Note: Lower maxSuggestions improves performance and focuses on critical issues
+ * Increase if you need more comprehensive coverage for very long documents
  */
 const defaultConfig: Required<Omit<OfflineCheckerConfig, 'onProgress'>> = {
   enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
   enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
   enabledSeverities: ['error', 'warning', 'info'],
-  maxSuggestions: 500, // Optimized: Show most important suggestions only
+  maxSuggestions: 500, // Optimized: Show most important suggestions only (increase for longer documents)
   removeOverlapping: true,
   chunkSize: 8000 // Optimized for faster processing
 };

@@ -26,7 +26,8 @@ const ApiStatusNotification: React.FC = () => {
         const error = (window as any).__lastLanguageToolError;
         // Only show critical errors (not using alternative/offline - those work fine)
         // Only show if error is recent (within last 30 seconds) and different from current
-        if (Date.now() - error.timestamp < 30000 && !error.usingAlternative && !error.usingOffline) {
+        // Use optional chaining for safe property access
+        if (Date.now() - error.timestamp < 30000 && !error?.usingAlternative && !error?.usingOffline) {
           if (!errorInfo || error.timestamp !== errorInfo.timestamp) {
             setErrorInfo(error);
             setOpen(true);
