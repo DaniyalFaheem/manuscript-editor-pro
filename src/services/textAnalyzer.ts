@@ -21,7 +21,7 @@ interface AnalysisCache {
 }
 
 let analysisCache: AnalysisCache | null = null;
-const CACHE_DURATION = 60000; // 60 seconds (increased for better performance)
+const CACHE_DURATION = 60000; // 60 seconds (increased to reduce API calls and processing overhead)
 
 /**
  * Generate a hash for text caching

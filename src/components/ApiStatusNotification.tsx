@@ -18,7 +18,7 @@ const ApiStatusNotification: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    // Check for API errors every 10 seconds (optimized for better performance)
+    // Check for API errors every 10 seconds (reduced to minimize CPU usage and overhead)
     const interval = setInterval(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError) {
