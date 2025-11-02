@@ -178,40 +178,52 @@ const SuggestionPanel: React.FC = () => {
         flexDirection: 'column',
         overflow: 'hidden',
         background: (theme) => theme.palette.mode === 'dark'
-          ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
+          ? 'linear-gradient(135deg, #1a1a24 0%, #2d1b4e 100%)'
           : 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
         border: '1px solid',
         borderColor: (theme) => theme.palette.mode === 'dark' 
-          ? 'rgba(255, 255, 255, 0.1)' 
-          : 'rgba(99, 102, 241, 0.1)',
+          ? 'rgba(139, 92, 246, 0.3)' 
+          : 'rgba(99, 102, 241, 0.2)',
         boxShadow: (theme) => theme.palette.mode === 'dark'
-          ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+          ? '0 8px 32px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
           : '0 8px 32px rgba(99, 102, 241, 0.1)',
         borderRadius: 3,
-        backdropFilter: 'blur(10px)',
+        backdropFilter: 'blur(20px)',
+        position: 'relative',
+        '&::before': (theme) => theme.palette.mode === 'dark' ? {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '3px',
+          background: 'linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%)',
+          borderRadius: '12px 12px 0 0',
+        } : {},
       }}
     >
       <Box sx={{ 
         p: 2.5, 
         borderBottom: 1, 
         borderColor: (theme) => theme.palette.mode === 'dark' 
-          ? 'rgba(255, 255, 255, 0.1)' 
+          ? 'rgba(139, 92, 246, 0.2)' 
           : 'rgba(99, 102, 241, 0.1)',
         background: (theme) => theme.palette.mode === 'dark'
-          ? 'rgba(255, 255, 255, 0.03)'
+          ? 'rgba(139, 92, 246, 0.08)'
           : 'rgba(99, 102, 241, 0.03)',
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
           <Typography 
             variant="h6"
             sx={{
-              fontWeight: 700,
+              fontWeight: 800,
               background: (theme) => theme.palette.mode === 'dark'
-                ? 'linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%)'
-                : 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+                ? 'linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #f0abfc 100%)'
+                : 'linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               letterSpacing: '-0.01em',
+              filter: (theme) => theme.palette.mode === 'dark' ? 'drop-shadow(0 0 8px rgba(139, 92, 246, 0.3))' : 'none',
             }}
           >
             Suggestions ({suggestions.length})
@@ -222,13 +234,20 @@ const SuggestionPanel: React.FC = () => {
               onClick={() => setShowLegend(!showLegend)}
               sx={{
                 background: (theme) => theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.1)'
+                  ? 'rgba(139, 92, 246, 0.2)'
                   : 'rgba(99, 102, 241, 0.1)',
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.mode === 'dark'
+                  ? 'rgba(139, 92, 246, 0.3)'
+                  : 'rgba(99, 102, 241, 0.2)',
                 '&:hover': {
                   background: (theme) => theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.2)'
+                    ? 'rgba(139, 92, 246, 0.35)'
                     : 'rgba(99, 102, 241, 0.2)',
                   transform: 'scale(1.1)',
+                  boxShadow: (theme) => theme.palette.mode === 'dark'
+                    ? '0 4px 16px rgba(139, 92, 246, 0.4)'
+                    : 'none',
                 },
                 transition: 'all 0.2s ease-in-out',
               }}

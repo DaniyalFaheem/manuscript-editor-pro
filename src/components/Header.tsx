@@ -38,11 +38,23 @@ const Header: React.FC = () => {
         elevation={0}
         sx={{
           background: isDarkMode 
-            ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
-            : 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
-          borderBottom: '1px solid',
-          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.2)',
-          backdropFilter: 'blur(10px)',
+            ? 'linear-gradient(135deg, #1a1a24 0%, #2d1b4e 100%)'
+            : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+          borderBottom: '2px solid',
+          borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255, 255, 255, 0.3)',
+          backdropFilter: 'blur(20px)',
+          boxShadow: isDarkMode ? '0 4px 20px rgba(139, 92, 246, 0.2)' : '0 4px 20px rgba(99, 102, 241, 0.2)',
+          position: 'relative',
+          '&::after': isDarkMode ? {
+            content: '""',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent 0%, #8b5cf6 50%, transparent 100%)',
+            opacity: 0.6,
+          } : {},
         }}
       >
         <Toolbar sx={{ minHeight: { xs: 64, sm: 70 } }}>
@@ -52,12 +64,16 @@ const Header: React.FC = () => {
             component="div" 
             sx={{ 
               flexGrow: 1,
-              fontWeight: 700,
+              fontWeight: 800,
               letterSpacing: '-0.02em',
               fontSize: { xs: '1.1rem', sm: '1.3rem' },
-              background: 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
+              background: isDarkMode
+                ? 'linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #f0abfc 100%)'
+                : 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
+              textShadow: isDarkMode ? '0 0 30px rgba(139, 92, 246, 0.5)' : 'none',
+              filter: isDarkMode ? 'drop-shadow(0 0 10px rgba(139, 92, 246, 0.3))' : 'none',
             }}
           >
             Manuscript Editor Pro
@@ -70,12 +86,20 @@ const Header: React.FC = () => {
                 startIcon={<Upload />}
                 onClick={() => setUploadDialogOpen(true)}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: isDarkMode 
+                    ? 'rgba(139, 92, 246, 0.2)'
+                    : 'rgba(255, 255, 255, 0.15)',
                   backdropFilter: 'blur(10px)',
+                  border: '1px solid',
+                  borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.4)' : 'rgba(255, 255, 255, 0.3)',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: isDarkMode
+                      ? 'rgba(139, 92, 246, 0.35)'
+                      : 'rgba(255, 255, 255, 0.25)',
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    boxShadow: isDarkMode
+                      ? '0 6px 20px rgba(139, 92, 246, 0.5)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.15)',
                   },
                   transition: 'all 0.2s ease-in-out',
                   borderRadius: 2,
@@ -90,10 +114,13 @@ const Header: React.FC = () => {
                 color="inherit" 
                 onClick={() => setSearchDialogOpen(true)}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid',
+                  borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255, 255, 255, 0.2)',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: isDarkMode ? 'rgba(139, 92, 246, 0.35)' : 'rgba(255, 255, 255, 0.2)',
                     transform: 'translateY(-2px)',
+                    boxShadow: isDarkMode ? '0 4px 16px rgba(139, 92, 246, 0.4)' : 'none',
                   },
                   transition: 'all 0.2s ease-in-out',
                 }}
@@ -108,12 +135,20 @@ const Header: React.FC = () => {
                 startIcon={<Download />}
                 onClick={() => setExportDialogOpen(true)}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: isDarkMode 
+                    ? 'rgba(139, 92, 246, 0.2)'
+                    : 'rgba(255, 255, 255, 0.15)',
                   backdropFilter: 'blur(10px)',
+                  border: '1px solid',
+                  borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.4)' : 'rgba(255, 255, 255, 0.3)',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: isDarkMode
+                      ? 'rgba(139, 92, 246, 0.35)'
+                      : 'rgba(255, 255, 255, 0.25)',
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    boxShadow: isDarkMode
+                      ? '0 6px 20px rgba(139, 92, 246, 0.5)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.15)',
                   },
                   transition: 'all 0.2s ease-in-out',
                   borderRadius: 2,
@@ -128,10 +163,13 @@ const Header: React.FC = () => {
                 color="inherit" 
                 onClick={togglePresentationMode}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid',
+                  borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255, 255, 255, 0.2)',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: isDarkMode ? 'rgba(139, 92, 246, 0.35)' : 'rgba(255, 255, 255, 0.2)',
                     transform: 'translateY(-2px)',
+                    boxShadow: isDarkMode ? '0 4px 16px rgba(139, 92, 246, 0.4)' : 'none',
                   },
                   transition: 'all 0.2s ease-in-out',
                 }}
@@ -145,10 +183,13 @@ const Header: React.FC = () => {
                 color="inherit" 
                 onClick={() => setShortcutsDialogOpen(true)}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid',
+                  borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255, 255, 255, 0.2)',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: isDarkMode ? 'rgba(139, 92, 246, 0.35)' : 'rgba(255, 255, 255, 0.2)',
                     transform: 'translateY(-2px)',
+                    boxShadow: isDarkMode ? '0 4px 16px rgba(139, 92, 246, 0.4)' : 'none',
                   },
                   transition: 'all 0.2s ease-in-out',
                 }}
@@ -157,18 +198,32 @@ const Header: React.FC = () => {
               </IconButton>
             </Tooltip>
 
-            <Box sx={{ width: 1, height: 32, bgcolor: 'rgba(255, 255, 255, 0.2)', mx: 1 }} />
+            <Box sx={{ 
+              width: 1, 
+              height: 32, 
+              background: isDarkMode 
+                ? 'linear-gradient(180deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%)'
+                : 'rgba(255, 255, 255, 0.2)', 
+              mx: 1,
+              borderRadius: 1,
+            }} />
 
             <Tooltip title="Toggle Dark Mode" arrow>
               <IconButton 
                 color="inherit" 
                 onClick={toggleDarkMode}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: isDarkMode 
+                    ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%)'
+                    : 'rgba(255, 255, 255, 0.2)',
+                  border: '1px solid',
+                  borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.5)' : 'rgba(255, 255, 255, 0.3)',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.25)',
-                    transform: 'rotate(180deg) translateY(2px)',
+                    background: isDarkMode
+                      ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.5) 0%, rgba(236, 72, 153, 0.5) 100%)'
+                      : 'rgba(255, 255, 255, 0.3)',
+                    transform: 'rotate(180deg) scale(1.1)',
+                    boxShadow: isDarkMode ? '0 4px 20px rgba(139, 92, 246, 0.6)' : 'none',
                   },
                   transition: 'all 0.3s ease-in-out',
                 }}

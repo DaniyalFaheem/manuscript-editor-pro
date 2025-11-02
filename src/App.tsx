@@ -23,38 +23,38 @@ const AppContent: React.FC = () => {
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       primary: {
-        main: isDarkMode ? '#6366f1' : '#4f46e5', // Modern indigo
-        light: '#818cf8',
-        dark: '#3730a3',
+        main: isDarkMode ? '#8b5cf6' : '#6366f1', // Vivid purple for dark, indigo for light
+        light: isDarkMode ? '#a78bfa' : '#818cf8',
+        dark: isDarkMode ? '#7c3aed' : '#4f46e5',
       },
       secondary: {
-        main: isDarkMode ? '#f59e0b' : '#f59e0b', // Premium amber
-        light: '#fbbf24',
-        dark: '#d97706',
+        main: isDarkMode ? '#ec4899' : '#f59e0b', // Hot pink for dark, amber for light
+        light: isDarkMode ? '#f472b6' : '#fbbf24',
+        dark: isDarkMode ? '#db2777' : '#d97706',
       },
       background: {
-        default: isDarkMode ? '#0f172a' : '#f8fafc',
-        paper: isDarkMode ? '#1e293b' : '#ffffff',
+        default: isDarkMode ? '#0a0a0f' : '#f8fafc', // Deeper dark background
+        paper: isDarkMode ? '#1a1a24' : '#ffffff', // Rich dark paper
       },
       success: {
-        main: '#10b981',
-        light: '#34d399',
-        dark: '#059669',
+        main: isDarkMode ? '#10b981' : '#10b981',
+        light: isDarkMode ? '#34d399' : '#34d399',
+        dark: isDarkMode ? '#059669' : '#059669',
       },
       error: {
-        main: '#ef4444',
-        light: '#f87171',
-        dark: '#dc2626',
+        main: isDarkMode ? '#f43f5e' : '#ef4444', // Brighter red for dark
+        light: isDarkMode ? '#fb7185' : '#f87171',
+        dark: isDarkMode ? '#e11d48' : '#dc2626',
       },
       warning: {
-        main: '#f59e0b',
-        light: '#fbbf24',
-        dark: '#d97706',
+        main: isDarkMode ? '#fbbf24' : '#f59e0b',
+        light: isDarkMode ? '#fcd34d' : '#fbbf24',
+        dark: isDarkMode ? '#f59e0b' : '#d97706',
       },
       info: {
-        main: '#3b82f6',
-        light: '#60a5fa',
-        dark: '#2563eb',
+        main: isDarkMode ? '#06b6d4' : '#3b82f6', // Cyan for dark
+        light: isDarkMode ? '#22d3ee' : '#60a5fa',
+        dark: isDarkMode ? '#0891b2' : '#2563eb',
       },
     },
     typography: {
@@ -178,8 +178,19 @@ const AppContent: React.FC = () => {
         flexDirection: 'column', 
         height: '100vh',
         background: isDarkMode 
-          ? 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)'
-          : 'linear-gradient(180deg, #f8fafc 0%, #e0e7ff 100%)',
+          ? 'radial-gradient(ellipse at top, #1e1b4b 0%, #0a0a0f 50%, #000000 100%)'
+          : 'linear-gradient(180deg, #f8fafc 0%, #ddd6fe 100%)',
+        position: 'relative',
+        '&::before': isDarkMode ? {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%)',
+          pointerEvents: 'none',
+        } : {},
       }}>
         <Header />
         <ApiStatusNotification />
@@ -189,6 +200,8 @@ const AppContent: React.FC = () => {
           p: 3, 
           display: 'flex', 
           gap: 3,
+          position: 'relative',
+          zIndex: 1,
         }}>
           <Box sx={{ flex: '0 0 25%', minWidth: 0, height: '100%' }}>
             <SuggestionPanel />
@@ -211,11 +224,14 @@ const AppContent: React.FC = () => {
             px: 3,
             mt: 'auto',
             background: isDarkMode 
-              ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
-              : 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+              ? 'linear-gradient(135deg, #1a1a24 0%, #2d1b4e 100%)'
+              : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
             borderTop: '1px solid',
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.2)',
-            backdropFilter: 'blur(10px)',
+            borderColor: isDarkMode ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(20px)',
+            position: 'relative',
+            zIndex: 1,
+            boxShadow: isDarkMode ? '0 -4px 20px rgba(139, 92, 246, 0.2)' : '0 -4px 20px rgba(99, 102, 241, 0.2)',
           }}
         >
           <Typography 
