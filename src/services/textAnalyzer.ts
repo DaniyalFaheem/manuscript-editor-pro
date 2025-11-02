@@ -119,6 +119,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       
       // Clear any previous error notifications (removed success message per user request)
       if (typeof window !== 'undefined') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         delete (window as any).__lastLanguageToolError;
       }
     }
@@ -145,6 +146,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
         
         // Clear error notifications (removed success message per user request)
         if (typeof window !== 'undefined') {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           delete (window as any).__lastLanguageToolError;
         }
         
@@ -156,6 +158,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       
       // No notification needed (removed per user request)
       if (typeof window !== 'undefined') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         delete (window as any).__lastLanguageToolError;
       }
     }

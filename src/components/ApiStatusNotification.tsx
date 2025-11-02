@@ -20,7 +20,9 @@ const ApiStatusNotification: React.FC = () => {
   useEffect(() => {
     // Check for API errors every 10 seconds (optimized for better performance)
     const interval = setInterval(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = (window as any).__lastLanguageToolError;
         // Only show if error is recent (within last 30 seconds) and different from current
         if (Date.now() - error.timestamp < 30000) {
@@ -39,6 +41,7 @@ const ApiStatusNotification: React.FC = () => {
     setOpen(false);
     // Clear the error from window after closing
     if (typeof window !== 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (window as any).__lastLanguageToolError;
     }
   };

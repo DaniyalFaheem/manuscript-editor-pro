@@ -236,7 +236,7 @@ export function extractSections(text: string): Section[] {
  * DISABLED: Structure validation turned off per user request
  * Users only want actual grammar/style/spelling/punctuation corrections
  */
-export function validateStructure(_text: string, _type: DocumentType): Suggestion[] {
+export function validateStructure(): Suggestion[] {
   // DISABLED: Return empty array - no structure validation
   // Users don't want "Consider adding a [section] section" messages
   return [];
