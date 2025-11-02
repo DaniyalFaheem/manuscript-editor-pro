@@ -158,6 +158,7 @@ async function tryLanguageToolEndpoint(
  * Check text using LanguageTool API with multiple mirror endpoints
  * FREE - No API key required, delivers professional accuracy
  * Tries multiple endpoints for maximum reliability
+ * Optimized: Chunks large text for better performance
  */
 export async function checkWithLanguageTool(
   text: string,
@@ -167,6 +168,12 @@ export async function checkWithLanguageTool(
   
   if (!text || text.trim().length === 0) {
     return [];
+  }
+
+  // OPTIMIZATION: For very large texts (>10000 chars), chunk them
+  const MAX_CHUNK_SIZE = 10000;
+  if (text.length > MAX_CHUNK_SIZE) {
+    return checkLargeTextInChunks(text, mergedConfig);
   }
 
   // If user specified a custom API URL, try only that
@@ -290,6 +297,65 @@ function convertLanguageToolMatches(text: string, matches: LanguageToolMatch[]):
       endOffset,
     };
   });
+}
+
+/**
+ * Check large text in chunks for better performance
+ * Splits text at sentence boundaries to maintain context
+ */
+async function checkLargeTextInChunks(
+  text: string,
+  config: LanguageToolConfig
+): Promise<Suggestion[]> {
+  const MAX_CHUNK_SIZE = 10000;
+  const allSuggestions: Suggestion[] = [];
+  
+  // Split text into sentences for better chunking
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+  let currentChunk = '';
+  let chunkOffset = 0;
+  
+  for (let i = 0; i < sentences.length; i++) {
+    const sentence = sentences[i];
+    
+    // If adding this sentence would exceed chunk size, process current chunk
+    if (currentChunk.length + sentence.length > MAX_CHUNK_SIZE && currentChunk.length > 0) {
+      try {
+        const chunkSuggestions = await checkWithLanguageTool(currentChunk, config);
+        // Adjust offsets for this chunk
+        const adjustedSuggestions = chunkSuggestions.map(s => ({
+          ...s,
+          startOffset: s.startOffset + chunkOffset,
+          endOffset: s.endOffset + chunkOffset,
+        }));
+        allSuggestions.push(...adjustedSuggestions);
+      } catch (error) {
+        console.error('Chunk analysis failed:', error);
+      }
+      
+      chunkOffset += currentChunk.length;
+      currentChunk = sentence;
+    } else {
+      currentChunk += sentence;
+    }
+  }
+  
+  // Process final chunk
+  if (currentChunk.length > 0) {
+    try {
+      const chunkSuggestions = await checkWithLanguageTool(currentChunk, config);
+      const adjustedSuggestions = chunkSuggestions.map(s => ({
+        ...s,
+        startOffset: s.startOffset + chunkOffset,
+        endOffset: s.endOffset + chunkOffset,
+      }));
+      allSuggestions.push(...adjustedSuggestions);
+    } catch (error) {
+      console.error('Final chunk analysis failed:', error);
+    }
+  }
+  
+  return allSuggestions;
 }
 
 /**

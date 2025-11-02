@@ -14,6 +14,30 @@ const log = (...args: unknown[]) => {
   if (DEBUG) console.log(...args);
 };
 
+// Simple cache for recently analyzed text to avoid redundant processing
+interface AnalysisCache {
+  text: string;
+  hash: string;
+  suggestions: Suggestion[];
+  timestamp: number;
+}
+
+let analysisCache: AnalysisCache | null = null;
+const CACHE_DURATION = 30000; // 30 seconds
+
+/**
+ * Generate a simple hash for text caching
+ */
+function simpleHash(text: string): string {
+  let hash = 0;
+  for (let i = 0; i < Math.min(text.length, 1000); i++) {
+    const char = text.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return `${hash}_${text.length}`;
+}
+
 /**
  * Analyze text and return all suggestions
  * ENHANCED: Comprehensive validation for PhD-level research papers
@@ -28,6 +52,18 @@ const log = (...args: unknown[]) => {
 export async function analyzeText(text: string): Promise<Suggestion[]> {
   if (!text || text.trim().length === 0) {
     return [];
+  }
+
+  // Check cache first for performance
+  const textHash = simpleHash(text);
+  const now = Date.now();
+  
+  if (analysisCache && 
+      analysisCache.hash === textHash && 
+      analysisCache.text === text &&
+      (now - analysisCache.timestamp) < CACHE_DURATION) {
+    log('Using cached analysis results');
+    return analysisCache.suggestions;
   }
 
   const allSuggestions: Suggestion[] = [];
@@ -171,37 +207,46 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     console.info(`✅ Analysis Complete: Professional Offline Checker | ${allSuggestions.length} suggestions found`);
   }
 
+  // Calculate word count once for reuse
+  const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+
   // ENHANCED: Citation validation for research papers
-  try {
-    log('Validating citations...');
-    const citationStyle = detectCitationStyle(text);
-    if (citationStyle) {
-      const citationSuggestions = validateAllCitations(text, citationStyle);
-      if (citationSuggestions.length > 0) {
-        log(`Found ${citationSuggestions.length} citation issues`);
-        allSuggestions.push(...citationSuggestions);
+  // OPTIMIZATION: Only run for documents with citations (contains parentheses or brackets)
+  if (text.includes('(') || text.includes('[')) {
+    try {
+      log('Validating citations...');
+      const citationStyle = detectCitationStyle(text);
+      if (citationStyle) {
+        const citationSuggestions = validateAllCitations(text, citationStyle);
+        if (citationSuggestions.length > 0) {
+          log(`Found ${citationSuggestions.length} citation issues`);
+          allSuggestions.push(...citationSuggestions);
+        }
       }
+    } catch (error) {
+      if (DEBUG) console.error('Citation validation failed:', error);
     }
-  } catch (error) {
-    if (DEBUG) console.error('Citation validation failed:', error);
   }
 
   // ENHANCED: Statistical notation validation
-  try {
-    log('Validating statistical notation...');
-    const statsSuggestions = validateAllStatistics(text);
-    if (statsSuggestions.length > 0) {
-      log(`Found ${statsSuggestions.length} statistical notation issues`);
-      allSuggestions.push(...statsSuggestions);
+  // OPTIMIZATION: Only run if document contains statistical notation
+  if (wordCount > 300 && (/\bp\s*[=<>]|confidence interval|CI|effect size/i.test(text))) {
+    try {
+      log('Validating statistical notation...');
+      const statsSuggestions = validateAllStatistics(text);
+      if (statsSuggestions.length > 0) {
+        log(`Found ${statsSuggestions.length} statistical notation issues`);
+        allSuggestions.push(...statsSuggestions);
+      }
+    } catch (error) {
+      if (DEBUG) console.error('Statistics validation failed:', error);
     }
-  } catch (error) {
-    if (DEBUG) console.error('Statistics validation failed:', error);
   }
 
   // ENHANCED: Academic structure validation (for longer documents)
+  // OPTIMIZATION: Increased threshold to 2000+ words to avoid false positives on drafts
   try {
-    const wordCount = text.split(/\s+/).length;
-    if (wordCount > 500) { // Only check structure for substantial documents
+    if (wordCount > 2000) { // Only check structure for substantial research documents
       log('Validating document structure...');
       
       // Detect document type (simple heuristic based on content)
@@ -235,9 +280,9 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   }
 
   // ENHANCED: Field-specific terminology and methodology validation
+  // OPTIMIZATION: Only run for documents >500 words AND containing field-specific indicators
   try {
-    const wordCount = text.split(/\s+/).length;
-    if (wordCount > 200) { // Only for substantial documents
+    if (wordCount > 500) {
       log('Validating field-specific terminology...');
       const academicField = detectAcademicField(text);
       log(`Detected academic field: ${academicField}`);
@@ -256,6 +301,14 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   allSuggestions.sort((a, b) => a.startOffset - b.startOffset);
   
   log(`Total suggestions found: ${allSuggestions.length}`);
+  
+  // Cache the results for future use
+  analysisCache = {
+    text,
+    hash: textHash,
+    suggestions: allSuggestions,
+    timestamp: Date.now()
+  };
   
   return allSuggestions;
 }

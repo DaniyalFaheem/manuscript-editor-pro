@@ -120,7 +120,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // 4. SLOW: Heavy analysis - only run for longer documents
         const wordCount = content.split(/\s+/).length;
         
-        if (wordCount > 100) {
+        // Increased threshold from 100 to 200 words for better performance
+        if (wordCount > 200) {
           // Run heavy checks asynchronously without blocking
           Promise.all([
             analyzeDocumentStructure(content),
@@ -134,8 +135,9 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             console.error('Document analysis failed:', err);
           });
 
-          // 5. VERY SLOW: Plagiarism check - only for documents > 500 words
-          if (wordCount > 500) {
+          // 5. VERY SLOW: Plagiarism check - only for documents > 1000 words
+          // Increased from 500 to 1000 for better performance
+          if (wordCount > 1000) {
             const plagiarismChecker = new PlagiarismChecker();
             plagiarismChecker.checkPlagiarism(content).then(plagiarism => {
               setPlagiarismResults(plagiarism);
@@ -172,7 +174,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setPlagiarismResults([]);
         setStatistics(null);
       }
-    }, 2000); // Increased from 1000ms to 2000ms for better performance
+    }, 1500); // Reduced from 2000ms to 1500ms for better responsiveness
 
     return () => clearTimeout(timer);
   }, [content]);

@@ -380,7 +380,12 @@ export function validateUnitsAndMeasurements(text: string): Suggestion[] {
       'sample', 'group', 'study', 'trial', 'experiment',
       'version', 'step', 'phase', 'stage', 'week', 'day', 'month',
       'equation', 'formula', 'model', 'id', 'number', 'no.',
-      'df =', 'α =', 'β =', 'r² =', 'sd =', 'm =', 'age'
+      'df =', 'α =', 'β =', 'r² =', 'sd =', 'm =', 'age',
+      // CRITICAL: Add word count and text metrics context
+      'word', 'character', 'sentence', 'paragraph', 'line',
+      'item', 'point', 'percent', '%', 'times', 'fold',
+      'level', 'grade', 'score', 'rank', 'position',
+      'count', 'total', 'sum', 'average', 'mean'
     ];
     
     // Check if this is a heading number (e.g., "2.6", "3.1.2")

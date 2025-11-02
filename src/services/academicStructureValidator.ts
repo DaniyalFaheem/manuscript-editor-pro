@@ -233,11 +233,27 @@ export function extractSections(text: string): Section[] {
 
 /**
  * Validate document structure
+ * OPTIMIZED: Only validate for substantial academic documents
  */
 export function validateStructure(text: string, type: DocumentType): Suggestion[] {
   const suggestions: Suggestion[] = [];
   const sections = extractSections(text);
   const requirements = getStructureRequirements(type);
+  
+  // OPTIMIZATION: Only validate structure for documents with clear section markers
+  // This prevents false positives on short documents, drafts, or partial content
+  const wordCount = text.split(/\s+/).length;
+  const hasMultipleSections = sections.length >= 3;
+  
+  // Only check for missing sections if:
+  // 1. Document is substantial (>2000 words for journal articles, >5000 for theses)
+  // 2. Document already has clear section structure (3+ sections detected)
+  const minWordCount = type === 'dissertation' ? 10000 : type === 'thesis' ? 5000 : 2000;
+  
+  if (wordCount < minWordCount && !hasMultipleSections) {
+    // Skip structure validation for short documents or documents without clear sections
+    return suggestions;
+  }
   
   // Check for missing required sections
   for (const req of requirements) {
@@ -261,8 +277,8 @@ export function validateStructure(text: string, type: DocumentType): Suggestion[
         suggestions.push({
           id: `structure-missing-${req.section}`,
           type: 'style',
-          severity: 'error',
-          message: `Missing required section: ${req.section}`,
+          severity: 'info', // Changed from 'error' to 'info' for less aggressive flagging
+          message: `Consider adding a ${req.section} section`,
           original: '',
           suggestion: `Add a ${req.section} section. ${req.description}`,
           startLine: 0,
