@@ -1486,26 +1486,26 @@ const spellingTerminologyRules: AcademicGrammarRule[] = [
   },
   {
     id: 'punct-051',
-    pattern: /([a-z])\s*\'\s*([ts])\b/gi,
+    pattern: /([a-z])\s*'\s*([ts])\b/gi,
     message: 'Use apostrophe without spaces for contractions.',
     suggestion: (match) => [`${match[1]}'${match[2]}`],
     type: 'punctuation',
     severity: 'error',
     category: 'punctuation',
     examples: [
-      { incorrect: 'it \' s', correct: 'it\'s' }
+      { incorrect: "it ' s", correct: "it's" }
     ]
   },
   {
     id: 'punct-052',
-    pattern: /\b(its'|it\'s)\s+(own|use|place|time)/gi,
+    pattern: /\b(its'|it's)\s+(own|use|place|time)/gi,
     message: 'Possessive "its" has no apostrophe. "It\'s" means "it is".',
     suggestion: (match) => [`its ${match[2]}`],
     type: 'grammar',
     severity: 'error',
     category: 'punctuation',
     examples: [
-      { incorrect: 'it\'s own merit', correct: 'its own merit' }
+      { incorrect: "it's own merit", correct: 'its own merit' }
     ]
   },
   {
@@ -1534,14 +1534,14 @@ const spellingTerminologyRules: AcademicGrammarRule[] = [
   },
   {
     id: 'style-053',
-    pattern: /\b(in\s+today\'s\s+society|in\s+today\'s\s+world)\b/gi,
+    pattern: /\b(in\s+today's\s+society|in\s+today's\s+world)\b/gi,
     message: 'Clichéd phrase. Be more specific about the context.',
     suggestion: () => ['currently', 'in contemporary contexts'],
     type: 'style',
     severity: 'info',
     category: 'academic-tone',
     examples: [
-      { incorrect: 'in today\'s society', correct: 'currently' }
+      { incorrect: "in today's society", correct: 'currently' }
     ]
   },
   {
@@ -1614,7 +1614,7 @@ const spellingTerminologyRules: AcademicGrammarRule[] = [
   },
   {
     id: 'punct-053',
-    pattern: /(\d+)\s*\-\s*(\d+)/g,
+    pattern: /(\d+)\s*-\s*(\d+)/g,
     message: 'Use en dash (–) for number ranges, not hyphen.',
     suggestion: (match) => [`${match[1]}–${match[2]}`],
     type: 'punctuation',

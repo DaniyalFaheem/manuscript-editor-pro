@@ -165,7 +165,7 @@ function getSpellingSuggestions(word: string): string[] {
     if (corrections && corrections.length > 0) {
       suggestions.push(...corrections);
     }
-  } catch (error) {
+  } catch {
     // If Natural spell checker fails, generate suggestions based on edit distance
     const dictionary = Object.values(commonMisspellings);
     const candidates = dictionary
