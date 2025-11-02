@@ -30,15 +30,17 @@ let massiveRuleCache: typeof allAcademicRules | null = null;
 
 function getMassiveRules() {
   if (!massiveRuleCache) {
-    console.log('🚀 Initializing 50,000+ offline rules (one-time setup)...');
+    console.log('🚀 Initializing optimized offline rules (one-time setup)...');
     const startTime = Date.now();
     
-    // Combine existing academic rules with generated massive rules
+    // Use core academic rules + limited generated rules for optimal performance
     const generatedRules = generateAllOfflineRules();
-    massiveRuleCache = [...allAcademicRules, ...generatedRules];
+    // Limit generated rules to avoid excessive overhead
+    const limitedGenerated = generatedRules.slice(0, 2000);
+    massiveRuleCache = [...allAcademicRules, ...limitedGenerated];
     
     const initTime = Date.now() - startTime;
-    console.log(`✅ Loaded ${massiveRuleCache.length} total rules in ${initTime}ms`);
+    console.log(`✅ Loaded ${massiveRuleCache.length} optimized rules in ${initTime}ms`);
   }
   return massiveRuleCache;
 }
@@ -58,15 +60,15 @@ export interface OfflineCheckerConfig {
 
 /**
  * Default configuration
- * MAXIMUM PERFORMANCE: Optimized for 50,000+ rules with ultra-fast processing
+ * OPTIMIZED: Balanced performance with comprehensive coverage
  */
 const defaultConfig: Required<Omit<OfflineCheckerConfig, 'onProgress'>> = {
   enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
   enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
   enabledSeverities: ['error', 'warning', 'info'],
-  maxSuggestions: 10000, // Increased for comprehensive coverage with 50,000+ rules
+  maxSuggestions: 500, // Optimized: Show most important suggestions only
   removeOverlapping: true,
-  chunkSize: 15000 // Optimized for maximum speed with large rule sets
+  chunkSize: 8000 // Optimized for faster processing
 };
 
 /**

@@ -18,21 +18,22 @@ const ApiStatusNotification: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    // Check for API errors every 10 seconds (reduced to minimize CPU usage and overhead)
+    // Check for API errors every 15 seconds (optimized to minimize overhead)
     const interval = setInterval(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error = (window as any).__lastLanguageToolError;
+        // Only show critical errors (not using alternative/offline - those work fine)
         // Only show if error is recent (within last 30 seconds) and different from current
-        if (Date.now() - error.timestamp < 30000) {
+        if (Date.now() - error.timestamp < 30000 && !error.usingAlternative && !error.usingOffline) {
           if (!errorInfo || error.timestamp !== errorInfo.timestamp) {
             setErrorInfo(error);
             setOpen(true);
           }
         }
       }
-    }, 10000); // Increased to 10 seconds for better performance
+    }, 15000); // Increased to 15 seconds for better performance
 
     return () => clearInterval(interval);
   }, [errorInfo]);
@@ -60,7 +61,7 @@ const ApiStatusNotification: React.FC = () => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={10000}
+      autoHideDuration={8000}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
     >

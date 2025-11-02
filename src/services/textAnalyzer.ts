@@ -117,7 +117,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
       enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
       enabledSeverities: ['error', 'warning', 'info'],
-      maxSuggestions: 5000, // Increased for comprehensive coverage
+      maxSuggestions: 300, // Optimized: Focus on most important issues
       removeOverlapping: true
     });
     
@@ -130,15 +130,16 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   }
   
   const processingTime = Date.now() - startTime;
-  console.info(`✅ 100% OFFLINE Analysis Complete: ${allSuggestions.length} suggestions found in ${processingTime}ms`);
-  console.info(`📊 Using 50,000+ comprehensive offline rules - No APIs, Maximum Speed!`);
+  if (DEBUG) {
+    console.log(`✅ Analysis complete: ${allSuggestions.length} suggestions in ${processingTime}ms`);
+  }
 
   // Calculate word count once for reuse
   const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
 
   // ENHANCED: Citation validation for research papers
-  // OPTIMIZATION: Only run for documents with citations (contains parentheses or brackets)
-  if (text.includes('(') || text.includes('[')) {
+  // OPTIMIZATION: Only run for longer documents with citations
+  if (wordCount > 200 && (text.includes('(') || text.includes('['))) {
     try {
       log('Validating citations...');
       const citationStyle = detectCitationStyle(text);
@@ -155,8 +156,8 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   }
 
   // ENHANCED: Statistical notation validation
-  // OPTIMIZATION: Only run if document contains statistical notation
-  if (wordCount > 300 && (/\bp\s*[=<>]|confidence interval|CI|effect size/i.test(text))) {
+  // OPTIMIZATION: Only run for longer documents with statistical notation
+  if (wordCount > 500 && (/\bp\s*[=<>]|confidence interval|CI|effect size/i.test(text))) {
     try {
       log('Validating statistical notation...');
       const statsSuggestions = validateAllStatistics(text);
