@@ -171,21 +171,68 @@ const SuggestionPanel: React.FC = () => {
 
   return (
     <Paper
-      elevation={2}
+      elevation={0}
       sx={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        background: (theme) => theme.palette.mode === 'dark'
+          ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
+        border: '1px solid',
+        borderColor: (theme) => theme.palette.mode === 'dark' 
+          ? 'rgba(255, 255, 255, 0.1)' 
+          : 'rgba(99, 102, 241, 0.1)',
+        boxShadow: (theme) => theme.palette.mode === 'dark'
+          ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+          : '0 8px 32px rgba(99, 102, 241, 0.1)',
+        borderRadius: 3,
+        backdropFilter: 'blur(10px)',
       }}
     >
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="h6">
+      <Box sx={{ 
+        p: 2.5, 
+        borderBottom: 1, 
+        borderColor: (theme) => theme.palette.mode === 'dark' 
+          ? 'rgba(255, 255, 255, 0.1)' 
+          : 'rgba(99, 102, 241, 0.1)',
+        background: (theme) => theme.palette.mode === 'dark'
+          ? 'rgba(255, 255, 255, 0.03)'
+          : 'rgba(99, 102, 241, 0.03)',
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+          <Typography 
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              background: (theme) => theme.palette.mode === 'dark'
+                ? 'linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%)'
+                : 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '-0.01em',
+            }}
+          >
             Suggestions ({suggestions.length})
           </Typography>
-          <Tooltip title="Show color legend">
-            <IconButton size="small" onClick={() => setShowLegend(!showLegend)}>
+          <Tooltip title="Show color legend" arrow>
+            <IconButton 
+              size="small" 
+              onClick={() => setShowLegend(!showLegend)}
+              sx={{
+                background: (theme) => theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'rgba(99, 102, 241, 0.1)',
+                '&:hover': {
+                  background: (theme) => theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.2)'
+                    : 'rgba(99, 102, 241, 0.2)',
+                  transform: 'scale(1.1)',
+                },
+                transition: 'all 0.2s ease-in-out',
+              }}
+            >
               <HelpOutline fontSize="small" />
             </IconButton>
           </Tooltip>

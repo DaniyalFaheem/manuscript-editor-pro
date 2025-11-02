@@ -138,7 +138,36 @@ const EditorPanel: React.FC = () => {
     }, [suggestions]);
 
     return (
-        <Paper sx={{ height: '100%', overflow: 'hidden' }}>
+        <Paper 
+            elevation={0}
+            sx={{ 
+                height: '100%', 
+                overflow: 'hidden',
+                background: (theme) => theme.palette.mode === 'dark'
+                    ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
+                    : 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.mode === 'dark' 
+                    ? 'rgba(255, 255, 255, 0.1)' 
+                    : 'rgba(99, 102, 241, 0.1)',
+                boxShadow: (theme) => theme.palette.mode === 'dark'
+                    ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+                    : '0 8px 32px rgba(99, 102, 241, 0.1)',
+                borderRadius: 3,
+                backdropFilter: 'blur(10px)',
+                position: 'relative',
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #4f46e5 0%, #6366f1 50%, #4f46e5 100%)',
+                    borderRadius: '12px 12px 0 0',
+                },
+            }}
+        >
             <style>{EDITOR_DECORATION_STYLES}</style>
             <Editor
                 height="100%"
@@ -152,7 +181,7 @@ const EditorPanel: React.FC = () => {
                     wordWrap: 'on',
                     lineNumbers: 'on',
                     fontSize: 14,
-                    padding: { top: 10 },
+                    padding: { top: 16, bottom: 10 },
                     // Performance optimizations
                     scrollBeyondLastLine: false,
                     renderLineHighlight: 'line',

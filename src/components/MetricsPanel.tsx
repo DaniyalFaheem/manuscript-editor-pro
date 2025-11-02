@@ -41,49 +41,156 @@ const MetricsPanel: React.FC = () => {
 
   return (
     <Paper
-      elevation={2}
+      elevation={0}
       sx={{
         height: '100%',
         overflow: 'auto',
-        p: 2,
+        p: 2.5,
+        background: (theme) => theme.palette.mode === 'dark'
+          ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)',
+        border: '1px solid',
+        borderColor: (theme) => theme.palette.mode === 'dark' 
+          ? 'rgba(255, 255, 255, 0.1)' 
+          : 'rgba(99, 102, 241, 0.1)',
+        boxShadow: (theme) => theme.palette.mode === 'dark'
+          ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+          : '0 8px 32px rgba(99, 102, 241, 0.1)',
+        borderRadius: 3,
+        backdropFilter: 'blur(10px)',
       }}
     >
-      <Typography variant="h6" gutterBottom>
+      <Typography 
+        variant="h6" 
+        gutterBottom
+        sx={{
+          fontWeight: 700,
+          background: (theme) => theme.palette.mode === 'dark'
+            ? 'linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%)'
+            : 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          letterSpacing: '-0.01em',
+          mb: 2,
+        }}
+      >
         Document Metrics
       </Typography>
 
-      <Divider sx={{ my: 2 }} />
+      <Divider sx={{ 
+        my: 2,
+        borderColor: (theme) => theme.palette.mode === 'dark' 
+          ? 'rgba(255, 255, 255, 0.1)' 
+          : 'rgba(99, 102, 241, 0.1)',
+      }} />
 
       {/* Word Count Section */}
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <TextFields sx={{ mr: 1, color: 'primary.main' }} />
-          <Typography variant="subtitle2">Word Statistics</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+          <TextFields sx={{ 
+            mr: 1, 
+            color: 'primary.main',
+            fontSize: 20,
+          }} />
+          <Typography 
+            variant="subtitle2"
+            sx={{ fontWeight: 600, letterSpacing: '0.01em' }}
+          >
+            Word Statistics
+          </Typography>
         </Box>
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(99, 102, 241, 0.1)'
+              : 'rgba(99, 102, 241, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(99, 102, 241, 0.2)'
+              : 'rgba(99, 102, 241, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Words
             </Typography>
-            <Typography variant="h5">{metrics.wordCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
+              {metrics.wordCount}
+            </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(245, 158, 11, 0.1)'
+              : 'rgba(245, 158, 11, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(245, 158, 11, 0.2)'
+              : 'rgba(245, 158, 11, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(245, 158, 11, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Characters
             </Typography>
-            <Typography variant="h5">{metrics.characterCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'secondary.main' }}>
+              {metrics.characterCount}
+            </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(16, 185, 129, 0.1)'
+              : 'rgba(16, 185, 129, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(16, 185, 129, 0.2)'
+              : 'rgba(16, 185, 129, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Sentences
             </Typography>
-            <Typography variant="h5">{metrics.sentenceCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'success.main' }}>
+              {metrics.sentenceCount}
+            </Typography>
           </Box>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            p: 1.5,
+            borderRadius: 2,
+            background: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(59, 130, 246, 0.1)'
+              : 'rgba(59, 130, 246, 0.05)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.mode === 'dark'
+              ? 'rgba(59, 130, 246, 0.2)'
+              : 'rgba(59, 130, 246, 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)',
+            },
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontWeight: 500 }}>
               Paragraphs
             </Typography>
-            <Typography variant="h5">{metrics.paragraphCount}</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'info.main' }}>
+              {metrics.paragraphCount}
+            </Typography>
           </Box>
         </Box>
       </Box>
