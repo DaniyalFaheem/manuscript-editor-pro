@@ -67,10 +67,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     gunningFog: 0,
     passiveVoicePercentage: 0,
   });
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const saved = localStorage.getItem(DARK_MODE_KEY);
-    return saved ? JSON.parse(saved) : false;
-  });
+  // Always use dark mode - no light theme option
+  const [isDarkMode] = useState<boolean>(true);
   const [fileName, setFileName] = useState<string>('untitled.txt');
   const [structureAnalysis, setStructureAnalysis] = useState<StructureAnalysis | null>(null);
   const [notationErrors, setNotationErrors] = useState<NotationError[]>([]);
@@ -185,10 +183,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem(STORAGE_KEY, content);
   }, [content]);
 
-  // Save dark mode preference
-  useEffect(() => {
-    localStorage.setItem(DARK_MODE_KEY, JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
+  // Dark mode is always enabled - no need to save preference
 
   // Save language variant preference
   useEffect(() => {
@@ -199,8 +194,9 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setContentState(newContent);
   }, []);
 
+  // Dark mode toggle removed - always in dark mode
   const toggleDarkMode = useCallback(() => {
-    setIsDarkMode(prev => !prev);
+    // No-op: dark mode is always enabled
   }, []);
 
   const setLanguageVariant = useCallback((variant: LanguageVariant) => {
