@@ -184,7 +184,6 @@ export function generateGrammarRules(): AcademicGrammarRule[] {
   });
 
   // 8. Preposition Errors (1000+ variations)
-  const preps = ['in', 'on', 'at', 'by', 'with', 'from', 'to', 'for', 'of', 'about'];
   const wrongPreps = {
     'different from': 'different than',
     'comprised of': 'comprise',
@@ -318,7 +317,7 @@ export function generatePunctuationRules(): AcademicGrammarRule[] {
       id: `punct-${ruleId++}`,
       pattern: new RegExp(`\\s+\\${punct}`, 'g'),
       message: `Remove space before "${punct}".`,
-      suggestion: (match) => [punct],
+      suggestion: () => [punct],
       type: 'punctuation',
       severity: 'error',
       category: 'punctuation'
