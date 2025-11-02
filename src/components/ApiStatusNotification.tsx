@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Snackbar, IconButton, Link } from '@mui/material';
+import { Alert, Snackbar, IconButton } from '@mui/material';
 import { Close, Refresh } from '@mui/icons-material';
 
 /**
@@ -18,19 +18,19 @@ const ApiStatusNotification: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    // Check for API errors every 5 seconds (reduced frequency for better performance)
+    // Check for API errors every 10 seconds (optimized for better performance)
     const interval = setInterval(() => {
       if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError) {
         const error = (window as any).__lastLanguageToolError;
-        // Only show if error is recent (within last 15 seconds) and different from current
-        if (Date.now() - error.timestamp < 15000) {
+        // Only show if error is recent (within last 30 seconds) and different from current
+        if (Date.now() - error.timestamp < 30000) {
           if (!errorInfo || error.timestamp !== errorInfo.timestamp) {
             setErrorInfo(error);
             setOpen(true);
           }
         }
       }
-    }, 5000); // Reduced from 2000ms to 5000ms
+    }, 10000); // Increased to 10 seconds for better performance
 
     return () => clearInterval(interval);
   }, [errorInfo]);
@@ -104,20 +104,7 @@ const ApiStatusNotification: React.FC = () => {
               <br />
             </>
           )}
-          {!errorInfo.usingAlternative && !errorInfo.usingOffline && (
-            <>
-              Check your internet connection.
-              <br />
-            </>
-          )}
-          <Link
-            href="https://languagetool.org/status"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: 'inherit', textDecoration: 'underline' }}
-          >
-            Check LanguageTool API Status
-          </Link>
+
         </small>
       </Alert>
     </Snackbar>

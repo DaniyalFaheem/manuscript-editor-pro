@@ -4,8 +4,6 @@ import { checkWithAlternativeAPIs } from './alternativeGrammarAPIs';
 import { checkAcademicGrammar } from './offlineAcademicChecker';
 import { validateAllCitations, detectCitationStyle } from './citationValidator';
 import { validateAllStatistics } from './enhancedStatisticsValidator';
-import { validateStructure, validateHeadingHierarchy, validateNumberedElements, validateMethodologySection } from './academicStructureValidator';
-import { validateAllFieldSpecific, detectAcademicField } from './fieldSpecificValidator';
 
 // Enable debug logging (set to false for production)
 const DEBUG = false;
@@ -23,7 +21,7 @@ interface AnalysisCache {
 }
 
 let analysisCache: AnalysisCache | null = null;
-const CACHE_DURATION = 30000; // 30 seconds
+const CACHE_DURATION = 60000; // 60 seconds (increased for better performance)
 
 /**
  * Generate a hash for text caching
@@ -119,21 +117,9 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       onlineApiSuccess = true;
       suggestionSources.push('LanguageTool API (FREE & Unlimited)');
       
-      // Clear any previous error notifications and show success
+      // Clear any previous error notifications (removed success message per user request)
       if (typeof window !== 'undefined') {
-        (window as any).__lastLanguageToolError = {
-          message: '✅ Connected to LanguageTool API - Professional Grammar Checking Active!',
-          details: '🎯 Free Forever  ⚡ Real-time Analysis  🌐 Internet Connected',
-          timestamp: Date.now(),
-          usingOnline: true,
-          isSuccess: true
-        };
-        // Auto-clear success message after 3 seconds
-        setTimeout(() => {
-          if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError?.isSuccess) {
-            delete (window as any).__lastLanguageToolError;
-          }
-        }, 3000);
+        delete (window as any).__lastLanguageToolError;
       }
     }
   } catch (error) {
@@ -157,23 +143,9 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
         allSuggestions.push(...altSuggestions);
         suggestionSources.push(`${apiUsed} API (FREE)`);
         
-        // Update notification to show which alternative API is being used
+        // Clear error notifications (removed success message per user request)
         if (typeof window !== 'undefined') {
-          (window as any).__lastLanguageToolError = {
-            message: `✅ Connected to ${apiUsed} API - Professional Checking Active!`,
-            details: `🎯 Free Alternative API  ⚡ Real-time Analysis  📝 100000+ Offline Rules Backup`,
-            timestamp: Date.now(),
-            usingAlternative: true,
-            alternativeAPI: apiUsed,
-            usingHybrid: true,
-            isSuccess: true
-          };
-          // Auto-clear success message after 3 seconds
-          setTimeout(() => {
-            if (typeof window !== 'undefined' && (window as any).__lastLanguageToolError?.isSuccess) {
-              delete (window as any).__lastLanguageToolError;
-            }
-          }, 3000);
+          delete (window as any).__lastLanguageToolError;
         }
         
         console.info(`✅ Successfully using ${apiUsed} as grammar checker!`);
@@ -182,14 +154,9 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     } catch {
       console.info('✅ Using Professional Offline Checker with 100000+ academic rules - Perfect for research papers and PhD dissertations!');
       
+      // No notification needed (removed per user request)
       if (typeof window !== 'undefined') {
-        (window as any).__lastLanguageToolError = {
-          message: '✅ Professional Offline Checker Active - No Internet Required!',
-          details: '🎓 100000+ Valid Academic Rules  📝 PhD-Level Quality  🔒 100% Privacy  ⚡ Zero Rate Limits  🌍 Works Offline',
-          timestamp: Date.now(),
-          usingOffline: true,
-          isWorking: true
-        };
+        delete (window as any).__lastLanguageToolError;
       }
     }
   }
@@ -255,59 +222,12 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
     }
   }
 
-  // ENHANCED: Academic structure validation (for longer documents)
-  // OPTIMIZATION: Increased threshold to 2000+ words to avoid false positives on drafts
-  try {
-    if (wordCount > 2000) { // Only check structure for substantial research documents
-      log('Validating document structure...');
-      
-      // Detect document type (simple heuristic based on content)
-      let docType: 'journal-article' | 'dissertation' | 'thesis' | 'conference-paper' = 'journal-article';
-      if (text.toLowerCase().includes('dissertation') || wordCount > 20000) {
-        docType = 'dissertation';
-      } else if (text.toLowerCase().includes('thesis') || wordCount > 10000) {
-        docType = 'thesis';
-      } else if (text.toLowerCase().includes('conference') || wordCount < 5000) {
-        docType = 'conference-paper';
-      }
-      
-      const structureSuggestions = validateStructure(text, docType);
-      const hierarchySuggestions = validateHeadingHierarchy(text);
-      const numberingSuggestions = validateNumberedElements(text);
-      const methodologySuggestions = validateMethodologySection(text);
-      
-      const totalStructure = structureSuggestions.length + hierarchySuggestions.length + 
-                             numberingSuggestions.length + methodologySuggestions.length;
-      
-      if (totalStructure > 0) {
-        log(`Found ${totalStructure} structure issues`);
-        allSuggestions.push(...structureSuggestions);
-        allSuggestions.push(...hierarchySuggestions);
-        allSuggestions.push(...numberingSuggestions);
-        allSuggestions.push(...methodologySuggestions);
-      }
-    }
-  } catch (error) {
-    if (DEBUG) console.error('Structure validation failed:', error);
-  }
+  // DISABLED: Academic structure validation per user request
+  // Users only want actual grammar/style/spelling/punctuation corrections
+  // Structure validation disabled to improve performance and remove unwanted suggestions
 
-  // ENHANCED: Field-specific terminology and methodology validation
-  // OPTIMIZATION: Only run for documents >500 words AND containing field-specific indicators
-  try {
-    if (wordCount > 500) {
-      log('Validating field-specific terminology...');
-      const academicField = detectAcademicField(text);
-      log(`Detected academic field: ${academicField}`);
-      
-      const fieldSuggestions = validateAllFieldSpecific(text, academicField);
-      if (fieldSuggestions.length > 0) {
-        log(`Found ${fieldSuggestions.length} field-specific issues`);
-        allSuggestions.push(...fieldSuggestions);
-      }
-    }
-  } catch (error) {
-    if (DEBUG) console.error('Field-specific validation failed:', error);
-  }
+  // DISABLED: Field-specific validation per user request
+  // Users only want actual grammar/style/spelling/punctuation corrections
 
   // Sort by position
   allSuggestions.sort((a, b) => a.startOffset - b.startOffset);
