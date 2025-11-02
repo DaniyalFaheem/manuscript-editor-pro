@@ -23,7 +23,7 @@ import SearchReplaceDialog from './SearchReplaceDialog';
 import KeyboardShortcutsHelp from './KeyboardShortcutsHelp';
 
 const Header: React.FC = () => {
-  const { isDarkMode, togglePresentationMode, content, setContent } = useDocument();
+  const { togglePresentationMode, content, setContent } = useDocument();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);

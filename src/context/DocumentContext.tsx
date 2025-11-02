@@ -49,7 +49,6 @@ interface DocumentContextType {
 const DocumentContext = createContext<DocumentContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'manuscript-editor-content';
-const DARK_MODE_KEY = 'manuscript-editor-dark-mode';
 const LANGUAGE_VARIANT_KEY = 'manuscript-editor-language-variant';
 
 export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
