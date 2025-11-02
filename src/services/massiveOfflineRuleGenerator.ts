@@ -95,39 +95,11 @@ export function generateGrammarRules(): AcademicGrammarRule[] {
     });
   });
 
-  // 4. Commonly Confused Words (2000+ variations)
-  const confusedPairs = [
-    ['affect', 'effect'], ['accept', 'except'], ['advice', 'advise'],
-    ['allude', 'elude'], ['allusion', 'illusion'], ['altar', 'alter'],
-    ['bare', 'bear'], ['brake', 'break'], ['capital', 'capitol'],
-    ['cite', 'sight', 'site'], ['complement', 'compliment'], ['council', 'counsel'],
-    ['desert', 'dessert'], ['discreet', 'discrete'], ['elicit', 'illicit'],
-    ['emigrate', 'immigrate'], ['ensure', 'insure'], ['farther', 'further'],
-    ['flaunt', 'flout'], ['foreword', 'forward'], ['hear', 'here'],
-    ['hoard', 'horde'], ['imply', 'infer'], ['its', "it's"],
-    ['lead', 'led'], ['loose', 'lose'], ['moral', 'morale'],
-    ['passed', 'past'], ['peace', 'piece'], ['personal', 'personnel'],
-    ['precede', 'proceed'], ['principal', 'principle'], ['quiet', 'quite'],
-    ['stationary', 'stationery'], ['than', 'then'], ['their', 'there', "they're"],
-    ['to', 'too', 'two'], ['weather', 'whether'], ['who', 'whom'],
-    ['whose', "who's"], ['your', "you're"]
-  ];
-
-  confusedPairs.forEach(pair => {
-    pair.forEach((word, idx) => {
-      const others = pair.filter((_, i) => i !== idx);
-      others.forEach(other => {
-        rules.push({
-          id: `gram-${ruleId++}`,
-          pattern: new RegExp(`\\b${other}\\s+(\\w+)\\s+(\\w+)`, 'gi'),
-          message: `Possibly confused word: "${other}" vs "${word}". Check context.`,
-          type: 'grammar',
-          severity: 'warning',
-          category: 'grammar'
-        });
-      });
-    });
-  });
+  // 4. Commonly Confused Words - DISABLED
+  // These rules generated too many false positives due to lack of context awareness
+  // Proper confused word detection requires NLP and context analysis
+  // Core academic rules handle the most critical confused word cases with better patterns
+  // If needed in the future, implement with proper context checking and provide corrections
 
   // 5. Modal Verbs (1000+ variations)
   const modals = ['can', 'could', 'may', 'might', 'must', 'shall', 'should', 'will', 'would'];
