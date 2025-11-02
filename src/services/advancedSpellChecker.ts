@@ -3,12 +3,12 @@
  * Provides intelligent spell checking with context awareness
  */
 
-import natural from 'natural';
+import * as natural from 'natural';
 import type { Suggestion } from '../types';
 import { generateId, getPositionFromOffset } from '../utils/textUtils';
 
-// Initialize spell checker with English dictionary
-const spellCheck = new natural.Spellcheck(['en']);
+// Note: Natural library doesn't have a built-in comprehensive spell checker
+// We'll use its tokenizer and string distance functions for spell checking
 
 // Common academic and technical terms to add to dictionary
 const academicTerms = [
@@ -147,41 +147,29 @@ function levenshteinDistance(str1: string, str2: string): number {
 }
 
 /**
- * Get spelling suggestions for a word
+ * Get spelling suggestions for a word using edit distance
  */
 function getSpellingSuggestions(word: string): string[] {
   const lowerWord = word.toLowerCase();
   
-  // Check common misspellings first
+  // Check common misspellings first (instant correction)
   if (commonMisspellings[lowerWord]) {
     return [commonMisspellings[lowerWord]];
   }
   
-  // Use Natural library's spell checker
-  const suggestions: string[] = [];
+  // Generate suggestions based on Levenshtein distance from our dictionary
+  const dictionary = Object.values(commonMisspellings);
+  const candidates = dictionary
+    .map(correctWord => ({
+      word: correctWord,
+      distance: levenshteinDistance(lowerWord, correctWord.toLowerCase())
+    }))
+    .filter(candidate => candidate.distance <= 2)
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 3)
+    .map(candidate => candidate.word);
   
-  try {
-    const corrections = spellCheck.getCorrections(word, 3);
-    if (corrections && corrections.length > 0) {
-      suggestions.push(...corrections);
-    }
-  } catch {
-    // If Natural spell checker fails, generate suggestions based on edit distance
-    const dictionary = Object.values(commonMisspellings);
-    const candidates = dictionary
-      .map(correctWord => ({
-        word: correctWord,
-        distance: levenshteinDistance(lowerWord, correctWord.toLowerCase())
-      }))
-      .filter(candidate => candidate.distance <= 2)
-      .sort((a, b) => a.distance - b.distance)
-      .slice(0, 3)
-      .map(candidate => candidate.word);
-    
-    suggestions.push(...candidates);
-  }
-  
-  return suggestions;
+  return candidates;
 }
 
 /**
@@ -218,14 +206,13 @@ export function checkAdvancedSpelling(text: string): Suggestion[] {
       continue;
     }
     
-    // Check if word is correct
-    const lowerWord = word.toLowerCase();
-    const isCorrect = spellCheck.isCorrect(word);
-    
     // Check common misspellings
+    const lowerWord = word.toLowerCase();
     const hasCommonMisspelling = commonMisspellings[lowerWord];
     
-    if (!isCorrect || hasCommonMisspelling) {
+    // Only flag if it's in our common misspellings dictionary
+    // This keeps the checker fast and accurate for known errors
+    if (hasCommonMisspelling) {
       // Find the actual position in text
       const startOffset = text.indexOf(word, currentOffset);
       if (startOffset === -1) {

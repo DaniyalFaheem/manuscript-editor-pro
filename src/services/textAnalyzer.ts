@@ -29,18 +29,18 @@ const CACHE_DURATION = 90000; // 90 seconds (increased to reduce API calls and p
 // Clean up old cache entries periodically
 function cleanCache() {
   const now = Date.now();
-  const entries = Array.from(cacheMap.entries());
   
   // Remove expired entries
-  for (const [hash, cache] of entries) {
+  for (const [hash, cache] of cacheMap.entries()) {
     if (now - cache.timestamp > CACHE_DURATION) {
       cacheMap.delete(hash);
     }
   }
   
-  // If still too many, remove oldest
+  // If still too many, remove oldest (get fresh entries after cleanup)
   if (cacheMap.size > MAX_CACHE_ENTRIES) {
-    const sortedEntries = entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+    const currentEntries = Array.from(cacheMap.entries());
+    const sortedEntries = currentEntries.sort((a, b) => a[1].timestamp - b[1].timestamp);
     const toRemove = sortedEntries.slice(0, cacheMap.size - MAX_CACHE_ENTRIES);
     toRemove.forEach(([hash]) => cacheMap.delete(hash));
   }

@@ -406,9 +406,9 @@ export async function checkWithAlternativeAPIs(text: string): Promise<{
     })
   );
 
-  // Return the first successful result
+  // Return the first successful result (even if empty array)
   for (const result of results) {
-    if (result.status === 'fulfilled' && result.value.suggestions.length >= 0) {
+    if (result.status === 'fulfilled') {
       return result.value;
     }
   }
