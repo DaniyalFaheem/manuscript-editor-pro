@@ -26,12 +26,23 @@ let analysisCache: AnalysisCache | null = null;
 const CACHE_DURATION = 30000; // 30 seconds
 
 /**
- * Generate a simple hash for text caching
+ * Generate a hash for text caching
+ * Samples from beginning, middle, and end to reduce collision risk
  */
 function simpleHash(text: string): string {
   let hash = 0;
-  for (let i = 0; i < Math.min(text.length, 1000); i++) {
-    const char = text.charCodeAt(i);
+  const len = text.length;
+  const sampleSize = Math.min(len, 2000);
+  
+  // Sample from beginning, middle, and end
+  const samples = [
+    text.substring(0, Math.min(len, 500)),
+    text.substring(Math.floor(len / 2) - 250, Math.floor(len / 2) + 250),
+    text.substring(Math.max(0, len - 500))
+  ].join('|');
+  
+  for (let i = 0; i < Math.min(samples.length, sampleSize); i++) {
+    const char = samples.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash; // Convert to 32bit integer
   }
@@ -58,9 +69,10 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
   const textHash = simpleHash(text);
   const now = Date.now();
   
+  // Cache hit only if hash matches AND text length matches (double check for safety)
   if (analysisCache && 
       analysisCache.hash === textHash && 
-      analysisCache.text === text &&
+      analysisCache.text.length === text.length &&
       (now - analysisCache.timestamp) < CACHE_DURATION) {
     log('Using cached analysis results');
     return analysisCache.suggestions;

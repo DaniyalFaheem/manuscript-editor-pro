@@ -321,7 +321,8 @@ async function checkLargeTextInChunks(
     // If adding this sentence would exceed chunk size, process current chunk
     if (currentChunk.length + sentence.length > MAX_CHUNK_SIZE && currentChunk.length > 0) {
       try {
-        const chunkSuggestions = await checkWithLanguageTool(currentChunk, config);
+        // Call tryLanguageToolEndpoint directly to avoid recursive call
+        const chunkSuggestions = await tryLanguageToolEndpointDirect(currentChunk, config);
         // Adjust offsets for this chunk
         const adjustedSuggestions = chunkSuggestions.map(s => ({
           ...s,
@@ -343,7 +344,8 @@ async function checkLargeTextInChunks(
   // Process final chunk
   if (currentChunk.length > 0) {
     try {
-      const chunkSuggestions = await checkWithLanguageTool(currentChunk, config);
+      // Call tryLanguageToolEndpoint directly to avoid recursive call
+      const chunkSuggestions = await tryLanguageToolEndpointDirect(currentChunk, config);
       const adjustedSuggestions = chunkSuggestions.map(s => ({
         ...s,
         startOffset: s.startOffset + chunkOffset,
@@ -356,6 +358,20 @@ async function checkLargeTextInChunks(
   }
   
   return allSuggestions;
+}
+
+/**
+ * Direct call to endpoint without chunking logic (for use in chunks)
+ */
+async function tryLanguageToolEndpointDirect(
+  text: string,
+  config: LanguageToolConfig
+): Promise<Suggestion[]> {
+  // Try the primary endpoint from config
+  const apiUrl = config.apiUrl || defaultConfig.apiUrl;
+  
+  // Use the first mirror endpoint for chunked calls
+  return await tryLanguageToolEndpoint(apiUrl, text, config);
 }
 
 /**
