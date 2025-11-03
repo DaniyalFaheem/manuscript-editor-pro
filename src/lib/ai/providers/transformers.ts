@@ -57,11 +57,11 @@ export class TransformersProvider implements AIProvider {
   }
 
   async stream(
-    messages: Message[],
+    _messages: Message[],
     onChunk: (chunk: string) => void,
-    options?: ChatOptions
+    _options?: ChatOptions
   ): Promise<void> {
-    const response = await this.chat(messages, options);
+    const response = await this.chat();
     onChunk(response);
   }
 
