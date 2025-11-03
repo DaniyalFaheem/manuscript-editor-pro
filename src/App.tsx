@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { ThemeProvider, createTheme, CssBaseline, Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { ThemeProvider, createTheme, CssBaseline, Box, Typography, Drawer } from '@mui/material';
 import { DocumentProvider, useDocument } from './context/DocumentContext';
 import Header from './components/Header';
 import EditorPanel from './components/EditorPanel';
@@ -7,6 +7,7 @@ import SuggestionPanel from './components/SuggestionPanel';
 import MetricsPanel from './components/MetricsPanel';
 import PresentationMode from './components/PresentationMode';
 import ApiStatusNotification from './components/ApiStatusNotification';
+import ChatPanel from './components/ai/ChatPanel';
 
 import { setupKeyboardShortcuts } from './services/keyboardShortcuts';
 import type { ShortcutAction } from './types';
@@ -16,8 +17,10 @@ const AppContent: React.FC = () => {
     isDarkMode, 
     presentationMode, 
     togglePresentationMode,
-    content
+    content,
+    setContent
   } = useDocument();
+  const [aiChatOpen, setAiChatOpen] = useState(false);
 
   const theme = createTheme({
     palette: {
@@ -170,6 +173,11 @@ const AppContent: React.FC = () => {
     );
   }
 
+  const handleApplyChange = (change: string) => {
+    // Apply the change to the document
+    setContent(content + '\n\n' + change);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -192,7 +200,7 @@ const AppContent: React.FC = () => {
           pointerEvents: 'none',
         } : {},
       }}>
-        <Header />
+        <Header onToggleAIChat={() => setAiChatOpen(!aiChatOpen)} />
         <ApiStatusNotification />
         <Box sx={{ 
           flex: 1, 
@@ -246,6 +254,25 @@ const AppContent: React.FC = () => {
             Created by <strong style={{ fontWeight: 700 }}>Daniyal Faheem</strong> | Open Source Manuscript Editor
           </Typography>
         </Box>
+
+        {/* AI Chat Drawer */}
+        <Drawer
+          anchor="right"
+          open={aiChatOpen}
+          onClose={() => setAiChatOpen(false)}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: { xs: '100%', sm: 500 },
+              maxWidth: '100%',
+            },
+          }}
+        >
+          <ChatPanel
+            onClose={() => setAiChatOpen(false)}
+            documentContent={content}
+            onApplyChange={handleApplyChange}
+          />
+        </Drawer>
       </Box>
     </ThemeProvider>
   );
