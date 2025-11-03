@@ -22,6 +22,17 @@ const AppContent: React.FC = () => {
   } = useDocument();
   const [aiChatOpen, setAiChatOpen] = useState(false);
 
+  // Start AI initialization in the background on app load
+  useEffect(() => {
+    // Dynamically import to avoid blocking the initial load
+    import('./lib/ai').then(({ getAIOrchestrator }) => {
+      const orchestrator = getAIOrchestrator();
+      orchestrator.startBackgroundInitialization();
+    }).catch(error => {
+      console.warn('Failed to start AI initialization:', error);
+    });
+  }, []);
+
   const theme = createTheme({
     palette: {
       mode: isDarkMode ? 'dark' : 'light',

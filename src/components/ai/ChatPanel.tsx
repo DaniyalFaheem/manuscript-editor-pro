@@ -34,8 +34,10 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
 }) => {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [canCancel, setCanCancel] = useState(false);
   const chatEngineRef = useRef<ChatEngine | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const currentRequestRef = useRef<{ cancel: () => void } | null>(null);
 
   useEffect(() => {
     // Initialize chat engine
@@ -49,10 +51,27 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const handleCancelRequest = () => {
+    if (currentRequestRef.current) {
+      currentRequestRef.current.cancel();
+      currentRequestRef.current = null;
+      setIsLoading(false);
+      setCanCancel(false);
+    }
+  };
+
   const handleSendMessage = async (content: string) => {
     if (!chatEngineRef.current || !content.trim()) return;
 
     setIsLoading(true);
+    setCanCancel(true);
+
+    let cancelled = false;
+    currentRequestRef.current = {
+      cancel: () => {
+        cancelled = true;
+      }
+    };
 
     try {
       await chatEngineRef.current.sendMessage(
@@ -60,13 +79,21 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
         documentContent
       );
       
-      const updatedMessages = chatEngineRef.current.getHistory();
-      setMessages(updatedMessages);
-      chatEngineRef.current.saveHistory();
+      if (!cancelled) {
+        const updatedMessages = chatEngineRef.current.getHistory();
+        setMessages(updatedMessages);
+        chatEngineRef.current.saveHistory();
+      }
     } catch (error) {
-      console.error('Chat error:', error);
+      if (!cancelled) {
+        console.error('Chat error:', error);
+      }
     } finally {
-      setIsLoading(false);
+      if (!cancelled) {
+        setIsLoading(false);
+        setCanCancel(false);
+      }
+      currentRequestRef.current = null;
     }
   };
 
@@ -216,6 +243,19 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
 
       {/* Input Area */}
       <Box sx={{ p: 2 }}>
+        {canCancel && (
+          <Box sx={{ mb: 1, display: 'flex', justifyContent: 'center' }}>
+            <IconButton
+              size="small"
+              onClick={handleCancelRequest}
+              color="error"
+              sx={{ fontSize: '0.875rem' }}
+            >
+              <CloseIcon fontSize="small" sx={{ mr: 0.5 }} />
+              Cancel Request
+            </IconButton>
+          </Box>
+        )}
         <ChatInput
           onSend={handleSendMessage}
           onStream={handleStreamMessage}
