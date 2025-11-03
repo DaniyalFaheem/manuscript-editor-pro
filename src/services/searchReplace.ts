@@ -59,8 +59,9 @@ export function searchText(
       const flags = options.caseSensitive ? 'g' : 'gi';
       pattern = new RegExp(escapedQuery, flags);
     }
-  } catch (error) {
+  } catch (err) {
     // Invalid regex pattern
+    console.warn('Invalid regex pattern:', err);
     return { matches: [], totalCount: 0 };
   }
 

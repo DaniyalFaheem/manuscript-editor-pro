@@ -44,13 +44,14 @@ export class MLEngine {
   /**
    * Generate grammar suggestions using ML
    */
-  public async checkGrammar(_context: DocumentContext): Promise<Suggestion[]> {
+  public async checkGrammar(context: DocumentContext): Promise<Suggestion[]> {
     if (!this.enabled) {
       return [];
     }
 
-    // TODO: Implement actual ML inference
+    // TODO: Implement actual ML inference with context
     // This is a placeholder that returns empty array
+    console.debug('ML grammar checking not yet implemented for:', context.text.substring(0, 50));
     return [];
   }
 
@@ -58,8 +59,8 @@ export class MLEngine {
    * Generate paraphrasing suggestions
    */
   public async generateParaphrases(
-    _text: string,
-    _options: {
+    text: string,
+    options: {
       count?: number;
       formality?: 'casual' | 'neutral' | 'formal';
     } = {}
@@ -69,13 +70,14 @@ export class MLEngine {
     }
 
     // TODO: Implement paraphrasing using T5 or similar model
+    console.debug('ML paraphrasing not yet implemented for:', text.substring(0, 50), options);
     return [];
   }
 
   /**
    * Analyze style and tone
    */
-  public async analyzeStyle(_context: DocumentContext): Promise<{
+  public async analyzeStyle(context: DocumentContext): Promise<{
     formality: number; // 0-1 scale
     sentiment: number; // -1 to 1 scale
     confidence: number;
@@ -85,6 +87,7 @@ export class MLEngine {
     }
 
     // TODO: Implement style classification
+    console.debug('ML style analysis not yet implemented for:', context.text.substring(0, 50));
     return { formality: 0.5, sentiment: 0, confidence: 0 };
   }
 

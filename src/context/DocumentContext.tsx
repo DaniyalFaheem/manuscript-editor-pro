@@ -29,14 +29,14 @@ interface DocumentContextType {
   presentationMode: boolean;
   plagiarismResults: PlagiarismResult[];
   statistics: DocumentStatistics | null;
-  editorRef: React.MutableRefObject<any> | null;
+  editorRef: React.MutableRefObject<unknown> | null;
   setContent: (content: string) => void;
   toggleDarkMode: () => void;
   setFileName: (name: string) => void;
   acceptSuggestion: (id: string) => void;
   dismissSuggestion: (id: string) => void;
   navigateToSuggestion: (suggestionId: string) => void;
-  setEditorRef: (ref: React.MutableRefObject<any>) => void;
+  setEditorRef: (ref: React.MutableRefObject<unknown>) => void;
   setLanguageVariant: (variant: LanguageVariant) => void;
   convertLanguageVariant: (targetVariant: LanguageVariant) => void;
   togglePresentationMode: () => void;
@@ -79,7 +79,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [presentationMode, setPresentationMode] = useState(false);
   const [plagiarismResults, setPlagiarismResults] = useState<PlagiarismResult[]>([]);
   const [statistics, setStatistics] = useState<DocumentStatistics | null>(null);
-  const [editorRef, setEditorRefState] = useState<React.MutableRefObject<any> | null>(null);
+  const [editorRef, setEditorRefState] = useState<React.MutableRefObject<unknown> | null>(null);
 
   // Load content from localStorage on mount
   useEffect(() => {
@@ -239,7 +239,8 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const suggestion = suggestions.find(s => s.id === suggestionId);
     if (!suggestion || !editorRef?.current) return;
 
-    const editor = editorRef.current;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const editor = editorRef.current as any;
     const model = editor.getModel();
     if (!model) return;
 
@@ -267,7 +268,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     editor.focus();
   }, [suggestions, editorRef]);
 
-  const setEditorRef = useCallback((ref: React.MutableRefObject<any>) => {
+  const setEditorRef = useCallback((ref: React.MutableRefObject<unknown>) => {
     setEditorRefState(ref);
   }, []);
 
