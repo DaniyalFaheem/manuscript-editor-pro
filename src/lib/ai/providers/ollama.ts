@@ -13,6 +13,16 @@ import type {
 } from './types';
 import { AIProviderStatus } from './types';
 
+interface RawSuggestion {
+  type?: string;
+  severity?: string;
+  message?: string;
+  context?: string;
+  offset?: number;
+  length?: number;
+  replacements?: string[];
+}
+
 export class OllamaProvider implements AIProvider {
   readonly name = 'ollama';
   private baseUrl: string;
@@ -212,7 +222,7 @@ export class OllamaProvider implements AIProvider {
         const suggestions = JSON.parse(jsonMatch[0]);
         return {
           type,
-          suggestions: suggestions.map((s: { type?: string; severity?: string; message?: string; context?: string; offset?: number; length?: number; replacements?: string[] }, idx: number) => ({
+          suggestions: suggestions.map((s: RawSuggestion, idx: number) => ({
             id: `ollama-${type}-${idx}`,
             type: s.type || type,
             severity: s.severity || 'warning',

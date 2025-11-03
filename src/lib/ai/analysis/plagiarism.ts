@@ -61,9 +61,17 @@ export class PlagiarismDetector {
 
   /**
    * Calculate originality percentage (simplified)
+   * 
+   * NOTE: This is a basic heuristic-based check that identifies potentially
+   * problematic patterns. It DOES NOT:
+   * - Check against external databases
+   * - Detect all types of plagiarism
+   * - Provide definitive plagiarism detection
+   * 
+   * For academic work, always use professional plagiarism detection services.
    */
   calculateOriginality(text: string): number {
-    // This is a simplified calculation
+    // This is a simplified heuristic calculation
     // Real plagiarism detection would require external databases
     const commonPhrases = this.detectCommonPhrases(text);
     const totalSentences = text.split(/[.!?]+/).filter(s => s.trim()).length;

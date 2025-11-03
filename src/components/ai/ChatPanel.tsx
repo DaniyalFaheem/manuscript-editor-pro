@@ -92,7 +92,9 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
         content,
         (chunk) => {
           streamingMessage.content += chunk;
-          setMessages([...chatEngineRef.current!.getHistory().slice(0, -1), streamingMessage]);
+          if (chatEngineRef.current) {
+            setMessages([...chatEngineRef.current.getHistory().slice(0, -1), streamingMessage]);
+          }
         },
         documentContent
       );

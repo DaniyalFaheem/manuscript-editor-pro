@@ -114,8 +114,10 @@ export class WebLLMProvider implements AIProvider {
 
   private generatePlaceholderResponse(messages: Message[]): string {
     const lastMessage = messages[messages.length - 1];
+    // Sanitize content to prevent any potential issues
+    const sanitizedContent = lastMessage.content.replace(/[<>]/g, '');
     
-    return `WebLLM is currently in placeholder mode. To enable full functionality, install the @mlc-ai/web-llm package. Your message was: "${lastMessage.content}"`;
+    return `WebLLM is currently in placeholder mode. To enable full functionality, install the @mlc-ai/web-llm package. Your message was: "${sanitizedContent.substring(0, 100)}"`;
   }
 
   async dispose(): Promise<void> {

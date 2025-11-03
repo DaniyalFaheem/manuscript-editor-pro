@@ -18,7 +18,8 @@ export class MetricsCalculator {
     const citations = citationAnalyzer.extractCitations(text);
     
     // Calculate individual scores
-    const grammarAccuracy = 95; // Placeholder - would come from actual grammar check
+    // TODO: Replace with actual grammar analysis results
+    const grammarAccuracy = 95; // Placeholder - will be calculated from real analysis
     const styleConsistency = this.calculateStyleConsistency(text);
     const citationCompleteness = this.calculateCitationCompleteness(citations, wordCount);
     
