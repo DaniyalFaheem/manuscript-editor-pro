@@ -19,6 +19,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import AIStatusIndicator from './AIStatusIndicator';
+import SettingsPanel from './SettingsPanel';
 import { ChatEngine, type ChatMessage as ChatMsg } from '../../lib/ai/chatbot/chat-engine';
 
 interface ChatPanelProps {
@@ -35,6 +36,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [canCancel, setCanCancel] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const chatEngineRef = useRef<ChatEngine | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const currentRequestRef = useRef<{ cancel: () => void } | null>(null);
@@ -145,6 +147,15 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     }
   };
 
+  // Show settings if requested
+  if (showSettings) {
+    return (
+      <Box sx={{ height: '100%', overflow: 'auto' }}>
+        <SettingsPanel onClose={() => setShowSettings(false)} />
+      </Box>
+    );
+  }
+
   return (
     <Paper
       elevation={3}
@@ -181,7 +192,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
             </IconButton>
           </Tooltip>
           <Tooltip title="Settings">
-            <IconButton size="small">
+            <IconButton size="small" onClick={() => setShowSettings(true)}>
               <SettingsIcon fontSize="small" />
             </IconButton>
           </Tooltip>

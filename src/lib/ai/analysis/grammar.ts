@@ -6,6 +6,7 @@
 import { getAIOrchestrator } from '../index';
 import type { AnalysisResult, Suggestion, Message } from '../providers/types';
 import { requestQueue } from '../utils/request-queue';
+import { offlineChecker } from '../fallback/offline-checker';
 
 export interface GrammarCheckOptions {
   checkSpelling?: boolean;
@@ -187,40 +188,14 @@ ${checkPunctuation ? '- Punctuation errors (commas, periods, apostrophes, etc.)'
   }
 
   /**
-   * Fallback analysis using basic pattern matching
+   * Fallback analysis using offline checker
    */
   private getFallbackAnalysis(text: string): AnalysisResult {
-    const suggestions: Suggestion[] = [];
-
-    // Basic spelling check for common mistakes
-    const commonMistakes = [
-      { wrong: 'recieve', correct: 'receive' },
-      { wrong: 'definately', correct: 'definitely' },
-      { wrong: 'occured', correct: 'occurred' },
-      { wrong: 'seperate', correct: 'separate' },
-      { wrong: 'alot', correct: 'a lot' },
-    ];
-
-    commonMistakes.forEach(({ wrong, correct }) => {
-      const regex = new RegExp(`\\b${wrong}\\b`, 'gi');
-      let match;
-      while ((match = regex.exec(text)) !== null) {
-        suggestions.push({
-          id: `spell-${suggestions.length}`,
-          type: 'spelling',
-          severity: 'error',
-          message: `Spelling error: "${wrong}" should be "${correct}"`,
-          context: text.substring(Math.max(0, match.index - 20), match.index + wrong.length + 20),
-          offset: match.index,
-          length: wrong.length,
-          replacements: [correct],
-        });
-      }
-    });
-
+    console.info('Using offline fallback checker');
+    
     return {
       type: 'grammar',
-      suggestions,
+      suggestions: offlineChecker.checkAll(text),
     };
   }
 }
