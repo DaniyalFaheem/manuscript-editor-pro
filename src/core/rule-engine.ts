@@ -137,16 +137,11 @@ export class RuleEngine {
   private createSuggestion(
     rule: RuleDefinition,
     match: Match,
-    context: DocumentContext
+    _context: DocumentContext
   ): Suggestion | null {
     const message = typeof rule.message === 'function' ? rule.message(match) : rule.message;
     const explanation = typeof rule.explanation === 'function' ? rule.explanation(match) : rule.explanation;
     const replacement = typeof rule.replacement === 'function' ? rule.replacement(match) : rule.replacement;
-    
-    // Context can be used for future enhancements like context-aware explanations
-    if (context.text.length > 0) {
-      // Future: Add context-aware explanation generation
-    }
 
     return {
       id: `${rule.id}-${match.start}`,

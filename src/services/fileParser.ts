@@ -53,9 +53,8 @@ async function parseDocxFile(file: File): Promise<string> {
         const arrayBuffer = e.target?.result as ArrayBuffer;
         const result = await mammoth.extractRawText({ arrayBuffer });
         resolve(result.value);
-      } catch (err) {
-        const error = err as Error;
-        reject(new Error(`Failed to parse DOCX file: ${error.message}`));
+      } catch (error) {
+        reject(new Error('Failed to parse DOCX file'));
       }
     };
     reader.onerror = () => reject(new Error('Failed to read file'));
@@ -80,21 +79,15 @@ async function parsePdfFile(file: File): Promise<string> {
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const textContent = await page.getTextContent();
-          interface TextItem {
-            str: string;
-          }
           const pageText = textContent.items
-            .map((item: TextItem | { type?: string }) => {
-              return 'str' in item ? item.str : '';
-            })
+            .map((item: any) => item.str)
             .join(' ');
           fullText += pageText + '\n\n';
         }
         
         resolve(fullText);
-      } catch (err) {
-        const error = err as Error;
-        reject(new Error(`Failed to parse PDF file: ${error.message}`));
+      } catch (error) {
+        reject(new Error('Failed to parse PDF file'));
       }
     };
     reader.onerror = () => reject(new Error('Failed to read file'));

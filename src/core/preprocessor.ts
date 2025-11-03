@@ -311,11 +311,9 @@ export class Preprocessor {
   /**
    * Detect language (simple heuristic, can be enhanced)
    */
-  private detectLanguage(text: string): string {
+  private detectLanguage(_text: string): string {
     // For now, assume English
     // Can be enhanced with language detection library
-    // Basic detection could look for language-specific patterns in the future
-    console.debug(`Detecting language for text of length: ${text.length}`);
     return 'en';
   }
 }
