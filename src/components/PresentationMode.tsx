@@ -205,7 +205,7 @@ const PresentationMode: React.FC<PresentationModeProps> = ({
             >
               {isHeading ? (
                 <Typography
-                  variant={`h${Math.min(headingLevel + 2, 6)}` as any}
+                  variant={`h${Math.min(headingLevel + 2, 6)}` as 'h3' | 'h4' | 'h5' | 'h6'}
                   sx={{
                     fontWeight: 'bold',
                     fontSize: `${fontSize + (6 - headingLevel) * 4}px`,

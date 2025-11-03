@@ -165,9 +165,11 @@ async function exportAsDocx(
       const level = trimmedLine.match(/^#+/)?.[0].length || 1;
       const text = trimmedLine.replace(/^#+\s*/, '');
       
+      type HeadingLevel = 'Heading1' | 'Heading2' | 'Heading3' | 'Heading4' | 'Heading5' | 'Heading6';
+      
       return new Paragraph({
         text,
-        heading: `Heading${Math.min(level, 6)}` as any,
+        heading: `Heading${Math.min(level, 6)}` as HeadingLevel,
         spacing: { before: 240, after: 120 }
       });
     }
