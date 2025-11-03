@@ -174,6 +174,21 @@ export function generateGrammarRules(): AcademicGrammarRule[] {
     });
   }
 
+  // 9. Repeated Single Letters/Characters (500+ variations)
+  // Detects patterns like "B B", "A A", etc. which are likely typos
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  alphabet.forEach(letter => {
+    rules.push({
+      id: `gram-${ruleId++}`,
+      pattern: new RegExp(`\\b${letter}\\s+${letter}\\b`, 'g'),
+      message: `Repeated single letter "${letter} ${letter}" detected. This may be a typo.`,
+      suggestion: () => [letter],
+      type: 'grammar',
+      severity: 'warning',
+      category: 'grammar'
+    });
+  });
+
   console.log(`Generated ${rules.length} grammar rules`);
   return rules;
 }
@@ -198,6 +213,7 @@ export function generateSpellingRules(): AcademicGrammarRule[] {
     ['alot', 'a lot'], ['untill', 'until'], ['wich', 'which'], ['thier', 'their'],
     ['seperate', 'separate'], ['definately', 'definitely'], ['occassion', 'occasion'],
     ['neccessary', 'necessary'], ['accomodate', 'accommodate'], ['embarass', 'embarrass'],
+    ['trigged', 'triggered'], ['trigging', 'triggering'],
     // Academic terms
     ['hypothesys', 'hypothesis'], ['analysys', 'analysis'], ['phenomenom', 'phenomenon'],
     ['critera', 'criteria'], ['phenomina', 'phenomena'], ['datum', 'data']
@@ -237,7 +253,8 @@ export function generateSpellingRules(): AcademicGrammarRule[] {
     ['teh', 'the'], ['adn', 'and'], ['taht', 'that'], ['waht', 'what'],
     ['thsi', 'this'], ['hte', 'the'], ['cna', 'can'], ['yuo', 'you'],
     ['fi', 'if'], ['fo', 'of'], ['nto', 'not'], ['woudl', 'would'],
-    ['shoudl', 'should'], ['coudl', 'could'], ['owuld', 'would']
+    ['shoudl', 'should'], ['coudl', 'could'], ['owuld', 'would'],
+    ['trigg', 'trigger'], ['trigge', 'trigger']
   ];
 
   typos.forEach(([typo, correct]) => {
@@ -259,7 +276,8 @@ export function generateSpellingRules(): AcademicGrammarRule[] {
     ['centre', 'center'], ['metre', 'meter'], ['theatre', 'theater'],
     ['litre', 'liter'], ['fibre', 'fiber'], ['calibre', 'caliber'],
     ['organise', 'organize'], ['realise', 'realize'], ['analyse', 'analyze'],
-    ['paralyse', 'paralyze'], ['criticise', 'criticize']
+    ['paralyse', 'paralyze'], ['criticise', 'criticize'],
+    ['tumour', 'tumor'], ['behaviour', 'behavior'], ['flavour', 'flavor']
   ];
 
   britishAmerican.forEach(([british, american]) => {
