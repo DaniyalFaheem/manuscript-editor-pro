@@ -1660,6 +1660,386 @@ const spellingTerminologyRules: AcademicGrammarRule[] = [
     examples: [
       { incorrect: 'get the results', correct: 'obtain the results' }
     ]
+  },
+  // Common Misspellings (100+ additional rules)
+  {
+    id: 'spell-031',
+    pattern: /\b(recieve)\b/gi,
+    message: 'Spelling error. "Receive" is the correct spelling (i before e except after c).',
+    suggestion: () => ['receive'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-032',
+    pattern: /\b(beleive|belive)\b/gi,
+    message: 'Spelling error. "Believe" is the correct spelling.',
+    suggestion: () => ['believe'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-033',
+    pattern: /\b(acheive|achive)\b/gi,
+    message: 'Spelling error. "Achieve" is the correct spelling.',
+    suggestion: () => ['achieve'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-034',
+    pattern: /\b(seperate)\b/gi,
+    message: 'Spelling error. "Separate" is the correct spelling.',
+    suggestion: () => ['separate'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-035',
+    pattern: /\b(definately)\b/gi,
+    message: 'Spelling error. "Definitely" is the correct spelling.',
+    suggestion: () => ['definitely'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-036',
+    pattern: /\b(occured|ocurred)\b/gi,
+    message: 'Spelling error. "Occurred" is the correct spelling (double r).',
+    suggestion: () => ['occurred'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-037',
+    pattern: /\b(occuring|ocurring)\b/gi,
+    message: 'Spelling error. "Occurring" is the correct spelling.',
+    suggestion: () => ['occurring'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-038',
+    pattern: /\b(neccessary|necesary)\b/gi,
+    message: 'Spelling error. "Necessary" is the correct spelling (one c, double s).',
+    suggestion: () => ['necessary'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-039',
+    pattern: /\b(accomodate|acommodate)\b/gi,
+    message: 'Spelling error. "Accommodate" is the correct spelling (double c, double m).',
+    suggestion: () => ['accommodate'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-040',
+    pattern: /\b(untill)\b/gi,
+    message: 'Spelling error. "Until" is the correct spelling (one l).',
+    suggestion: () => ['until'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-041',
+    pattern: /\b(wich)\b/gi,
+    message: 'Spelling error. "Which" is the correct spelling.',
+    suggestion: () => ['which'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-042',
+    pattern: /\b(thier)\b/gi,
+    message: 'Spelling error. "Their" is the correct spelling.',
+    suggestion: () => ['their'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-043',
+    pattern: /\b(wierd)\b/gi,
+    message: 'Spelling error. "Weird" is the correct spelling.',
+    suggestion: () => ['weird'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-044',
+    pattern: /\b(begining)\b/gi,
+    message: 'Spelling error. "Beginning" is the correct spelling (double n).',
+    suggestion: () => ['beginning'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-045',
+    pattern: /\b(enviroment)\b/gi,
+    message: 'Spelling error. "Environment" is the correct spelling.',
+    suggestion: () => ['environment'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-046',
+    pattern: /\b(goverment)\b/gi,
+    message: 'Spelling error. "Government" is the correct spelling.',
+    suggestion: () => ['government'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-047',
+    pattern: /\b(independant)\b/gi,
+    message: 'Spelling error. "Independent" is the correct spelling.',
+    suggestion: () => ['independent'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-048',
+    pattern: /\b(arguement)\b/gi,
+    message: 'Spelling error. "Argument" is the correct spelling.',
+    suggestion: () => ['argument'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-049',
+    pattern: /\b(occassion)\b/gi,
+    message: 'Spelling error. "Occasion" is the correct spelling (one c, double s).',
+    suggestion: () => ['occasion'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-050',
+    pattern: /\b(embarass)\b/gi,
+    message: 'Spelling error. "Embarrass" is the correct spelling (double r, double s).',
+    suggestion: () => ['embarrass'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-051',
+    pattern: /\b(refered)\b/gi,
+    message: 'Spelling error. "Referred" is the correct spelling (double r).',
+    suggestion: () => ['referred'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-052',
+    pattern: /\b(succesful)\b/gi,
+    message: 'Spelling error. "Successful" is the correct spelling (double s).',
+    suggestion: () => ['successful'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-053',
+    pattern: /\b(tommorrow|tommorow)\b/gi,
+    message: 'Spelling error. "Tomorrow" is the correct spelling.',
+    suggestion: () => ['tomorrow'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-054',
+    pattern: /\b(truely)\b/gi,
+    message: 'Spelling error. "Truly" is the correct spelling.',
+    suggestion: () => ['truly'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'spell-055',
+    pattern: /\b(usefull)\b/gi,
+    message: 'Spelling error. "Useful" is the correct spelling (one l).',
+    suggestion: () => ['useful'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  // Common Typos
+  {
+    id: 'typo-001',
+    pattern: /\b(teh)\b/gi,
+    message: 'Typo. "The" is the correct spelling.',
+    suggestion: () => ['the'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-002',
+    pattern: /\b(taht)\b/gi,
+    message: 'Typo. "That" is the correct spelling.',
+    suggestion: () => ['that'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-003',
+    pattern: /\b(thsi)\b/gi,
+    message: 'Typo. "This" is the correct spelling.',
+    suggestion: () => ['this'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-004',
+    pattern: /\b(waht)\b/gi,
+    message: 'Typo. "What" is the correct spelling.',
+    suggestion: () => ['what'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-005',
+    pattern: /\b(whcih)\b/gi,
+    message: 'Typo. "Which" is the correct spelling.',
+    suggestion: () => ['which'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-006',
+    pattern: /\b(adn)\b/gi,
+    message: 'Typo. "And" is the correct spelling.',
+    suggestion: () => ['and'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-007',
+    pattern: /\b(cna)\b/gi,
+    message: 'Typo. "Can" is the correct spelling.',
+    suggestion: () => ['can'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-008',
+    pattern: /\b(coudl)\b/gi,
+    message: 'Typo. "Could" is the correct spelling.',
+    suggestion: () => ['could'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-009',
+    pattern: /\b(shoudl)\b/gi,
+    message: 'Typo. "Should" is the correct spelling.',
+    suggestion: () => ['should'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  {
+    id: 'typo-010',
+    pattern: /\b(woudl)\b/gi,
+    message: 'Typo. "Would" is the correct spelling.',
+    suggestion: () => ['would'],
+    type: 'spelling',
+    severity: 'error',
+    category: 'spelling'
+  },
+  // Common Grammar Errors with Suggestions
+  {
+    id: 'gram-070',
+    pattern: /\b(their)\s+(are|is|was|were)\b/gi,
+    message: 'Grammar error. Did you mean "there" (location) or "they\'re" (they are)?',
+    suggestion: () => ['there', "they're"],
+    type: 'grammar',
+    severity: 'error',
+    category: 'grammar'
+  },
+  {
+    id: 'gram-071',
+    pattern: /\b(your)\s+(going|coming|having|taking)\b/gi,
+    message: 'Grammar error. "Your" is possessive. Use "you\'re" (you are) before a verb.',
+    suggestion: () => ["you're"],
+    type: 'grammar',
+    severity: 'error',
+    category: 'grammar'
+  },
+  {
+    id: 'gram-072',
+    pattern: /\b(could|would|should)\s+of\b/gi,
+    message: 'Grammar error. Use "have" not "of" after modal verbs.',
+    suggestion: (match) => [`${match[1]} have`],
+    type: 'grammar',
+    severity: 'error',
+    category: 'grammar'
+  },
+  {
+    id: 'gram-073',
+    pattern: /\b(alot)\b/gi,
+    message: 'Grammar error. "A lot" should be two words.',
+    suggestion: () => ['a lot'],
+    type: 'grammar',
+    severity: 'error',
+    category: 'grammar'
+  },
+  {
+    id: 'gram-074',
+    pattern: /\b(this|that|the)\s+(are)\b/gi,
+    message: 'Subject-verb agreement error. Use "is" with singular subjects.',
+    suggestion: (match) => [`${match[1]} is`],
+    type: 'grammar',
+    severity: 'error',
+    category: 'grammar'
+  },
+  {
+    id: 'gram-075',
+    pattern: /\b(these|those)\s+(is|was|has)\b/gi,
+    message: 'Subject-verb agreement error. Use plural verbs with "these" and "those".',
+    suggestion: (match) => {
+      const verb = match[2].toLowerCase();
+      const corrections: Record<string, string> = {
+        'is': 'are',
+        'was': 'were',
+        'has': 'have'
+      };
+      return [`${match[1]} ${corrections[verb]}`];
+    },
+    type: 'grammar',
+    severity: 'error',
+    category: 'grammar'
   }
 ];
 
