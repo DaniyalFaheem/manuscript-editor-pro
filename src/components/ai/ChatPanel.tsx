@@ -256,15 +256,31 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
       <Box sx={{ p: 2 }}>
         {canCancel && (
           <Box sx={{ mb: 1, display: 'flex', justifyContent: 'center' }}>
-            <IconButton
-              size="small"
+            <Box
+              component="button"
               onClick={handleCancelRequest}
-              color="error"
-              sx={{ fontSize: '0.875rem' }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                border: 1,
+                borderColor: 'error.main',
+                borderRadius: 1,
+                px: 2,
+                py: 0.5,
+                bgcolor: 'transparent',
+                color: 'error.main',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                '&:hover': {
+                  bgcolor: 'error.light',
+                  color: 'error.contrastText',
+                }
+              }}
             >
-              <CloseIcon fontSize="small" sx={{ mr: 0.5 }} />
+              <CloseIcon fontSize="small" />
               Cancel Request
-            </IconButton>
+            </Box>
           </Box>
         )}
         <ChatInput

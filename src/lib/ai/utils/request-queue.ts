@@ -104,6 +104,7 @@ export class RequestQueue {
   }
 
   private async processQueue(): Promise<void> {
+    // Guard against race conditions with atomic check-and-set
     if (this.processing || this.currentConcurrent >= this.maxConcurrent) {
       return;
     }
@@ -113,6 +114,7 @@ export class RequestQueue {
       return;
     }
 
+    // Set processing flag immediately to prevent race conditions
     this.processing = true;
     this.currentConcurrent++;
 
@@ -122,12 +124,14 @@ export class RequestQueue {
     } catch (error) {
       request.reject(error as Error);
     } finally {
-      this.currentConcurrent--;
+      // Update state in correct order to maintain consistency
       this.processing = false;
+      this.currentConcurrent--;
       
-      // Process next request
+      // Process next request if queue not empty
       if (this.queue.length > 0) {
-        this.processQueue();
+        // Use setImmediate equivalent to avoid deep recursion
+        setTimeout(() => this.processQueue(), 0);
       }
     }
   }

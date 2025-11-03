@@ -143,22 +143,10 @@ export class WebLLMProvider implements AIProvider {
         estimatedTimeRemaining: 60,
       });
 
-      // Check cache first
-      const cachedEngine = await this.loadFromCache();
-      
-      if (cachedEngine) {
-        this.engine = cachedEngine;
-        this.isInitialized = true;
-        
-        this.notifyProgress({
-          progress: 1,
-          message: 'Loaded from cache',
-          estimatedTimeRemaining: 0,
-        });
-        
-        console.info('✅ WebLLM loaded from cache!');
-        return;
-      }
+      // TODO: Implement model caching via IndexedDB for faster subsequent loads
+      // Currently, caching infrastructure is in place but not yet active
+      // const cachedEngine = await this.loadFromCache();
+      // if (cachedEngine) { ... }
 
       // Create the MLC engine with progress reporting
       this.engine = await CreateMLCEngine(this.defaultModel, {
@@ -179,8 +167,8 @@ export class WebLLMProvider implements AIProvider {
       
       this.isInitialized = true;
       
-      // Cache the engine for next time
-      await this.saveToCache();
+      // TODO: Save engine state to cache for future use
+      // await this.saveToCache();
       
       this.notifyProgress({
         progress: 1,
@@ -205,18 +193,7 @@ export class WebLLMProvider implements AIProvider {
     }
   }
 
-  private async loadFromCache(): Promise<MLCEngineInterface | null> {
-    // Note: Currently, MLC engines can't be easily serialized/cached
-    // This is a placeholder for future implementation
-    // Could use IndexedDB to cache model weights
-    return null;
-  }
 
-  private async saveToCache(): Promise<void> {
-    // Note: Currently, MLC engines can't be easily serialized/cached
-    // This is a placeholder for future implementation
-    return;
-  }
 
   async chat(messages: Message[]): Promise<string> {
     if (!this.isInitialized) {

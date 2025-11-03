@@ -15,6 +15,16 @@ export interface GrammarCheckOptions {
   context?: string;
 }
 
+interface ParsedSuggestion {
+  type?: string;
+  severity?: string;
+  message?: string;
+  context?: string;
+  offset?: number;
+  length?: number;
+  replacements?: string[];
+}
+
 export class GrammarAnalyzer {
   private orchestrator = getAIOrchestrator();
 
@@ -169,7 +179,7 @@ ${checkPunctuation ? '- Punctuation errors (commas, periods, apostrophes, etc.)'
       const jsonMatch = response.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
-        return parsed.map((item: { type?: string; severity?: string; message?: string; context?: string; offset?: number; length?: number; replacements?: string[] }, index: number) => ({
+        return parsed.map((item: ParsedSuggestion, index: number) => ({
           id: `ai-${index}`,
           type: (item.type || 'grammar') as 'grammar' | 'spelling' | 'punctuation',
           severity: (item.severity || 'warning') as 'error' | 'warning' | 'info',
