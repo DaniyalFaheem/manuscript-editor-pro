@@ -118,7 +118,7 @@ export async function analyzeText(text: string): Promise<Suggestion[]> {
       enabledCategories: ['grammar', 'spelling', 'punctuation'],
       enabledTypes: ['grammar', 'spelling', 'punctuation'],
       enabledSeverities: ['error', 'warning'],
-      maxSuggestions: 100, // Focus on most critical issues only
+      maxSuggestions: 1000, // Show all errors - increased from 100 to catch all mistakes
       removeOverlapping: true
     });
     

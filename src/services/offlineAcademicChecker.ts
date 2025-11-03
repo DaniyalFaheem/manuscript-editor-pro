@@ -30,7 +30,7 @@ let massiveRuleCache: typeof allAcademicRules | null = null;
 
 // Performance optimization: Limit generated rules to balance speed vs coverage
 // Adjust MAX_GENERATED_RULES to tune performance (higher = slower but more thorough)
-const MAX_GENERATED_RULES = 2000;
+const MAX_GENERATED_RULES = 5000; // Increased from 2000 to ensure all spelling and grammar rules are included
 
 function getMassiveRules() {
   if (!massiveRuleCache) {
@@ -65,14 +65,14 @@ export interface OfflineCheckerConfig {
 /**
  * Default configuration
  * OPTIMIZED: Balanced performance with comprehensive coverage
- * Note: Lower maxSuggestions improves performance and focuses on critical issues
- * Increase if you need more comprehensive coverage for very long documents
+ * Note: maxSuggestions set to 1000 to show all grammar and spelling errors
+ * This ensures users can see and correct all mistakes in their documents
  */
 const defaultConfig: Required<Omit<OfflineCheckerConfig, 'onProgress'>> = {
   enabledCategories: ['grammar', 'academic-tone', 'citation', 'punctuation', 'wordiness', 'spelling'],
   enabledTypes: ['grammar', 'punctuation', 'style', 'spelling'],
   enabledSeverities: ['error', 'warning', 'info'],
-  maxSuggestions: 500, // Optimized: Show most important suggestions only (increase for longer documents)
+  maxSuggestions: 1000, // Increased from 500 to show all errors
   removeOverlapping: true,
   chunkSize: 8000 // Optimized for faster processing
 };
