@@ -322,8 +322,16 @@ export class ParaphrasingService {
     // Change word order slightly
     let result = text;
     
-    // Move adverbs
-    result = result.replace(/(\w+ly)\s+(\w+)/g, '$2 $1');
+    // Move common adverbs (more specific pattern to avoid false matches)
+    const commonAdverbs = [
+      'quickly', 'slowly', 'carefully', 'easily', 'simply',
+      'clearly', 'directly', 'effectively', 'frequently', 'generally'
+    ];
+    
+    for (const adverb of commonAdverbs) {
+      const pattern = new RegExp(`\\b${adverb}\\s+(\\w+)`, 'gi');
+      result = result.replace(pattern, '$1 ' + adverb);
+    }
     
     // Add emphasis
     if (!result.includes('indeed') && !result.includes('certainly')) {

@@ -102,11 +102,13 @@ export class VocabularyEnhancer {
     // Create suggestions for frequently used weak words
     for (const [word, count] of wordCounts) {
       if (count > 3) {
-        // Find all occurrences
+        // Find all occurrences - regex with global flag will auto-advance
         const regex = new RegExp(`\\b${word}\\b`, 'gi');
         let match;
+        let iterations = 0;
+        const maxIterations = count + 10; // Safety limit
         
-        while ((match = regex.exec(text)) !== null) {
+        while ((match = regex.exec(text)) !== null && iterations++ < maxIterations) {
           const powerWord = POWER_WORD_MAP[word.toLowerCase()]?.[0] || word;
           const suggestion: Suggestion = {
             id: generateId(),
