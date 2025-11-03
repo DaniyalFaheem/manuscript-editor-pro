@@ -21,6 +21,7 @@ export class AIOrchestrator {
   private providers: Map<string, AIProvider> = new Map();
   private config: AIConfig;
   private activeProvider: AIProvider | null = null;
+  private backgroundInitStarted = false;
 
   constructor(config: AIConfig = {}) {
     this.config = {
@@ -45,6 +46,23 @@ export class AIOrchestrator {
     );
     this.providers.set('webllm', new WebLLMProvider());
     this.providers.set('transformers', new TransformersProvider());
+  }
+
+  /**
+   * Start background initialization of AI providers
+   * This should be called early (e.g., on app startup) to pre-load models
+   */
+  startBackgroundInitialization(): void {
+    if (this.backgroundInitStarted) {
+      return;
+    }
+
+    this.backgroundInitStarted = true;
+
+    // Try to initialize providers in background
+    this.getBestProvider().catch(error => {
+      console.warn('Background initialization failed:', error);
+    });
   }
 
   /**

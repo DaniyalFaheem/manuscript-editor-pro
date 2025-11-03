@@ -1,7 +1,7 @@
 /**
  * WebLLM AI Provider
  * Browser-based AI using WebGPU - completely free and private
- * Now with full WebLLM integration for AI-powered manuscript editing
+ * Now with optimized initialization, caching, and background loading
  */
 
 import { CreateMLCEngine, type MLCEngineInterface, type ChatCompletionMessageParam } from '@mlc-ai/web-llm';
@@ -13,6 +13,13 @@ import type {
   AnalysisResult,
 } from './types';
 import { AIProviderStatus } from './types';
+import { requestQueue } from '../utils/request-queue';
+
+export interface InitializationProgress {
+  progress: number;
+  message: string;
+  estimatedTimeRemaining?: number;
+}
 
 export class WebLLMProvider implements AIProvider {
   readonly name = 'webllm';
@@ -20,6 +27,9 @@ export class WebLLMProvider implements AIProvider {
   private isInitialized = false;
   private isInitializing = false;
   private defaultModel = 'Llama-3.1-8B-Instruct-q4f32_1-MLC';
+  private initializationCallbacks: ((progress: InitializationProgress) => void)[] = [];
+  private initializationStartTime = 0;
+  private backgroundInitStarted = false;
 
   async isAvailable(): Promise<boolean> {
     // Check for WebGPU support
@@ -65,8 +75,55 @@ export class WebLLMProvider implements AIProvider {
     };
   }
 
+  /**
+   * Start background initialization (non-blocking)
+   * This can be called early to pre-load the model
+   */
+  startBackgroundInitialization(): void {
+    if (this.backgroundInitStarted || this.isInitialized || this.isInitializing) {
+      return;
+    }
+
+    this.backgroundInitStarted = true;
+    
+    // Start initialization in background without blocking
+    this.initialize().catch(error => {
+      console.warn('Background initialization failed:', error);
+      this.backgroundInitStarted = false;
+    });
+  }
+
+  /**
+   * Subscribe to initialization progress updates
+   */
+  onInitializationProgress(callback: (progress: InitializationProgress) => void): () => void {
+    this.initializationCallbacks.push(callback);
+    
+    // Return unsubscribe function
+    return () => {
+      const index = this.initializationCallbacks.indexOf(callback);
+      if (index > -1) {
+        this.initializationCallbacks.splice(index, 1);
+      }
+    };
+  }
+
+  private notifyProgress(progress: InitializationProgress): void {
+    this.initializationCallbacks.forEach(callback => {
+      try {
+        callback(progress);
+      } catch (error) {
+        console.error('Error in progress callback:', error);
+      }
+    });
+  }
+
   async initialize(): Promise<void> {
-    if (this.isInitialized || this.isInitializing) {
+    if (this.isInitialized) {
+      return;
+    }
+
+    if (this.isInitializing) {
       // Wait for initialization to complete if it's in progress
       while (this.isInitializing) {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -75,27 +132,68 @@ export class WebLLMProvider implements AIProvider {
     }
 
     this.isInitializing = true;
+    this.initializationStartTime = Date.now();
     
     try {
       console.info('🚀 Initializing WebLLM with model:', this.defaultModel);
-      console.info('⏳ This may take a few moments on first load...');
       
+      this.notifyProgress({
+        progress: 0,
+        message: 'Starting AI initialization...',
+        estimatedTimeRemaining: 60,
+      });
+
+      // TODO: Implement model caching via IndexedDB for faster subsequent loads
+      // Currently, caching infrastructure is in place but not yet active
+      // const cachedEngine = await this.loadFromCache();
+      // if (cachedEngine) { ... }
+
       // Create the MLC engine with progress reporting
       this.engine = await CreateMLCEngine(this.defaultModel, {
         initProgressCallback: (progress) => {
-          console.info(`⏳ Loading model: ${Math.round(progress.progress * 100)}%`);
+          const elapsed = (Date.now() - this.initializationStartTime) / 1000;
+          const estimatedTotal = elapsed / progress.progress;
+          const estimatedRemaining = Math.max(0, estimatedTotal - elapsed);
+          
+          this.notifyProgress({
+            progress: progress.progress,
+            message: `Loading model: ${Math.round(progress.progress * 100)}%`,
+            estimatedTimeRemaining: Math.round(estimatedRemaining),
+          });
+          
+          console.info(`⏳ Loading model: ${Math.round(progress.progress * 100)}% (${Math.round(estimatedRemaining)}s remaining)`);
         },
       });
       
       this.isInitialized = true;
-      console.info('✅ WebLLM initialized successfully!');
+      
+      // TODO: Save engine state to cache for future use
+      // await this.saveToCache();
+      
+      this.notifyProgress({
+        progress: 1,
+        message: 'AI ready!',
+        estimatedTimeRemaining: 0,
+      });
+      
+      const totalTime = ((Date.now() - this.initializationStartTime) / 1000).toFixed(1);
+      console.info(`✅ WebLLM initialized successfully in ${totalTime}s!`);
     } catch (error) {
       console.error('❌ Failed to initialize WebLLM:', error);
+      
+      this.notifyProgress({
+        progress: 0,
+        message: 'Initialization failed',
+        estimatedTimeRemaining: 0,
+      });
+      
       throw new Error(`Failed to initialize WebLLM: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       this.isInitializing = false;
     }
   }
+
+
 
   async chat(messages: Message[]): Promise<string> {
     if (!this.isInitialized) {
@@ -106,23 +204,36 @@ export class WebLLMProvider implements AIProvider {
       throw new Error('WebLLM engine not initialized');
     }
 
-    try {
-      // Convert our Message format to WebLLM format
-      const webllmMessages: ChatCompletionMessageParam[] = messages.map(msg => ({
-        role: msg.role as 'system' | 'user' | 'assistant',
-        content: msg.content,
-      }));
+    // Use request queue with debouncing and caching
+    const cacheKey = `chat-${JSON.stringify(messages)}`;
+    
+    return requestQueue.enqueue(
+      cacheKey,
+      async () => {
+        try {
+          // Convert our Message format to WebLLM format
+          const webllmMessages: ChatCompletionMessageParam[] = messages.map(msg => ({
+            role: msg.role as 'system' | 'user' | 'assistant',
+            content: msg.content,
+          }));
 
-      // Get completion from WebLLM
-      const response = await this.engine.chat.completions.create({
-        messages: webllmMessages,
-      });
+          // Get completion from WebLLM
+          const response = await this.engine!.chat.completions.create({
+            messages: webllmMessages,
+          });
 
-      return response.choices[0]?.message?.content || 'No response generated';
-    } catch (error) {
-      console.error('WebLLM chat error:', error);
-      throw new Error(`WebLLM chat failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+          return response.choices[0]?.message?.content || 'No response generated';
+        } catch (error) {
+          console.error('WebLLM chat error:', error);
+          throw new Error(`WebLLM chat failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      },
+      {
+        debounceMs: 300,
+        useCache: true,
+        priority: 1,
+      }
+    );
   }
 
   async stream(

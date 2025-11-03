@@ -118,37 +118,68 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
             onChange={(e) => handleConfigChange('grammarStrictness', e.target.value)}
             size="small"
           >
-            <MenuItem value="lenient">Lenient</MenuItem>
-            <MenuItem value="normal">Normal</MenuItem>
-            <MenuItem value="strict">Strict</MenuItem>
+            <MenuItem value="lenient">Lenient (Faster, fewer suggestions)</MenuItem>
+            <MenuItem value="normal">Normal (Balanced)</MenuItem>
+            <MenuItem value="strict">Strict (More thorough, slower)</MenuItem>
           </Select>
+          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+            Higher strictness provides more detailed analysis but may take longer
+          </Typography>
         </FormControl>
 
         <Divider />
 
-        {/* Toggle Options */}
-        <Box>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={config.enableRealtime}
-                onChange={(e) => handleConfigChange('enableRealtime', e.target.checked)}
-              />
-            }
-            label="Enable real-time checking"
-          />
+        {/* Performance Options */}
+        <Box sx={{ bgcolor: 'action.hover', p: 2, borderRadius: 1 }}>
+          <Typography variant="subtitle2" gutterBottom>
+            Performance Settings
+          </Typography>
+          
+          <Box>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={config.enableRealtime}
+                  onChange={(e) => handleConfigChange('enableRealtime', e.target.checked)}
+                />
+              }
+              label="Enable real-time checking"
+            />
+            <Typography variant="caption" color="text.secondary" display="block">
+              Analyzes text as you type (may impact performance on slower devices)
+            </Typography>
+          </Box>
+
+          <Box sx={{ mt: 1 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={config.enablePrivacyMode}
+                  onChange={(e) => handleConfigChange('enablePrivacyMode', e.target.checked)}
+                />
+              }
+              label="Privacy mode (all local processing)"
+            />
+            <Typography variant="caption" color="text.secondary" display="block">
+              All processing happens locally - no data sent to external servers
+            </Typography>
+          </Box>
         </Box>
 
-        <Box>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={config.enablePrivacyMode}
-                onChange={(e) => handleConfigChange('enablePrivacyMode', e.target.checked)}
-              />
-            }
-            label="Privacy mode (all local processing)"
-          />
+        {/* Performance Tips */}
+        <Box sx={{ bgcolor: 'info.light', p: 2, borderRadius: 1 }}>
+          <Typography variant="subtitle2" gutterBottom color="info.dark">
+            💡 Performance Tips
+          </Typography>
+          <Typography variant="caption" color="info.dark" component="div">
+            • Use "Lenient" strictness for faster analysis on large documents
+            <br />
+            • Disable real-time checking if experiencing lag
+            <br />
+            • Ollama provides the best performance for local AI
+            <br />
+            • WebLLM requires a modern GPU (Chrome 113+)
+          </Typography>
         </Box>
 
         {onClose && (
