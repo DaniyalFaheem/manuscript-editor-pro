@@ -213,6 +213,7 @@ export function generateSpellingRules(): AcademicGrammarRule[] {
     ['alot', 'a lot'], ['untill', 'until'], ['wich', 'which'], ['thier', 'their'],
     ['seperate', 'separate'], ['definately', 'definitely'], ['occassion', 'occasion'],
     ['neccessary', 'necessary'], ['accomodate', 'accommodate'], ['embarass', 'embarrass'],
+    ['trigged', 'triggered'], ['trigging', 'triggering'],
     // Academic terms
     ['hypothesys', 'hypothesis'], ['analysys', 'analysis'], ['phenomenom', 'phenomenon'],
     ['critera', 'criteria'], ['phenomina', 'phenomena'], ['datum', 'data']
