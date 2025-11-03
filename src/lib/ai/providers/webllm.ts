@@ -9,7 +9,6 @@ import type {
   AIProvider,
   AIProviderInfo,
   Message,
-  ChatOptions,
   AnalysisTask,
   AnalysisResult,
 } from './types';
@@ -22,7 +21,7 @@ export class WebLLMProvider implements AIProvider {
 
   async isAvailable(): Promise<boolean> {
     // Check for WebGPU support
-    const nav = navigator as any;
+    const nav = navigator as { gpu?: { requestAdapter: () => Promise<unknown | null> } };
     if (!nav.gpu) {
       return false;
     }
@@ -62,7 +61,7 @@ export class WebLLMProvider implements AIProvider {
     };
   }
 
-  async initialize(_config?: Record<string, unknown>): Promise<void> {
+  async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
     // WebLLM initialization would happen here
@@ -75,7 +74,7 @@ export class WebLLMProvider implements AIProvider {
     this.isInitialized = true;
   }
 
-  async chat(messages: Message[], _options?: ChatOptions): Promise<string> {
+  async chat(messages: Message[]): Promise<string> {
     if (!this.isInitialized) {
       await this.initialize();
     }
@@ -86,15 +85,14 @@ export class WebLLMProvider implements AIProvider {
 
   async stream(
     messages: Message[],
-    onChunk: (chunk: string) => void,
-    _options?: ChatOptions
+    onChunk: (chunk: string) => void
   ): Promise<void> {
     if (!this.isInitialized) {
       await this.initialize();
     }
 
     // Placeholder implementation - simulate streaming
-    const response = await this.chat(messages, _options);
+    const response = await this.chat(messages);
     const words = response.split(' ');
     
     for (const word of words) {
@@ -132,7 +130,7 @@ export async function checkWebGPUSupport(): Promise<{
   supported: boolean;
   message: string;
 }> {
-  const nav = navigator as any;
+  const nav = navigator as { gpu?: { requestAdapter: () => Promise<unknown | null> } };
   if (!nav.gpu) {
     return {
       supported: false,

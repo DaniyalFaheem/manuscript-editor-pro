@@ -19,7 +19,7 @@ import { AIProviderStatus } from './types';
 export class TransformersProvider implements AIProvider {
   readonly name = 'transformers';
   private isInitialized = false;
-  private models: Map<string, any> = new Map();
+  private models: Map<string, unknown> = new Map();
 
   async isAvailable(): Promise<boolean> {
     // Transformers.js works in all modern browsers
@@ -42,7 +42,7 @@ export class TransformersProvider implements AIProvider {
     };
   }
 
-  async initialize(_config?: Record<string, unknown>): Promise<void> {
+  async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
     console.info('Transformers.js provider initialized (placeholder mode)');
@@ -51,7 +51,7 @@ export class TransformersProvider implements AIProvider {
     this.isInitialized = true;
   }
 
-  async chat(_messages: Message[], _options?: ChatOptions): Promise<string> {
+  async chat(): Promise<string> {
     // Transformers.js is optimized for specific NLP tasks, not general chat
     return 'Transformers.js is optimized for specialized NLP tasks like grammar checking, not general conversation. Use Ollama or WebLLM for chat.';
   }

@@ -15,6 +15,7 @@ import {
   Search,
   Slideshow,
   Keyboard,
+  SmartToy,
 } from '@mui/icons-material';
 import { useDocument } from '../context/DocumentContext';
 import FileUploadDialog from './FileUploadDialog';
@@ -22,7 +23,11 @@ import ExportDialog from './ExportDialog';
 import SearchReplaceDialog from './SearchReplaceDialog';
 import KeyboardShortcutsHelp from './KeyboardShortcutsHelp';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onToggleAIChat?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onToggleAIChat }) => {
   const { togglePresentationMode, content, setContent } = useDocument();
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
@@ -138,6 +143,26 @@ const Header: React.FC = () => {
               >
                 Export
               </Button>
+            </Tooltip>
+
+            <Tooltip title="AI Assistant" arrow>
+              <IconButton 
+                color="inherit" 
+                onClick={onToggleAIChat}
+                sx={{
+                  background: 'rgba(236, 72, 153, 0.2)',
+                  border: '1px solid',
+                  borderColor: 'rgba(236, 72, 153, 0.3)',
+                  '&:hover': {
+                    background: 'rgba(236, 72, 153, 0.35)',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 4px 16px rgba(236, 72, 153, 0.4)',
+                  },
+                  transition: 'all 0.2s ease-in-out',
+                }}
+              >
+                <SmartToy />
+              </IconButton>
             </Tooltip>
 
             <Tooltip title="Presentation Mode (F11)" arrow>

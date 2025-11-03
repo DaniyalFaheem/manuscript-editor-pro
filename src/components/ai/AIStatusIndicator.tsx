@@ -32,7 +32,7 @@ const AIStatusIndicator: React.FC = () => {
         setStatus(AIProviderStatus.UNAVAILABLE);
         setProviderName('No provider');
       }
-    } catch (error) {
+    } catch {
       setStatus(AIProviderStatus.ERROR);
       setProviderName('Error');
     }

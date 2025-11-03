@@ -299,7 +299,7 @@ export class ChatEngine {
       const data = localStorage.getItem('manuscript-editor-chat-history');
       if (data) {
         const messages = JSON.parse(data);
-        this.messages = messages.map((m: any) => ({
+        this.messages = messages.map((m: { timestamp: string | Date }) => ({
           ...m,
           timestamp: new Date(m.timestamp),
         }));

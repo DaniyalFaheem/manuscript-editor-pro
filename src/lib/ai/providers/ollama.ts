@@ -61,7 +61,7 @@ export class OllamaProvider implements AIProvider {
           'document-analysis',
         ],
       };
-    } catch (error) {
+    } catch {
       return {
         name: this.name,
         status: AIProviderStatus.ERROR,
@@ -212,7 +212,7 @@ export class OllamaProvider implements AIProvider {
         const suggestions = JSON.parse(jsonMatch[0]);
         return {
           type,
-          suggestions: suggestions.map((s: any, idx: number) => ({
+          suggestions: suggestions.map((s: { type?: string; severity?: string; message?: string; context?: string; offset?: number; length?: number; replacements?: string[] }, idx: number) => ({
             id: `ollama-${type}-${idx}`,
             type: s.type || type,
             severity: s.severity || 'warning',

@@ -86,7 +86,7 @@ const ChangePreview: React.FC<ChangePreviewProps> = ({
               <Chip
                 label={change.category}
                 size="small"
-                color={getCategoryColor(change.category) as any}
+                color={getCategoryColor(change.category) as 'error' | 'warning' | 'info' | 'success'}
               />
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <Button

@@ -43,7 +43,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     setConfig(orchestrator.getConfig());
   }, []);
 
-  const handleConfigChange = (key: keyof AIConfig, value: any) => {
+  const handleConfigChange = (key: keyof AIConfig, value: unknown) => {
     const newConfig = { ...config, [key]: value };
     setConfig(newConfig);
     

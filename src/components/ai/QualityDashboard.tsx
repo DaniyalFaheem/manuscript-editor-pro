@@ -30,6 +30,7 @@ const QualityDashboard: React.FC<QualityDashboardProps> = ({ content }) => {
     if (content) {
       calculateMetrics();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content]);
 
   const calculateMetrics = async () => {

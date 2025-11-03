@@ -80,7 +80,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     setMessages([...updatedMessages]);
 
     // Create placeholder for streaming response
-    let streamingMessage: ChatMsg = {
+    const streamingMessage: ChatMsg = {
       id: 'streaming',
       role: 'assistant',
       content: '',
