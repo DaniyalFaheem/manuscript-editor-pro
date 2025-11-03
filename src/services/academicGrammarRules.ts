@@ -2083,17 +2083,21 @@ export function getRulesBySeverity(severity: 'error' | 'warning' | 'info'): Acad
 
 /**
  * Total rule count
- * ENHANCED: Expanded from 90 to 130+ comprehensive rules covering all major categories.
+ * ENHANCED: Expanded from 90 to 190+ comprehensive rules covering all major categories.
  * The system now includes:
- * - 60+ Grammar rules (expanded from 15)
- * - 25+ Academic Tone rules (expanded from 15)
- * - 15+ Citation rules
- * - 25+ Punctuation rules (expanded from 15)
- * - 20+ Wordiness rules (expanded from 15)
- * - 35+ Spelling rules (expanded from 15)
+ * - 70+ Grammar rules (includes subject-verb agreement, confused words, common errors)
+ * - 25+ Academic Tone rules (contractions, informal language, hedging)
+ * - 15+ Citation rules (format validation, consistency checks)
+ * - 25+ Punctuation rules (spacing, formatting, apostrophes)
+ * - 20+ Wordiness rules (redundancy, passive voice, nominalizations)
+ * - 95+ Spelling & Typo rules (common misspellings, typos, academic terms)
  * 
- * Combined with Natural NLP library spell checking for additional coverage.
- * Further expandable to 100000+ rules through pattern variations and discipline-specific additions.
+ * This provides comprehensive detection of common writing errors including:
+ * - Typos: teh, taht, thsi, waht, adn, cna, etc.
+ * - Misspellings: recieve, seperate, definately, occured, etc.
+ * - Grammar: their/there/they're, your/you're, could of, subject-verb agreement
+ * 
+ * Combined with offline rule generator for expanded coverage.
  */
 export const TOTAL_RULES = allAcademicRules.length;
 

@@ -163,26 +163,17 @@ export class WebLLMProvider implements AIProvider {
   }
 
   async analyzeDocument(
-    content: string,
+    _content: string,
     task: AnalysisTask
   ): Promise<AnalysisResult> {
     if (!this.isInitialized) {
       await this.initialize();
     }
 
-    // Create a specialized prompt for document analysis
-    const systemPrompt = `You are a professional manuscript editor. Analyze the following text for ${task.type} issues and provide specific suggestions.`;
-    
-    const messages: Message[] = [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: `Analyze this text:\n\n${content.substring(0, 2000)}` },
-    ];
-
+    // For now, return empty suggestions as document analysis is better handled
+    // by the existing offline checkers. WebLLM is primarily for interactive chat/Q&A
+    // Document analysis through AI can be added later if needed
     try {
-      await this.chat(messages);
-      
-      // For now, return empty suggestions as document analysis is better handled
-      // by the existing offline checkers. WebLLM is primarily for chat/Q&A
       return {
         type: task.type,
         suggestions: [],
