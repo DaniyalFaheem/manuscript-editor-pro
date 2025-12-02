@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: deepfake-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/deepfake_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - DEBUG=${DEBUG:-false}
+    volumes:
+      - ./models/weights:/app/models/weights
+      - uploads:/app/uploads
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: deepfake-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: deepfake-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=deepfake_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: deepfake-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Celery worker for async tasks
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: deepfake-worker
+    command: celery -A celery_app worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/deepfake_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    volumes:
+      - ./models/weights:/app/models/weights
+      - uploads:/app/uploads
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    profiles:
+      - worker
+
+volumes:
+  postgres_data:
+  redis_data:
+  uploads:
+
+networks:
+  default:
+    name: deepfake-network
