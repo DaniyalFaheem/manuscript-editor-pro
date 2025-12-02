@@ -9,7 +9,16 @@ const api = axios.create({
   },
 });
 
-// Add auth token to requests if available
+/**
+ * Add auth token to requests if available.
+ * 
+ * SECURITY NOTE: This implementation uses localStorage for token storage,
+ * which is vulnerable to XSS attacks. For production deployments with
+ * sensitive data, consider:
+ * - Using httpOnly cookies set by the server
+ * - Implementing token refresh mechanisms
+ * - Adding CSRF protection
+ */
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('auth_token');
   if (token) {

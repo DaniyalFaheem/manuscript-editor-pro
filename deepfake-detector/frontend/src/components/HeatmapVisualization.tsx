@@ -28,10 +28,13 @@ export default function HeatmapVisualization({
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
   const [heatmapImage, setHeatmapImage] = useState<HTMLImageElement | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Load images
   useEffect(() => {
     const loadImages = async () => {
+      setLoadError(null);
+      
       const original = new Image();
       original.crossOrigin = 'anonymous';
       original.src = imageUrl;
@@ -40,13 +43,23 @@ export default function HeatmapVisualization({
       heatmap.crossOrigin = 'anonymous';
       heatmap.src = heatmapUrl;
       
-      await Promise.all([
-        new Promise((resolve) => { original.onload = resolve; }),
-        new Promise((resolve) => { heatmap.onload = resolve; }),
-      ]);
-      
-      setOriginalImage(original);
-      setHeatmapImage(heatmap);
+      try {
+        await Promise.all([
+          new Promise<void>((resolve, reject) => { 
+            original.onload = () => resolve();
+            original.onerror = () => reject(new Error('Failed to load original image'));
+          }),
+          new Promise<void>((resolve, reject) => { 
+            heatmap.onload = () => resolve();
+            heatmap.onerror = () => reject(new Error('Failed to load heatmap image'));
+          }),
+        ]);
+        
+        setOriginalImage(original);
+        setHeatmapImage(heatmap);
+      } catch (error) {
+        setLoadError(error instanceof Error ? error.message : 'Failed to load images');
+      }
     };
     
     loadImages();
@@ -109,6 +122,18 @@ export default function HeatmapVisualization({
     setPosition({ x: 0, y: 0 });
     setOpacity(0.5);
   };
+
+  // Show error message if images failed to load
+  if (loadError) {
+    return (
+      <Paper sx={{ p: 2 }}>
+        <Typography variant="h6" gutterBottom>Heatmap Visualization</Typography>
+        <Box sx={{ textAlign: 'center', py: 4, color: 'error.main' }}>
+          <Typography>{loadError}</Typography>
+        </Box>
+      </Paper>
+    );
+  }
 
   return (
     <Paper sx={{ p: 2 }}>

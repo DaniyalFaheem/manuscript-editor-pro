@@ -235,6 +235,6 @@
     sendResponse({ received: true });
   });
   
-  // Initialize
-  console.log('Deepfake Detector content script loaded');
+  // Initialize - Debug logging disabled for production
+  // console.log('Deepfake Detector content script loaded');
 })();

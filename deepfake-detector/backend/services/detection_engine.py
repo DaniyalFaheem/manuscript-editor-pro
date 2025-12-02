@@ -70,14 +70,19 @@ class EfficientNetDetector(BaseDetector):
         if not self.is_loaded:
             raise RuntimeError("Model not loaded")
         
-        # Simulate prediction (replace with actual model inference)
-        # In production:
+        # ============================================================
+        # MOCK IMPLEMENTATION - REPLACE FOR PRODUCTION
+        # ============================================================
+        # This is a placeholder that generates pseudo-random predictions.
+        # In production, replace with actual PyTorch model inference:
+        #
         # preprocessed = self.preprocess(image)
         # with torch.no_grad():
         #     output = self.model(preprocessed)
         #     confidence = torch.sigmoid(output).item()
+        # ============================================================
         
-        # Mock prediction based on image statistics
+        # Mock prediction based on image statistics for demo purposes
         mean_pixel = np.mean(image)
         std_pixel = np.std(image)
         
@@ -89,6 +94,7 @@ class EfficientNetDetector(BaseDetector):
             "model": self.name,
             "version": self.version,
             "features_extracted": 256,
+            "_mock": True,  # Indicates this is mock data
         }
 
 
@@ -113,7 +119,7 @@ class XceptionNetDetector(BaseDetector):
         if not self.is_loaded:
             raise RuntimeError("Model not loaded")
         
-        # Mock prediction
+        # MOCK IMPLEMENTATION - Replace with actual XceptionNet inference in production
         mean_pixel = np.mean(image)
         std_pixel = np.std(image)
         
@@ -124,6 +130,7 @@ class XceptionNetDetector(BaseDetector):
             "model": self.name,
             "version": self.version,
             "facial_regions_analyzed": 8,
+            "_mock": True,
         }
 
 

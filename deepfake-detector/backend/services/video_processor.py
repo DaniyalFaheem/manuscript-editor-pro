@@ -39,12 +39,34 @@ class VideoProcessor:
             
         Yields:
             Tuples of (frame_number, frame_array)
-        """
-        # In production, use cv2 or ffmpeg
-        # For now, generate mock frames
         
+        Note:
+            ============================================================
+            MOCK IMPLEMENTATION - REPLACE FOR PRODUCTION
+            ============================================================
+            This is a placeholder that generates random frames.
+            In production, replace with actual video processing using:
+            
+            import cv2
+            import tempfile
+            
+            with tempfile.NamedTemporaryFile(suffix='.mp4') as f:
+                f.write(video_data)
+                f.flush()
+                cap = cv2.VideoCapture(f.name)
+                frame_idx = 0
+                while cap.isOpened() and frame_idx < max_frames * sample_rate:
+                    ret, frame = cap.read()
+                    if not ret:
+                        break
+                    if frame_idx % sample_rate == 0:
+                        yield frame_idx, frame
+                    frame_idx += 1
+                cap.release()
+            ============================================================
+        """
         for i in range(0, max_frames * sample_rate, sample_rate):
-            # Create a mock frame
+            # Create a mock frame for demonstration
             frame = np.random.randint(0, 255, (*self.frame_size, 3), dtype=np.uint8)
             yield i, frame
     

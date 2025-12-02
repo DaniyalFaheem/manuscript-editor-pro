@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 from PIL import Image
 import exifread
+from scipy import ndimage
 
 from config.settings import settings
 
@@ -205,7 +206,6 @@ class ImageProcessor:
             color_variance = 0
         
         # Calculate local contrast
-        from scipy import ndimage
         if len(region.shape) == 3:
             gray = np.mean(region, axis=2)
         else:

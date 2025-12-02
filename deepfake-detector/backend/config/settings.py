@@ -3,9 +3,14 @@ Application Settings and Configuration
 Uses Pydantic Settings for environment variable management.
 """
 
+import warnings
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings
+
+
+# Default secret key - NEVER use in production
+_DEFAULT_SECRET_KEY = "your-secret-key-change-in-production"
 
 
 class Settings(BaseSettings):
@@ -19,10 +24,22 @@ class Settings(BaseSettings):
     WORKERS: int = Field(default=4)
     
     # Security
-    SECRET_KEY: str = Field(default="your-secret-key-change-in-production")
+    SECRET_KEY: str = Field(default=_DEFAULT_SECRET_KEY)
     ALGORITHM: str = Field(default="HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30)
     API_KEY_HEADER: str = Field(default="X-API-Key")
+    
+    @model_validator(mode='after')
+    def validate_security_settings(self) -> 'Settings':
+        """Warn if using default secret key in non-debug mode."""
+        if self.SECRET_KEY == _DEFAULT_SECRET_KEY and not self.DEBUG:
+            warnings.warn(
+                "SECURITY WARNING: Using default SECRET_KEY in non-debug mode. "
+                "Please set a secure SECRET_KEY environment variable for production.",
+                UserWarning,
+                stacklevel=2
+            )
+        return self
     
     # Database
     DATABASE_URL: str = Field(

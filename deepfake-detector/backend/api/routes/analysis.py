@@ -167,11 +167,13 @@ async def analyze_image(
             detail=f"File too large. Maximum size: {settings.MAX_FILE_SIZE_MB}MB",
         )
     
-    # Parse models
+    # Parse models - handle empty strings and whitespace
     model_list = None
-    if models:
+    if models and models.strip():
         try:
-            model_list = [ModelType(m.strip()) for m in models.split(",")]
+            model_list = [ModelType(m.strip()) for m in models.split(",") if m.strip()]
+            if not model_list:
+                model_list = None
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid model: {e}")
     
@@ -232,11 +234,13 @@ async def analyze_video(
             detail=f"File too large. Maximum size: {settings.MAX_FILE_SIZE_MB}MB",
         )
     
-    # Parse models
+    # Parse models - handle empty strings and whitespace
     model_list = None
-    if models:
+    if models and models.strip():
         try:
-            model_list = [ModelType(m.strip()) for m in models.split(",")]
+            model_list = [ModelType(m.strip()) for m in models.split(",") if m.strip()]
+            if not model_list:
+                model_list = None
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid model: {e}")
     

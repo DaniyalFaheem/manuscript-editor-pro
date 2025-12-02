@@ -98,8 +98,20 @@ async def get_current_user(
     
     # Try API key
     if api_key:
-        # In production, validate API key against database
-        # For now, create a simple token data from the API key
+        # SECURITY NOTE: In production, this should validate the API key
+        # against a database or secure store. The current implementation
+        # accepts any key with the correct prefix for demonstration purposes.
+        # 
+        # Production implementation should:
+        # 1. Query database for the API key
+        # 2. Check if key is active and not expired
+        # 3. Load associated scopes from the database
+        # 4. Rate limit based on key-specific limits
+        
+        # Basic validation: check key format
+        if not api_key.startswith("df_") or len(api_key) < 10:
+            return None
+        
         return TokenData(
             sub=f"api_key:{api_key}",
             exp=datetime.utcnow() + timedelta(hours=1),
