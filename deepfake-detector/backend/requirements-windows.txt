@@ -1,0 +1,85 @@
+# =============================================================================
+# Deepfake Detector - Windows 11 Compatible Dependencies
+# =============================================================================
+#
+# Quick Install on Windows 11:
+# ----------------------------
+# 1. Install Python 3.10+ from https://www.python.org/downloads/
+#    - Check "Add Python to PATH" during installation
+#
+# 2. Open Command Prompt as Administrator and run:
+#    python -m venv venv
+#    venv\Scripts\activate
+#    pip install --upgrade pip
+#    pip install -r requirements-windows.txt
+#
+# 3. Install FFmpeg (required for video processing):
+#    - Download from https://www.gyan.dev/ffmpeg/builds/
+#    - Extract to C:\ffmpeg
+#    - Add to PATH: setx PATH "%PATH%;C:\ffmpeg\bin"
+#
+# =============================================================================
+
+# FastAPI and Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Machine Learning (Windows compatible)
+tensorflow==2.15.0
+torch==2.1.2
+torchvision==0.16.2
+onnxruntime==1.16.3
+scikit-learn==1.4.0
+
+# Computer Vision (Windows compatible - using opencv-python instead of headless)
+opencv-python==4.9.0.80
+Pillow==10.2.0
+mediapipe==0.10.9
+
+# Video Processing
+ffmpeg-python==0.2.0
+moviepy==1.0.3
+imageio[ffmpeg]==2.33.1
+
+# Image Analysis
+exifread==3.0.0
+imagehash==4.3.1
+
+# Database (SQLite for easy Windows setup)
+sqlalchemy==2.0.25
+alembic==1.13.1
+aiosqlite==0.19.0
+
+# Caching and Queue (Redis is optional on Windows)
+# Install Redis for Windows: https://github.com/microsoftarchive/redis/releases
+redis==5.0.1
+celery[redis]==5.3.6
+
+# Utilities
+numpy==1.26.3
+pandas==2.2.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+aiofiles==23.2.1
+httpx==0.26.0
+boto3==1.34.23
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0
+
+# Documentation
+Sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
+
+# Logging and Monitoring
+structlog==24.1.0
+prometheus-client==0.19.0
+
+# PDF Generation (reportlab works on Windows without dependencies)
+reportlab==4.0.8

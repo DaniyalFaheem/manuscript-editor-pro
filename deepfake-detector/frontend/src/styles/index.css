@@ -1,0 +1,187 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Dropzone styles */
+.dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dropzone:hover {
+  border-color: #2196f3;
+  background-color: rgba(33, 150, 243, 0.05);
+}
+
+.dropzone.active {
+  border-color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.dropzone.reject {
+  border-color: #f44336;
+  background-color: rgba(244, 67, 54, 0.05);
+}
+
+/* Heatmap overlay */
+.heatmap-container {
+  position: relative;
+}
+
+.heatmap-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Progress indicator */
+.progress-ring {
+  transition: stroke-dashoffset 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Confidence meter */
+.confidence-meter {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  overflow: hidden;
+}
+
+.confidence-meter::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to right, #4caf50, #ffeb3b, #f44336);
+  border-radius: 100px 100px 0 0;
+}
+
+/* Timeline styles */
+.timeline-container {
+  position: relative;
+  height: 60px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timeline-segment {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.timeline-segment:hover {
+  opacity: 0.8;
+}
+
+.timeline-segment.real {
+  background: #4caf50;
+}
+
+.timeline-segment.fake {
+  background: #f44336;
+}
+
+/* Card hover effects */
+.hover-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #2196f3, #ff4081);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none;
+  }
+}

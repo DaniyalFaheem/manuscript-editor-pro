@@ -1,0 +1,259 @@
+/* Deepfake Detector - Content Script Styles */
+
+#deepfake-detector-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 2147483646;
+}
+
+.deepfake-detector-overlay {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.deepfake-detector-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+}
+
+.deepfake-detector-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+}
+
+.deepfake-detector-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: deepfake-spin 1s linear infinite;
+  margin-bottom: 8px;
+}
+
+@keyframes deepfake-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.deepfake-detector-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.deepfake-detector-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.deepfake-detector-badge.real {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: white;
+}
+
+.deepfake-detector-badge.fake {
+  background: linear-gradient(135deg, #f44336, #c62828);
+  color: white;
+}
+
+.deepfake-detector-badge.error {
+  background: linear-gradient(135deg, #9e9e9e, #616161);
+  color: white;
+}
+
+.deepfake-detector-icon {
+  font-size: 14px;
+}
+
+.deepfake-detector-label {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.deepfake-detector-confidence {
+  opacity: 0.9;
+  font-size: 11px;
+}
+
+/* Popup Styles */
+.deepfake-detector-popup {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 320px;
+  max-width: 90vw;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: deepfake-popup-in 0.2s ease-out;
+}
+
+@keyframes deepfake-popup-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.deepfake-detector-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #1976d2;
+  color: white;
+}
+
+.deepfake-detector-popup-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.deepfake-detector-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.deepfake-detector-close:hover {
+  opacity: 1;
+}
+
+.deepfake-detector-popup-body {
+  padding: 16px;
+}
+
+.deepfake-detector-result {
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.deepfake-detector-result.real {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.deepfake-detector-result.fake {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.result-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.result-confidence {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.deepfake-detector-models h4 {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.model-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.model-row:last-child {
+  border-bottom: none;
+}
+
+.model-name {
+  font-size: 13px;
+  color: #333;
+}
+
+.model-score {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.model-score.fake {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.model-score.real {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.deepfake-detector-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.deepfake-detector-actions button {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary {
+  background: #1976d2;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #1565c0;
+}
+
+.btn-secondary {
+  background: white;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+  background: #f5f5f5;
+}
